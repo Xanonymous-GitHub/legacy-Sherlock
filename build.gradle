@@ -28,7 +28,7 @@ repositories {
     jcenter()
     mavenCentral()
     maven {
-        url "http://m2.objectdb.com" //ObjectDB Repository
+        url "https://m2.objectdb.com" //ObjectDB Repository
     }
 }
 
