@@ -4,6 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -136,7 +137,7 @@ public class SherlockEngine {
 		}
 		else {
 			try {
-				Constructor constructor = new Constructor();
+				Constructor constructor = new Constructor(new LoaderOptions());
 				constructor.addTypeDescription(new TypeDescription(Configuration.class, "!Sherlock"));
 				Yaml yaml = new Yaml(constructor);
 				SherlockEngine.configuration = yaml.loadAs(new FileInputStream(configFile), Configuration.class);
@@ -179,7 +180,7 @@ public class SherlockEngine {
 	 */
 	private static void writeConfiguration(File configFile) {
 		try {
-			Representer representer = new Representer();
+			Representer representer = new Representer(new DumperOptions());
 			representer.addClassTag(Configuration.class, new Tag("!Sherlock"));
 			DumperOptions options = new DumperOptions();
 			options.setPrettyFlow(true);

@@ -33,7 +33,7 @@ public class AnnotationLoader {
 	 * Load modules from directory, and initialise the reflection
 	 */
 	AnnotationLoader() {
-		boolean useDefaultPath = (SherlockEngine.overrideModulesPath == null || SherlockEngine.overrideModulesPath.equals(""));
+		boolean useDefaultPath = (SherlockEngine.overrideModulesPath == null || SherlockEngine.overrideModulesPath.isEmpty());
 		String modulesPath = useDefaultPath ? SherlockEngine.configuration.getDataPath() : SherlockEngine.overrideModulesPath;
 		if (!modulesPath.endsWith("/")) {
 			modulesPath += "/";
@@ -104,7 +104,7 @@ public class AnnotationLoader {
 		moduleURLS.addAll(ClasspathHelper.forPackage("uk.ac.warwick.dcs.sherlock.launch"));
 
 		ConfigurationBuilder config = new ConfigurationBuilder();
-		config.addClassLoader(SherlockEngine.classloader);
+		config.addClassLoaders(SherlockEngine.classloader);
 		config.setUrls(moduleURLS);
 		config.setScanners(new SubTypesScanner(), new TypeAnnotationsScanner(), new MethodAnnotationsScanner());
 		config.filterInputsBy(new FilterBuilder().include(".*class"));
