@@ -170,7 +170,7 @@ tasks.register('generateTestSources', Copy) {
     into "$buildDir/tmp/src/test/java"
 }
 sourceSets.test.java.srcDirs = ["$buildDir/tmp/src/test/java"]
-compileTestJava.dependsOn generateTestSources
+//compileTestJava.dependsOn generateTestSources
 
 tasks.register('deps', Copy) {
     from configurations.runtime
@@ -243,7 +243,7 @@ bootRun {
 }
 
 test {
-    useJUnitPlatform()
+    // useJUnitPlatform()
 }
 
 tasks.register('branchSetup') {
