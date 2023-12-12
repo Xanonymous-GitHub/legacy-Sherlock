@@ -89,7 +89,7 @@ dependencies {
 }
 
 configurations {
-    all {
+    configureEach {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
 }
@@ -140,7 +140,7 @@ description = """Sherlock"""
 sourceCompatibility = 11
 targetCompatibility = 11
 
-task printVersion {
+tasks.register('printVersion') {
     println project.name + '-' + project.version
 }
 
@@ -155,7 +155,7 @@ generateGrammarSource {
     outputDirectory = file("${buildDir}/tmp/src/main/antlr/uk/ac/warwick/dcs/sherlock/module/model/base/lang")
 }
 
-task generateSources(type: Copy) {
+tasks.register('generateSources', Copy) {
     from("src/main/java")
     exclude "**/sherlock/deprecated/**"
     into "$buildDir/tmp/src/main/java"
@@ -164,7 +164,7 @@ task generateSources(type: Copy) {
 sourceSets.main.java.srcDirs = ["$buildDir/tmp/src/main/java", "$buildDir/tmp/src/main/antlr"]
 compileJava.dependsOn generateSources
 
-task generateTestSources(type: Copy) {
+tasks.register('generateTestSources', Copy) {
     from("src/test/java")
     exclude "**/sherlock/deprecated/**"
     into "$buildDir/tmp/src/test/java"
@@ -172,7 +172,7 @@ task generateTestSources(type: Copy) {
 sourceSets.test.java.srcDirs = ["$buildDir/tmp/src/test/java"]
 compileTestJava.dependsOn generateTestSources
 
-task deps(type: Copy) {
+tasks.register('deps', Copy) {
     from configurations.runtime
     into "$buildDir/out/lib"
 }
@@ -246,7 +246,7 @@ test {
     useJUnitPlatform()
 }
 
-task branchSetup {
+tasks.register('branchSetup') {
     if (grgit != null) {
         ant.replaceregexp(match: '# Sherlock(.*)', replace: "# Sherlock  [![Build Status: ${grgit.branch.current().name}](https://travis-ci.org/DCS-Sherlock/Sherlock.svg?branch=${grgit.branch.current().name})](https://travis-ci.org/DCS-Sherlock/Sherlock?branch=${grgit.branch.current().name})", flags: 's', byline: true) {
             fileset(dir: project.projectDir, includes: 'README.md')
