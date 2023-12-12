@@ -9,8 +9,8 @@ import uk.ac.warwick.dcs.sherlock.api.event.EventPostInitialisation;
 import uk.ac.warwick.dcs.sherlock.api.event.EventPreInitialisation;
 import uk.ac.warwick.dcs.sherlock.api.util.Side;
 import uk.ac.warwick.dcs.sherlock.engine.SherlockEngine;
-import uk.ac.warwick.dcs.sherlock.module.client.LocalDashboard;
-import uk.ac.warwick.dcs.sherlock.module.client.Splash;
+// import uk.ac.warwick.dcs.sherlock.module.client.LocalDashboard;
+// import uk.ac.warwick.dcs.sherlock.module.client.Splash;
 
 import javax.swing.*;
 
@@ -20,24 +20,24 @@ public class SherlockClient {
 	@Instance
 	public static SherlockClient instance;
 
-	private static LocalDashboard dash;
-	private static Splash splash;
+	// private static LocalDashboard dash;
+	// private static Splash splash;
 
 	public static void main(String[] args) {
 		System.setProperty("spring.devtools.restart.enabled", "false"); // fix stupid double instance bug
 
-		SherlockClient.splash = new Splash();
+		// SherlockClient.splash = new Splash();
 		SherlockServer.engine = new SherlockEngine(Side.CLIENT);
 
 		if (!SherlockServer.engine.isValidInstance()) {
 			JFrame jf=new JFrame();
 			jf.setAlwaysOnTop(true);
 			JOptionPane.showMessageDialog(jf, "Sherlock is already running", "Sherlock error", JOptionPane.ERROR_MESSAGE);
-			splash.close();
+			// splash.close();
 			System.exit(1);
 		}
 		else {
-			SherlockClient.dash = new LocalDashboard();
+			// SherlockClient.dash = new LocalDashboard();
 
 			//If "-Dmodules" is in the JVM arguments, set the path to provided
 			String modulesPath = System.getProperty("modules");
@@ -63,8 +63,8 @@ public class SherlockClient {
 
 	@EventHandler
 	public void postInitialisation(EventPostInitialisation event) {
-		SherlockClient.splash.close();
-		SherlockClient.dash.setReady();
+		// SherlockClient.splash.close();
+		// SherlockClient.dash.setReady();
 	}
 
 	@EventHandler
