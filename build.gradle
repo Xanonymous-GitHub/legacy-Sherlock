@@ -286,6 +286,7 @@ minifyJs {
 }
 
 sassCompile {
+    dependsOn sassPrepare
     style = compressed
     outputDir = file("src/main/resources/static/css")
 }
