@@ -137,8 +137,8 @@ if (System.env.TRAVIS == "true") {
 
 description = """Sherlock"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 task printVersion {
     println project.name + '-' + project.version
