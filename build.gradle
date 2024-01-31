@@ -69,7 +69,7 @@ dependencies {
     if (project.getGradle().startParameter.taskNames.contains("bootWar")) {
         providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     }
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.16.1'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.17.0'
     testCompile(
             "io.github.bonigarcia:webdrivermanager:5.6.2"
     )
