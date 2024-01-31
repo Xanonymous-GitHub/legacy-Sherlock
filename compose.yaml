@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  app:
+    image: xanonymous/sherlock
+    volumes:
+      - sherlock:/sherlock
+    networks:
+      - sherlock
+    ports:
+      - "8080:2218"
+
+volumes:
+  sherlock:
+
+networks:
+  sherlock:
