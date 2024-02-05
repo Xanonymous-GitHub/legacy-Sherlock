@@ -82,7 +82,7 @@ dependencies {
     )
 
     testRuntimeOnly(
-            'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+            'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     )
 
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
