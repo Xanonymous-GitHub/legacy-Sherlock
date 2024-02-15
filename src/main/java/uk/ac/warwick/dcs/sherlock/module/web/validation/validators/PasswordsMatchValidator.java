@@ -3,8 +3,8 @@ package uk.ac.warwick.dcs.sherlock.module.web.validation.validators;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.AccountPasswordForm;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.PasswordsMatch;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * Form validator that checks if the new password and confirm password

@@ -20,7 +20,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.AccountWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.AccountRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.RoleRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Optional;
 
 /**

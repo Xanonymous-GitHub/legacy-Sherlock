@@ -12,7 +12,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.AccountWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.WorkspaceWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.WorkspaceRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * The controller that deals with the workspaces page

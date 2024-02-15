@@ -16,7 +16,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TDetectorReposito
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TParameterRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * The controller that deals with the template detector pages

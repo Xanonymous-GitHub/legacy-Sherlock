@@ -3,8 +3,8 @@ package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.TemplateWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidLanguage;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 

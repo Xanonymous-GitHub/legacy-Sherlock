@@ -18,7 +18,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.AccountPasswordFo
 import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.AccountWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.AccountRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Collection;
 
 /**

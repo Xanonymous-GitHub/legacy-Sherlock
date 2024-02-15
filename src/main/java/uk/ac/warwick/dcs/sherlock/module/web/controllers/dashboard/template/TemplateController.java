@@ -16,7 +16,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.TemplateWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TDetectorRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TemplateRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * The controller that deals with the manage template pages
