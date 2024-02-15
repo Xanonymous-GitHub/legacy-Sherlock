@@ -1,6 +1,6 @@
 package uk.ac.warwick.dcs.sherlock.module.web.configuration;
 
-import nz.net.ultraq.thymeleaf.LayoutDialect;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
