@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.util.regex.Matcher
@@ -248,9 +249,12 @@ tasks.register('branchSetup') {
 }
 
 tasks.withType(KotlinCompile).configureEach {
+    dependsOn(tasks.generateGrammarSource)
+    dependsOn(tasks.generateSources)
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
     compilerOptions {
-        freeCompilerArgs += '-Xjsr305=strict'
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = JvmTarget.JVM_17
     }
 }
 
