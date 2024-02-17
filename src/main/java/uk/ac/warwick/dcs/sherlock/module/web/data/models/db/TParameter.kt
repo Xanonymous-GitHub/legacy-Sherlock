@@ -12,7 +12,7 @@ open class TParameter(
     @Column(name = "name") var name: String?,
 
     @JvmField
-    @Column(name = "value")
+    @Column(name = "the_value")
     var value: Float,
 
     @JvmField
