@@ -8,8 +8,8 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.AccountRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidPassword;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * Form validator that checks if the password supplied matches that
@@ -44,7 +44,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 
         Account account = accountRepository.findByEmail(authentication.getName());
 
-        if (passwordEncoder.matches(password, account.getPassword())) {
+        if (passwordEncoder.matches(password, account.password)) {
             return true;
         }
 

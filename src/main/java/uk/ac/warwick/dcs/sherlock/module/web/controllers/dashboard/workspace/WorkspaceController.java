@@ -18,7 +18,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.WorkspaceWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TemplateRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.WorkspaceRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

@@ -5,7 +5,7 @@ import uk.ac.warwick.dcs.sherlock.api.executor.IJobStatus;
 import uk.ac.warwick.dcs.sherlock.engine.executor.common.AtomicFloat;
 import uk.ac.warwick.dcs.sherlock.engine.executor.common.Priority;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 

@@ -96,7 +96,7 @@ public class WorkspaceWrapper {
     private void init(Workspace workspace) throws IWorkspaceNotFound {
         this.workspace = workspace;
 
-        List<Long> engineId = Collections.singletonList(this.workspace.getEngineId());
+        List<Long> engineId = Collections.singletonList(this.workspace.engineId);
         List<IWorkspace> iWorkspaces = SherlockEngine.storage.getWorkspaces(engineId);
 
         if (iWorkspaces.size() == 1) {
@@ -130,7 +130,7 @@ public class WorkspaceWrapper {
      * @return the id
      */
     public long getId() {
-        return this.workspace.getId();
+        return this.workspace.id;
     }
 
     /**
@@ -294,17 +294,17 @@ public class WorkspaceWrapper {
      * @throws NoFilesUploaded if no files were uploaded
      */
     public long runTemplate(TemplateWrapper templateWrapper) throws TemplateContainsNoDetectors, ClassNotFoundException, ParameterNotFound, DetectorNotFound, NoFilesUploaded {
-		if (templateWrapper.getTemplate().getDetectors().size() == 0)
+		if (templateWrapper.getTemplate().detectors.isEmpty())
 		    throw new TemplateContainsNoDetectors("No detectors in chosen template.");
 
-		if (this.getFiles().size() == 0) {
+		if (this.getFiles().isEmpty()) {
 		    throw new NoFilesUploaded("No files in workspace");
         }
 
 		IJob job = this.iWorkspace.createJob();
 
-		for (TDetector td : templateWrapper.getTemplate().getDetectors()) {
-            Class<? extends IDetector> detector = (Class<? extends IDetector>) Class.forName(td.getName(), true, SherlockEngine.classloader);
+		for (TDetector td : templateWrapper.getTemplate().detectors) {
+            Class<? extends IDetector> detector = (Class<? extends IDetector>) Class.forName(td.name, true, SherlockEngine.classloader);
             job.addDetector(detector);
 		}
 
@@ -320,8 +320,8 @@ public class WorkspaceWrapper {
                                 + " has had parameter "
                                 + parameterWrapper.getParameterObj().getDisplayName()
                                 + " set to "
-                                + parameterWrapper.getParameter().getValue());
-		                task.setParameter(parameterWrapper.getParameterObj(), parameterWrapper.getParameter().getValue());
+                                + parameterWrapper.getParameter().value);
+		                task.setParameter(parameterWrapper.getParameterObj(), parameterWrapper.getParameter().value);
                     }
                 }
             }

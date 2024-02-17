@@ -4,10 +4,10 @@ import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 import uk.ac.warwick.dcs.sherlock.api.annotation.AdjustableParameterObj;
 import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector;
 import uk.ac.warwick.dcs.sherlock.engine.SherlockEngine;
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.DetectorNotFound;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.ParameterNotFound;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.ParameterForm;
@@ -63,15 +63,15 @@ public class DetectorWrapper {
     ) throws DetectorNotFound {
         Optional<TDetector> optional = tDetectorRepository.findById(id);
 
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             throw new DetectorNotFound("Detector not found.");
         }
 
         this.tDetector = optional.get();
 
-        TemplateWrapper templateWrapper = new TemplateWrapper(this.tDetector.getTemplate(), account);
+        TemplateWrapper templateWrapper = new TemplateWrapper(this.tDetector.template, account);
 
-        if (templateWrapper.isOwner() == false && templateWrapper.getTemplate().isPublic() == false)
+        if (!templateWrapper.isOwner() && !templateWrapper.getTemplate().isPublic)
             throw new DetectorNotFound("Detector not found.");
 
         this.isOwner = templateWrapper.isOwner();
@@ -168,7 +168,7 @@ public class DetectorWrapper {
      * @return the id
      */
     public long getId() {
-        return this.tDetector.getId();
+        return this.tDetector.id;
     }
 
     /**
@@ -181,7 +181,7 @@ public class DetectorWrapper {
     public Class<? extends IDetector> getEngineDetector() throws DetectorNotFound {
         Class<? extends IDetector> detector = null;
         try {
-            detector = (Class<? extends IDetector>) Class.forName(this.tDetector.getName(), true, SherlockEngine.classloader);
+            detector = (Class<? extends IDetector>) Class.forName(this.tDetector.name, true, SherlockEngine.classloader);
         } catch (ClassNotFoundException e) {
             throw new DetectorNotFound("Detector no longer exists");
         }
@@ -216,8 +216,8 @@ public class DetectorWrapper {
     public List<ParameterWrapper> getParametersList() throws DetectorNotFound, ParameterNotFound {
         List<ParameterWrapper> list = new ArrayList<>();
 
-        for (TParameter p : this.tDetector.getParameters()) {
-            if (p.isPostprocessing()) {
+        for (TParameter p : this.tDetector.parameters) {
+            if (p.postprocessing) {
                 list.add(new ParameterWrapper(p, this.getEnginePostProcessingParametersMap()));
             } else {
                 list.add(new ParameterWrapper(p, this.getEngineParametersMap()));
@@ -237,7 +237,7 @@ public class DetectorWrapper {
         if (!this.isOwner)
             throw new NotTemplateOwner("You are not the owner of this template.");
 
-        List<TParameter> currentParameters = tParameterRepository.findByTDetector(this.tDetector);
+        List<TParameter> currentParameters = tParameterRepository.findBytDetector(this.tDetector);
         tParameterRepository.deleteAll(currentParameters);
 
         for (Map.Entry<String, Float> entry : parameterForm.getParameters().entrySet()) {

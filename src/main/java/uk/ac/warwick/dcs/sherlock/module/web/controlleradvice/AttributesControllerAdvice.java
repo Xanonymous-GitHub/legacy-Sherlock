@@ -11,7 +11,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.AccountWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.AccountRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.SpringNotInitialised;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 /**

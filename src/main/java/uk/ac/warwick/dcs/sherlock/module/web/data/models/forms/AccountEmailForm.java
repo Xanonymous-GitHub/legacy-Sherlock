@@ -3,9 +3,9 @@ package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidPassword;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * The form for changing an account email
@@ -22,7 +22,7 @@ public class AccountEmailForm {
     public AccountEmailForm() { }
 
     public AccountEmailForm(Account account) {
-        this.email = account.getEmail();
+        this.email = account.email;
     }
 
     public String getOldPassword() {

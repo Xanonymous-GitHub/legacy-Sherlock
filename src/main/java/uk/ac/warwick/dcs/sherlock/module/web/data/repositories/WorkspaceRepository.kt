@@ -1,15 +1,13 @@
-package uk.ac.warwick.dcs.sherlock.module.web.data.repositories;
+package uk.ac.warwick.dcs.sherlock.module.web.data.repositories
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Workspace;
-
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Workspace
 
 /**
  * The database repository storing all workspaces
  */
-public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
+interface WorkspaceRepository : JpaRepository<Workspace?, Long?> {
     /**
      * Finds all workspaces owned by the supplied account
      *
@@ -17,7 +15,7 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
      *
      * @return the list of workspaces found
      */
-    List<Workspace> findByAccount(Account account);
+    fun findByAccount(account: Account?): List<Workspace?>?
 
     /**
      * Finds a workspace with the supplied id and owned by the
@@ -28,5 +26,5 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
      *
      * @return the workspace found
      */
-    Workspace findByIdAndAccount(long id, Account account);
+    fun findByIdAndAccount(id: Long, account: Account?): Workspace?
 }

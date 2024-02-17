@@ -1,17 +1,15 @@
-package uk.ac.warwick.dcs.sherlock.module.web.data.repositories;
+package uk.ac.warwick.dcs.sherlock.module.web.data.repositories
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template;
-
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template
 
 /**
  * The database repository storing the job templates
  */
-public interface TemplateRepository extends JpaRepository<Template, Long> {
+interface TemplateRepository : JpaRepository<Template?, Long?> {
     /**
      * Finds the template with the id supplied only if it is
      * owned by the account supplied or is public
@@ -22,7 +20,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
      * @return the template found
      */
     @Query("SELECT t FROM Template t WHERE t.id = :id AND (t.account = :account OR t.isPublic = true)")
-    Template findByIdAndPublic(@Param("id")long id, @Param("account")Account account);
+    fun findByIdAndPublic(@Param("id") id: Long, @Param("account") account: Account?): Template?
 
     /**
      * Finds all templates that are owned by the account or
@@ -33,7 +31,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
      * @return the list of templates found
      */
     @Query("SELECT t FROM Template t WHERE t.account = :account OR t.isPublic = true")
-    List<Template> findByAccountAndPublic(@Param("account") Account account);
+    fun findByAccountAndPublic(@Param("account") account: Account?): List<Template?>?
 
 
     /**
@@ -46,5 +44,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
      * @return the list of templates found
      */
     @Query("SELECT t FROM Template t WHERE t.language = :language AND (t.account = :account OR t.isPublic = true)")
-    List<Template> findByAccountAndPublicAndLanguage(@Param("account") Account account, @Param("language") String language);
+    fun findByAccountAndPublicAndLanguage(
+        @Param("account") account: Account?,
+        @Param("language") language: String?
+    ): List<Template?>?
 }

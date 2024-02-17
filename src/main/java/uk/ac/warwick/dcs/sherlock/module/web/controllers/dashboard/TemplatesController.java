@@ -15,7 +15,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.TemplateWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TDetectorRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TemplateRepository;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Set;
 
 /**
@@ -110,7 +110,7 @@ public class TemplatesController {
 		}
 
 		TemplateWrapper templateWrapper = new TemplateWrapper(templateForm, account.getAccount(), templateRepository, tDetectorRepository);
-		return "redirect:/dashboard/templates/manage/" + templateWrapper.getTemplate().getId();
+		return "redirect:/dashboard/templates/manage/" + templateWrapper.getTemplate().id;
 	}
 
 	/**

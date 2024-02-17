@@ -4,9 +4,9 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Role;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidPassword;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -38,14 +38,15 @@ public class AccountForm {
     public AccountForm() { }
 
     public AccountForm(Account account) {
-        this.name = account.getUsername();
-        this.email = account.getEmail();
+        this.name = account.username;
+        this.email = account.email;
 
         this.isAdmin = false;
-        Set<Role> roles = account.getRoles();
+        Set<Role> roles = account.roles;
         for (Role role : roles) {
-            if (role.getName().equals("ADMIN")) {
+            if (role.name != null && role.name.equals("ADMIN")) {
                 this.isAdmin = true;
+                break;
             }
         }
     }

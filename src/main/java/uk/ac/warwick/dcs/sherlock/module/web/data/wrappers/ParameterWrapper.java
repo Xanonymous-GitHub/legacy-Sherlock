@@ -31,11 +31,11 @@ public class ParameterWrapper {
     public ParameterWrapper(TParameter tParameter, Map<String, AdjustableParameterObj> map) throws ParameterNotFound {
         this.tParameter = tParameter;
 
-        if (!map.containsKey(tParameter.getName())) {
+        if (!map.containsKey(tParameter.name)) {
             throw new ParameterNotFound("Parameter not found");
         }
 
-        this.parameterObj = map.get(tParameter.getName());
+        this.parameterObj = map.get(tParameter.name);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ParameterWrapper {
      * @return the display name
      */
     public String getDisplayName() {
-        if (this.tParameter.isPostprocessing()) {
+        if (this.tParameter.postprocessing) {
             return "Post: " + this.parameterObj.getDisplayName();
         }
 

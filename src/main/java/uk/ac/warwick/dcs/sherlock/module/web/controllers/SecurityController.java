@@ -29,8 +29,8 @@ public class SecurityController {
 	public String login(Model model) {
 		//Automatically login if running locally
 		if (Arrays.asList(environment.getActiveProfiles()).contains("client")) {
-            model.addAttribute("local_username", SecurityConfig.getLocalEmail());
-            model.addAttribute("local_password", SecurityConfig.getLocalPassword());
+            model.addAttribute("local_username", SecurityConfig.Companion.getLocalEmail());
+            model.addAttribute("local_password", SecurityConfig.Companion.getLocalPassword());
             return "security/loginLocal";
 		}
 
