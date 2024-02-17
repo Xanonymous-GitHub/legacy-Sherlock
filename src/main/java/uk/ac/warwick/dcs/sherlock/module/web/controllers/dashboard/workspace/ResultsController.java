@@ -17,7 +17,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.AccountWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.WorkspaceWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The controller that deals with the workspace results pages
