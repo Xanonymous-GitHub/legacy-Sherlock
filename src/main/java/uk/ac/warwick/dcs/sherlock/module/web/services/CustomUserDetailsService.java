@@ -45,10 +45,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         Set<GrantedAuthority> roles = new HashSet<>();
-        for (Role role : account.getRoles()) {
-            roles.add(new SimpleGrantedAuthority(role.getName()));
+        for (Role role : account.roles) {
+            roles.add(new SimpleGrantedAuthority(role.name));
         }
 
-        return new User(account.getEmail(), account.getPassword(), roles);
+        return new User(account.email, account.password, roles);
     }
 }

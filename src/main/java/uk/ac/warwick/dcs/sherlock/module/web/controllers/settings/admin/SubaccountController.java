@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.AccountNotFound;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.AccountOwner;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Role;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.AccountForm;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.PasswordForm;
@@ -82,15 +82,15 @@ public class SubaccountController {
                 }
             }
 
-            subAccount.getAccount().setEmail(accountForm.getEmail());
-            subAccount.getAccount().setUsername(accountForm.getName());
+            subAccount.getAccount().email = accountForm.getEmail();
+            subAccount.getAccount().username = accountForm.getName();
             accountRepository.save(subAccount.getAccount());
 
             boolean isAdmin = false; //whether or not the user is already an admin
             Role adminRole = null; //the admin role object for that account
 
             for (Role role : subAccount.getRoles()) {
-                if (role.getName().equals("ADMIN")) {
+                if (role.name != null && role.name.equals("ADMIN")) {
                     isAdmin = true;
                     adminRole = role;
                 }
@@ -147,7 +147,7 @@ public class SubaccountController {
             //Generate a random password
             String newPassword = SecurityConfig.Companion.generateRandomPassword();
 
-            subAccount.getAccount().setPassword(passwordEncoder.encode(newPassword));
+            subAccount.getAccount().password = passwordEncoder.encode(newPassword);
             accountRepository.save(subAccount.getAccount());
 
             model.addAttribute("success_msg", "admin.accounts.change_password.updated");
@@ -220,7 +220,7 @@ public class SubaccountController {
     {
     	Optional<Account> optional = accountRepository.findById(pathid);
 
-    	if (!optional.isPresent()) {
+    	if (optional.isEmpty()) {
     		throw new AccountNotFound("Account not found");
 		}
 

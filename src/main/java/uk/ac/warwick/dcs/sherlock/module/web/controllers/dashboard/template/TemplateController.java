@@ -62,7 +62,7 @@ public class TemplateController {
         if (!isAjax) throw new NotAjaxRequest("/dashboard/templates/manage/" + pathid);
 
         model.addAttribute("templateForm", new TemplateForm(templateWrapper));
-        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.getTemplate().getLanguage()));
+        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.getTemplate().language));
         model.addAttribute("languageList", SherlockRegistry.getLanguages());
         return "dashboard/templates/fragments/details";
     }
@@ -99,7 +99,7 @@ public class TemplateController {
         }
 
         model.addAttribute("templateForm", templateForm);
-        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.getTemplate().getLanguage()));
+        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.getTemplate().language));
         model.addAttribute("languageList", SherlockRegistry.getLanguages());
         return "dashboard/templates/fragments/details";
     }
@@ -140,7 +140,7 @@ public class TemplateController {
             @ModelAttribute("template") TemplateWrapper templateWrapper
     ) {
         Template newTemplate = templateWrapper.copy(account, templateRepository, tDetectorRepository, tParameterRepository);
-        return "redirect:/dashboard/templates/manage/" + newTemplate.getId();
+        return "redirect:/dashboard/templates/manage/" + newTemplate.id;
     }
 
     /**

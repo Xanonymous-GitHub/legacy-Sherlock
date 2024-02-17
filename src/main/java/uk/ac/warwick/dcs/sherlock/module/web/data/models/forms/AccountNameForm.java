@@ -1,9 +1,8 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 
 /**
  * The form for changing an account name
@@ -24,7 +23,7 @@ public class AccountNameForm {
     public AccountNameForm() { }
 
     public AccountNameForm(Account account){
-        this.username = account.getUsername();
+        this.username = account.username;
     }
 
     public String getUsername() {

@@ -31,31 +31,31 @@ public class AccountWrapper {
     }
 
     public long getId() {
-        return this.wrapperAccount.getId();
+        return this.wrapperAccount.id;
     }
 
     public String getEmail() {
-        return this.wrapperAccount.getEmail();
+        return this.wrapperAccount.email;
     }
 
     public String getPassword() {
-        return this.wrapperAccount.getPassword();
+        return this.wrapperAccount.password;
     }
 
     public Set<Role> getRoles() {
-        return this.wrapperAccount.getRoles();
+        return this.wrapperAccount.roles;
     }
 
     public String getUsername() {
-        return this.wrapperAccount.getUsername();
+        return this.wrapperAccount.username;
     }
 
     public Set<Workspace> getWorkspaces() {
-        return this.wrapperAccount.getWorkspaces();
+        return this.wrapperAccount.workspaces;
     }
 
     public Set<Template> getTemplates() {
-        return this.wrapperAccount.getTemplates();
+        return this.wrapperAccount.templates;
     }
 
     public Account getAccount() {

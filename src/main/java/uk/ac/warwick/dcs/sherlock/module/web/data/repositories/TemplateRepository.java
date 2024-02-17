@@ -22,7 +22,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
      * @return the template found
      */
     @Query("SELECT t FROM Template t WHERE t.id = :id AND (t.account = :account OR t.isPublic = true)")
-    Template findByIdAndPublic(@Param("id")long id, @Param("account")Account account);
+    Template findByIdAndPublic(@Param("id")long id, @Param("account") Account account);
 
     /**
      * Finds all templates that are owned by the account or

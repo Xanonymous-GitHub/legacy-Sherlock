@@ -1,10 +1,10 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TParameterRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.TemplateNotFound;
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.TemplateForm;
@@ -45,7 +45,7 @@ public class TemplateWrapper {
             TDetectorRepository tDetectorRepository
     ) throws NotTemplateOwner {
         this.template = new Template();
-        this.template.setAccount(account);
+        this.template.account = account;
         this.isOwner = true;
         this.update(templateForm, templateRepository, tDetectorRepository);
     }
@@ -69,7 +69,7 @@ public class TemplateWrapper {
         if (this.template == null)
             throw new TemplateNotFound("Template not found.");
 
-        if (this.template.getAccount() == account)
+        if (this.template.account == account)
             this.isOwner = true;
     }
 
@@ -82,7 +82,7 @@ public class TemplateWrapper {
     public TemplateWrapper(Template template, Account account)  {
         this.template = template;
 
-        if (this.template.getAccount() == account)
+        if (this.template.account == account)
             this.isOwner = true;
     }
 
@@ -128,7 +128,7 @@ public class TemplateWrapper {
      * @return the name
      */
     public String getOwnerName() {
-        return this.template.getAccount().getUsername();
+        return this.template.account.username;
     }
 
     /**
@@ -137,7 +137,7 @@ public class TemplateWrapper {
      * @return the result
      */
     public boolean isPublic() {
-        return this.template.isPublic();
+        return this.template.isPublic;
     }
 
     /**
@@ -147,7 +147,7 @@ public class TemplateWrapper {
      */
     public List<DetectorWrapper> getDetectors() {
         List<DetectorWrapper> wrapperList = new ArrayList<>();
-        this.template.getDetectors().forEach(d -> wrapperList.add(new DetectorWrapper(d, this.isOwner)));
+        this.template.detectors.forEach(d -> wrapperList.add(new DetectorWrapper(d, this.isOwner)));
         return wrapperList;
     }
 
@@ -168,21 +168,19 @@ public class TemplateWrapper {
         if (!this.isOwner)
             throw new NotTemplateOwner("You are not the owner of this template.");
 
-        template.setName(templateForm.getName());
-        template.setLanguage(templateForm.getLanguage());
-        template.setPublic(templateForm.isPublic());
+        template.name = templateForm.getName();
+        template.language = templateForm.getLanguage();
+        template.isPublic = templateForm.isPublic();
         templateRepository.save(template);
 
-        List<String> activeDetectors = EngineDetectorWrapper.getDetectorNames(template.getLanguage());
+        List<String> activeDetectors = EngineDetectorWrapper.getDetectorNames(template.language);
 
-        List<String> toAdd = new ArrayList<>();
         List<String> toRemove = new ArrayList<>();
-        List<String> toCheck = new ArrayList<>();
 
-        toAdd.addAll(templateForm.getDetectors());
-        template.getDetectors().forEach(d -> toAdd.remove(d.getName()));
+        List<String> toAdd = new ArrayList<>(templateForm.getDetectors());
+        template.detectors.forEach(d -> toAdd.remove(d.name));
 
-        template.getDetectors().forEach(d -> toRemove.add(d.getName()));
+        template.detectors.forEach(d -> toRemove.add(d.name));
         toRemove.removeAll(templateForm.getDetectors());
 
         for (String add : toAdd) {
@@ -195,8 +193,8 @@ public class TemplateWrapper {
             );
         }
 
-        toCheck.addAll(toAdd);
-        template.getDetectors().forEach(d -> toCheck.add(d.getName()));
+        List<String> toCheck = new ArrayList<>(toAdd);
+        template.detectors.forEach(d -> toCheck.add(d.name));
         toCheck.removeAll(toRemove);
 
         for (String check : toCheck) {
@@ -225,25 +223,25 @@ public class TemplateWrapper {
             TParameterRepository tParameterRepository
     ) {
         Template template = new Template();
-        template.setAccount(account.getAccount());
-        template.setLanguage(this.template.getLanguage());
-        template.setPublic(false);
-        template.setName(this.template.getName() + " - Copy");
+        template.account = account.getAccount();
+        template.language = this.template.language;
+        template.isPublic = false;
+        template.name = this.template.name + " - Copy";
         templateRepository.save(template);
 
-        for (TDetector detector : this.template.getDetectors()) {
+        for (TDetector detector : this.template.detectors) {
             TDetector newDetector = new TDetector();
-            newDetector.setName(detector.getName());
-            newDetector.setTemplate(template);
+            newDetector.name = detector.name;
+            newDetector.template = template;
 
             tDetectorRepository.save(newDetector);
 
-            for (TParameter parameter : detector.getParameters()) {
+            for (TParameter parameter : detector.parameters) {
                 TParameter newParameter = new TParameter();
-                newParameter.setName(parameter.getName());
-                newParameter.setValue(parameter.getValue());
-                newParameter.setDetector(newDetector);
-                newParameter.setPostprocessing(parameter.isPostprocessing());
+                newParameter.name = parameter.name;
+                newParameter.value = parameter.value;
+                newParameter.tDetector = newDetector;
+                newParameter.postprocessing = parameter.postprocessing;
 
                 tParameterRepository.save(newParameter);
             }

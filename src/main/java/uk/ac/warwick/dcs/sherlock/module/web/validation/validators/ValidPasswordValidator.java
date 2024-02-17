@@ -44,7 +44,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 
         Account account = accountRepository.findByEmail(authentication.getName());
 
-        if (passwordEncoder.matches(password, account.getPassword())) {
+        if (passwordEncoder.matches(password, account.password)) {
             return true;
         }
 

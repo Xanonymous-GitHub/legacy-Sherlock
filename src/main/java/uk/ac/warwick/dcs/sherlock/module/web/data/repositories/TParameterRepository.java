@@ -17,5 +17,5 @@ public interface TParameterRepository extends JpaRepository<TParameter, Long> {
      *
      * @return the list of parameters
      */
-    List<TParameter> findByTDetector(TDetector tDetector);
+    List<TParameter> findBytDetector(TDetector tDetector);
 }

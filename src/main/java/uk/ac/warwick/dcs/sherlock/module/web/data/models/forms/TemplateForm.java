@@ -40,10 +40,10 @@ public class TemplateForm {
     }
 
     public TemplateForm(TemplateWrapper templateWrapper) {
-        this.name = templateWrapper.getTemplate().getName();
-        this.language = templateWrapper.getTemplate().getLanguage();
-        this.isPublic = templateWrapper.getTemplate().isPublic();
-        templateWrapper.getTemplate().getDetectors().forEach(d -> this.detectors.add(d.getName()));
+        this.name = templateWrapper.getTemplate().name;
+        this.language = templateWrapper.getTemplate().language;
+        this.isPublic = templateWrapper.getTemplate().isPublic;
+        templateWrapper.getTemplate().detectors.forEach(d -> this.detectors.add(d.name));
     }
 
     public String getName() {

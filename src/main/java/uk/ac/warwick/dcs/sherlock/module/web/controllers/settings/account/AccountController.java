@@ -88,7 +88,7 @@ public class AccountController {
 		if (!isAjax) throw new NotAjaxRequest("/account");
 
 		if (!result.hasErrors()) {
-			account.getAccount().setUsername(accountNameForm.getUsername());
+			account.getAccount().username = accountNameForm.getUsername();
 			accountRepository.save(account.getAccount());
 
 			model.addAttribute("success_msg", "account.name.updated");
@@ -160,7 +160,7 @@ public class AccountController {
 			//TODO: Perform email verification
 
 			//Update the email in the database
-			account.getAccount().setEmail(newEmail);
+			account.getAccount().email = newEmail;
 			accountRepository.save(account.getAccount());
 
 			//Update the email in the security session information to prevent the user being logged out.
@@ -223,7 +223,7 @@ public class AccountController {
 		if (!isAjax) throw new NotAjaxRequest("/account");
 
 		if (!result.hasErrors()) {
-			account.getAccount().setPassword(bCryptPasswordEncoder.encode(accountPasswordForm.getNewPassword()));
+			account.getAccount().password = bCryptPasswordEncoder.encode(accountPasswordForm.getNewPassword());
 			accountRepository.save(account.getAccount());
 
 			model.addAttribute("accountPasswordForm", new AccountPasswordForm());

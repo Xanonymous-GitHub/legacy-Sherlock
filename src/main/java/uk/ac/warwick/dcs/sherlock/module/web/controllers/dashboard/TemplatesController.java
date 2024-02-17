@@ -110,7 +110,7 @@ public class TemplatesController {
 		}
 
 		TemplateWrapper templateWrapper = new TemplateWrapper(templateForm, account.getAccount(), templateRepository, tDetectorRepository);
-		return "redirect:/dashboard/templates/manage/" + templateWrapper.getTemplate().getId();
+		return "redirect:/dashboard/templates/manage/" + templateWrapper.getTemplate().id;
 	}
 
 	/**

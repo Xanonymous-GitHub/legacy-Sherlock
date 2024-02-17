@@ -22,7 +22,7 @@ public class AccountEmailForm {
     public AccountEmailForm() { }
 
     public AccountEmailForm(Account account) {
-        this.email = account.getEmail();
+        this.email = account.email;
     }
 
     public String getOldPassword() {

@@ -23,8 +23,8 @@ public class ParameterForm {
 
         Map<String, Float> parameterMap = new HashMap<>();
         Map<String, Float> postprocessingMap = new HashMap<>();
-        detectorWrapper.getDetector().getDetectorParameters().forEach(p -> parameterMap.put(p.getName(), p.getValue()));
-        detectorWrapper.getDetector().getPostParameters().forEach(p -> postprocessingMap.put(p.getName(), p.getValue()));
+        detectorWrapper.getDetector().getDetectorParameters().forEach(p -> parameterMap.put(p.name, p.value));
+        detectorWrapper.getDetector().getPostParameters().forEach(p -> postprocessingMap.put(p.name, p.value));
 
         parameters = new HashMap<>();
         for (AdjustableParameterObj obj : parameterObjList) {

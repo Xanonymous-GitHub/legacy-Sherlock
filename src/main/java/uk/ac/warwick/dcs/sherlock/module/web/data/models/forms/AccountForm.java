@@ -38,14 +38,15 @@ public class AccountForm {
     public AccountForm() { }
 
     public AccountForm(Account account) {
-        this.name = account.getUsername();
-        this.email = account.getEmail();
+        this.name = account.username;
+        this.email = account.email;
 
         this.isAdmin = false;
-        Set<Role> roles = account.getRoles();
+        Set<Role> roles = account.roles;
         for (Role role : roles) {
-            if (role.getName().equals("ADMIN")) {
+            if (role.name != null && role.name.equals("ADMIN")) {
                 this.isAdmin = true;
+                break;
             }
         }
     }
