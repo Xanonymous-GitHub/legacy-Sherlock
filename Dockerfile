@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 
 # For solving https://github.com/sass/dart-sass/issues/617, we shouldn't use alpine image.
-FROM gradle:5.6.4-jdk11 AS build
+FROM gradle:7-alpine AS build
 
 # Set the working directory in the Docker image
 WORKDIR /app
@@ -22,8 +22,8 @@ RUN ./gradlew --no-daemon build
 
 FROM alpine:latest AS final
 
-# Install minimal JRE (Java 8) in the Alpine image
-RUN apk --no-cache add openjdk11-jre
+# Install minimal JRE (Java 17) in the Alpine image
+RUN apk --no-cache add openjdk17-jre
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
