@@ -1,4 +1,4 @@
-# Sherlock  [![Build Status: enable-kotlin-compilations](https://travis-ci.org/DCS-Sherlock/Sherlock.svg?branch=enable-kotlin-compilations)](https://travis-ci.org/DCS-Sherlock/Sherlock?branch=enable-kotlin-compilations)
+# Sherlock
 
 <!----- Branch: --->
 
@@ -30,7 +30,7 @@ the `./build/out/` directory.
 
 ## Running/Testing
 
-The compiled jar is executable and can be run either by double clicking in most operating systems, or using
+The compiled jar is executable and can be run either by double-clicking in most operating systems, or using
 the `java -jar Sherlock-x.x.x.jar` command.
 
 Alternatively, Sherlock can be run directly within the gradle environment using the command `gradlew(.bat) bootRun`,

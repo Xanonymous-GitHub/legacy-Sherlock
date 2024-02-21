@@ -22,12 +22,12 @@ public class JobResultsData {
 	/**
 	 * The job showing the results for
 	 */
-	private IJob job;
+	private final IJob job;
 
 	/**
 	 * The list of tasks from the job
 	 */
-	private List<TaskWrapper> tasks;
+	private final List<TaskWrapper> tasks;
 
 	/**
 	 * A map containing each submission (with the overall score for that submission) and a list of submissions which match with the key. Each submission in that list contains the relative score
@@ -196,7 +196,7 @@ public class JobResultsData {
 		Map<Long, String> idToName = new HashMap<>();
 		job.getWorkspace().getSubmissions().forEach(s -> idToName.put(s.getId(), s.getName()));
 
-		Comparator<SubmissionScore> compare = (SubmissionScore s1, SubmissionScore s2) -> ((Float) s1.getScore()).compareTo(s2.getScore() );
+		Comparator<SubmissionScore> compare = (SubmissionScore s1, SubmissionScore s2) -> Float.compare(s1.getScore(), s2.getScore());
 		List<ISubmissionSummary> summaries = report.GetMatchingSubmissions();
 		for (ISubmissionSummary summary : summaries) {
 			String name = idToName.getOrDefault(summary.getPersistentId(), "Deleted");
