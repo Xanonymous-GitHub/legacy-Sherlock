@@ -50,7 +50,7 @@ dependencies {
             'com.google.guava:guava:33.0.0-jre',
             'org.reflections:reflections:0.10.2',
             'org.apache.commons:commons-lang3:3.14.0',
-            'org.apache.commons:commons-compress:1.25.0',
+            'org.apache.commons:commons-compress:1.26.0',
             'commons-io:commons-io:2.15.1',
             'commons-codec:commons-codec:1.16.0',
             'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.13',
