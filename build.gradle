@@ -55,7 +55,7 @@ dependencies {
             'commons-codec:commons-codec:1.16.0',
             'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.13',
             'javax.transaction:jta:1.1',
-            'com.objectdb:objectdb:2.8.9',
+            'com.objectdb:objectdb:2.8.9_07',
             'org.yaml:snakeyaml:2.2',
             "org.springframework.boot:spring-boot-starter:$spring_boot_version",
             "org.springframework.boot:spring-boot-starter-web:$spring_boot_version",
