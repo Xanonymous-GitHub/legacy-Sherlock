@@ -72,7 +72,7 @@ dependencies {
             'org.springframework.boot:spring-boot-devtools',
             'javax.xml.bind:jaxb-api',
             'org.json:json:20240205',
-            'org.seleniumhq.selenium:selenium-java:4.17.0',
+            'org.seleniumhq.selenium:selenium-java:4.19.1',
             'com.h2database:h2:2.2.224'
     )
 
