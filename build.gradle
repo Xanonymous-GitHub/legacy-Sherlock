@@ -4,8 +4,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.util.regex.Matcher
 
 buildscript {
-    ext.kotlin_version = '1.9.22'
-    ext.spring_boot_version = '3.2.2'
+    ext.kotlin_version = '1.9.23'
+    ext.spring_boot_version = '3.2.4'
     repositories {
         mavenCentral()
         google()
@@ -50,12 +50,12 @@ dependencies {
             'com.google.guava:guava:33.0.0-jre',
             'org.reflections:reflections:0.10.2',
             'org.apache.commons:commons-lang3:3.14.0',
-            'org.apache.commons:commons-compress:1.25.0',
+            'org.apache.commons:commons-compress:1.26.1',
             'commons-io:commons-io:2.15.1',
-            'commons-codec:commons-codec:1.16.0',
+            'commons-codec:commons-codec:1.16.1',
             'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.13',
             'javax.transaction:jta:1.1',
-            'com.objectdb:objectdb:2.8.9',
+            'com.objectdb:objectdb:2.8.9_07',
             'org.yaml:snakeyaml:2.2',
             "org.springframework.boot:spring-boot-starter:$spring_boot_version",
             "org.springframework.boot:spring-boot-starter-web:$spring_boot_version",
@@ -72,7 +72,7 @@ dependencies {
             'org.springframework.boot:spring-boot-devtools',
             'javax.xml.bind:jaxb-api',
             'org.json:json:20240205',
-            'org.seleniumhq.selenium:selenium-java:4.17.0',
+            'org.seleniumhq.selenium:selenium-java:4.19.1',
             'com.h2database:h2:2.2.224'
     )
 
