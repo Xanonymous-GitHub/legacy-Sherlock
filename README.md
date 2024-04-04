@@ -12,8 +12,8 @@ User guide can be found at: https://github.com/DCS-Sherlock/Sherlock/wiki
 
 ## Requirements
 
-- JDK 17
-- Gradle 7.6.4
+- JDK 21
+- Gradle 8.7
 
 ## IDEA support
 
