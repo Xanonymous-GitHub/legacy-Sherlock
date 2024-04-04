@@ -1,6 +1,7 @@
+import org.apache.tools.ant.filters.ReplaceTokens
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.apache.tools.ant.filters.ReplaceTokens
+
 import java.util.regex.Matcher
 
 buildscript {
@@ -25,6 +26,7 @@ plugins {
     id "org.springframework.boot" version "$spring_boot_version"
     id "io.spring.dependency-management" version "1.1.4"
     id "org.ajoberstar.grgit" version "3.0.0"
+    id "io.freefair.sass-base" version "8.6"
 }
 
 repositories {
@@ -35,12 +37,17 @@ repositories {
     }
 }
 
+group = "uk.ac.warwick.dcs.sherlock"
+version = "release"
+description = """Sherlock"""
+sourceSets.main.java.srcDirs = ["$buildDir/tmp/src/main/java", "$buildDir/tmp/src/main/antlr"]
+
 apply plugin: 'kotlin'
 apply plugin: 'project-report'
 
 dependencies {
     antlr "org.antlr:antlr4:4.13.1"
-    implementation (
+    implementation(
             "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
             "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
             "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
@@ -112,40 +119,32 @@ idea {
         sourceDirs += file("src/main/java")
         sourceDirs += file("src/main/antlr")
 
-        testSourceDirs = new LinkedHashSet<File>()
-        testSourceDirs += file("src/test/java")
-        testSourceDirs += file("src/webTest/java")
-
         resourceDirs += file("src/main/resources")
 
         //generatedSourceDirs - fix for Idea 2018.3
         sourceDirs += file("${buildDir}/tmp/src/main/antlr")
-
         excludeDirs += file("${buildDir}/tmp/src/main/java")
         excludeDirs += file("${buildDir}/tmp/src/test/java")
     }
 }
 
-group = "uk.ac.warwick.dcs.sherlock"
-version = "release"
-
 if (grgit != null) {
-    project.ext.lastTag = grgit.tag.list().findAll { (it.name ==~ /([0-9]+).([0-9]+)$/).find() }.sort { -it.commit.time }.sort { -TagSupport.tagOrder(/([0-9]+).([0-9]+)$/, it.name) }.collect { it.name }[0]
+    project.ext.lastTag = grgit.tag.list().findAll {
+        (it.name ==~ /([0-9]+).([0-9]+)$/).find()
+    }.sort {
+        -it.commit.dateTime.toEpochSecond()
+    }.sort {
+        -TagSupport.tagOrder(/([0-9]+).([0-9]+)$/, it.name)
+    }.collect {
+        it.name
+    }[0]
+
     project.ext.latest = grgit.tag.list().find { it.name == project.lastTag.toString() }.collect { it }[0]
     if (project.ext.latest != null && project.ext.latest.name != null) {
         project.ext.count = grgit.log { range(project.ext.latest.name, "HEAD") }.size()
         project.version = "${project.ext.lastTag}.${project.count}"
     }
 }
-
-if (System.env.TRAVIS == "true") {
-    println "Building on travis"
-    build.dependsOn javadoc
-    new File("version.txt").text = """build/${project.version}"""
-}
-
-
-description = """Sherlock"""
 
 tasks.register('printVersion') {
     println project.name + '-' + project.version
@@ -166,7 +165,7 @@ tasks.register("generateSources", Copy) {
     into "$buildDir/tmp/src/main/java"
     filter(ReplaceTokens, tokens: [VERSION: project.version.toString()])
 }
-sourceSets.main.java.srcDirs = ["$buildDir/tmp/src/main/java", "$buildDir/tmp/src/main/antlr"]
+
 compileJava.dependsOn generateSources
 
 tasks.register("generateTestSources", Copy) {
@@ -181,58 +180,60 @@ tasks.register("deps", Copy) {
     into "$buildDir/out/lib"
 }
 
-jar {
-    from sourceSets.main.output
-    include "uk/ac/warwick/dcs/sherlock/api/**"
-    include "uk/ac/warwick/dcs/sherlock/module/model/base/**"
-
-    enabled = true //enable to build a standard jar
-    destinationDir = file("$buildDir/out")
-    classifier = "dev"
-    manifest {
-        attributes(
-                "Implementation-Version": version,
-        )
-    }
-    delete fileTree("$buildDir/out") {
-        include "*-dev.jar"
-        exclude jar.archiveName
-        exclude jar.archivePath.getName()
-    }
-}
-
 bootJar {
     // dependsOn sassCompile
-    destinationDir = file("$buildDir/out")
+    getDestinationDirectory().set(file("$buildDir/out"))
     setMainClass("uk.ac.warwick.dcs.sherlock.launch.SherlockClient")
     manifest {
         attributes(
-                "Implementation-Version": version
+                "Implementation-Version": archiveVersion
         )
     }
     delete fileTree("$buildDir/out") {
         include "*.jar"
-        exclude bootJar.archiveName
-        exclude jar.archivePath.getName()
+        exclude bootJar.archiveFileName.toString()
+        exclude jar.archiveFile.get().getAsFile().getName()
         exclude "*-dev.jar"
     }
 }
-jar.dependsOn bootJar
+
+jar {
+    dependsOn(tasks.bootJar)
+
+    from sourceSets.main.output
+    include "uk/ac/warwick/dcs/sherlock/api/**"
+    include "uk/ac/warwick/dcs/sherlock/module/model/base/**"
+
+    enabled = true
+    getDestinationDirectory().set(file("$buildDir/out"))
+    archiveClassifier.set("dev")
+    manifest {
+        attributes(
+                "Implementation-Version": archiveVersion,
+        )
+    }
+    delete fileTree("$buildDir/out") {
+        include "*-dev.jar"
+        exclude jar.archiveFileName.toString()
+        exclude jar.archiveFile.get().getAsFile().getName()
+    }
+}
 
 bootWar {
-    destinationDir = file("$buildDir/out")
+    getDestinationDirectory().set(file("$buildDir/out"))
     setMainClass("uk.ac.warwick.dcs.sherlock.launch.SherlockServer")
     manifest {
         attributes(
-                "Implementation-Version": version
+                "Implementation-Version": archiveVersion
         )
     }
     delete fileTree("$buildDir/out") {
         include "*.war"
-        exclude bootJar.archiveName
-        exclude war.archivePath.getName()
+        exclude bootJar.archiveFileName.toString()
+        exclude war.archiveFile.get().getAsFile().getName()
     }
 }
+
 war.dependsOn bootWar
 assemble.dependsOn jar
 
