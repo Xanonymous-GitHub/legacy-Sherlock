@@ -32,6 +32,6 @@ open class Template {
     var account: Account? = null
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "template", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "template", cascade = [CascadeType.ALL])
     var detectors: MutableSet<TDetector> = mutableSetOf()
 }

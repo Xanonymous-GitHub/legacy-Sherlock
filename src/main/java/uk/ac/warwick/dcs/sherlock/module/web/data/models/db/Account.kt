@@ -27,14 +27,14 @@ open class Account(
     var id: Long = 0
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE], mappedBy = "account")
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], mappedBy = "account")
     var roles: MutableSet<Role> = mutableSetOf()
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
     var workspaces: MutableSet<Workspace> = mutableSetOf()
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.REMOVE])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
     var templates: MutableSet<Template> = mutableSetOf()
 }
