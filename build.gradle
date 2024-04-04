@@ -26,7 +26,6 @@ plugins {
     id "org.springframework.boot" version "$spring_boot_version"
     id "io.spring.dependency-management" version "1.1.4"
     id "org.ajoberstar.grgit" version "3.0.0"
-    id "io.freefair.sass-base" version "8.6"
 }
 
 repositories {
@@ -37,10 +36,11 @@ repositories {
     }
 }
 
+final String buildLocation = getLayout().getBuildDirectory().get()
 group = "uk.ac.warwick.dcs.sherlock"
 version = "release"
 description = """Sherlock"""
-sourceSets.main.java.srcDirs = ["$buildDir/tmp/src/main/java", "$buildDir/tmp/src/main/antlr"]
+sourceSets.main.java.srcDirs = ["$buildLocation/tmp/src/main/java", "$buildLocation/tmp/src/main/antlr"]
 
 apply plugin: 'kotlin'
 apply plugin: 'project-report'
@@ -49,6 +49,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
+
 dependencies {
     antlr "org.antlr:antlr4:4.13.1"
     implementation(
@@ -126,9 +127,9 @@ idea {
         resourceDirs += file("src/main/resources")
 
         //generatedSourceDirs - fix for Idea 2018.3
-        sourceDirs += file("${buildDir}/tmp/src/main/antlr")
-        excludeDirs += file("${buildDir}/tmp/src/main/java")
-        excludeDirs += file("${buildDir}/tmp/src/test/java")
+        sourceDirs += file("${buildLocation}/tmp/src/main/antlr")
+        excludeDirs += file("${buildLocation}/tmp/src/main/java")
+        excludeDirs += file("${buildLocation}/tmp/src/test/java")
     }
 }
 
@@ -141,7 +142,7 @@ if (grgit != null) {
         -TagSupport.tagOrder(/([0-9]+).([0-9]+)$/, it.name)
     }.collect {
         it.name
-    }[0]
+    }.first()
 
     project.ext.latest = grgit.tag.list().find { it.name == project.lastTag.toString() }.collect { it }[0]
     if (project.ext.latest != null && project.ext.latest.name != null) {
@@ -160,13 +161,13 @@ javadoc {
 }
 
 generateGrammarSource {
-    outputDirectory = file("${buildDir}/tmp/src/main/antlr/uk/ac/warwick/dcs/sherlock/module/model/base/lang")
+    outputDirectory = file("${buildLocation}/tmp/src/main/antlr/uk/ac/warwick/dcs/sherlock/module/model/base/lang")
 }
 
 tasks.register("generateSources", Copy) {
     from("src/main/java")
     exclude "**/sherlock/deprecated/**"
-    into "$buildDir/tmp/src/main/java"
+    into "$buildLocation/tmp/src/main/java"
     filter(ReplaceTokens, tokens: [VERSION: project.version.toString()])
 }
 
@@ -175,25 +176,24 @@ compileJava.dependsOn generateSources
 tasks.register("generateTestSources", Copy) {
     from("src/test/java")
     exclude "**/sherlock/deprecated/**"
-    into "$buildDir/tmp/src/test/java"
+    into "$buildLocation/tmp/src/test/java"
 }
-sourceSets.test.java.srcDirs = ["$buildDir/tmp/src/test/java"]
+sourceSets.test.java.srcDirs = ["$buildLocation/tmp/src/test/java"]
 
 tasks.register("deps", Copy) {
     from configurations.runtime
-    into "$buildDir/out/lib"
+    into "$buildLocation/out/lib"
 }
 
 bootJar {
-    // dependsOn sassCompile
-    getDestinationDirectory().set(file("$buildDir/out"))
+    getDestinationDirectory().set(file("$buildLocation/out"))
     setMainClass("uk.ac.warwick.dcs.sherlock.launch.SherlockClient")
     manifest {
         attributes(
                 "Implementation-Version": archiveVersion
         )
     }
-    delete fileTree("$buildDir/out") {
+    delete fileTree("$buildLocation/out") {
         include "*.jar"
         exclude bootJar.archiveFileName.toString()
         exclude jar.archiveFile.get().getAsFile().getName()
@@ -209,14 +209,14 @@ jar {
     include "uk/ac/warwick/dcs/sherlock/module/model/base/**"
 
     enabled = true
-    getDestinationDirectory().set(file("$buildDir/out"))
+    getDestinationDirectory().set(file("$buildLocation/out"))
     archiveClassifier.set("dev")
     manifest {
         attributes(
                 "Implementation-Version": archiveVersion,
         )
     }
-    delete fileTree("$buildDir/out") {
+    delete fileTree("$buildLocation/out") {
         include "*-dev.jar"
         exclude jar.archiveFileName.toString()
         exclude jar.archiveFile.get().getAsFile().getName()
@@ -224,14 +224,14 @@ jar {
 }
 
 bootWar {
-    getDestinationDirectory().set(file("$buildDir/out"))
+    getDestinationDirectory().set(file("$buildLocation/out"))
     setMainClass("uk.ac.warwick.dcs.sherlock.launch.SherlockServer")
     manifest {
         attributes(
                 "Implementation-Version": archiveVersion
         )
     }
-    delete fileTree("$buildDir/out") {
+    delete fileTree("$buildLocation/out") {
         include "*.war"
         exclude bootJar.archiveFileName.toString()
         exclude war.archiveFile.get().getAsFile().getName()
@@ -246,19 +246,9 @@ bootRun {
     jvmArgs = ["-Dspring.profiles.active=dev", "-Dspring.output.ansi.enabled=ALWAYS"]
 }
 
-tasks.register("branchSetup") {
-    if (grgit != null) {
-        ant.replaceregexp(match: '# Sherlock(.*)', replace: "# Sherlock  [![Build Status: ${grgit.branch.current().name}](https://travis-ci.org/DCS-Sherlock/Sherlock.svg?branch=${grgit.branch.current().name})](https://travis-ci.org/DCS-Sherlock/Sherlock?branch=${grgit.branch.current().name})", flags: 's', byline: true) {
-            fileset(dir: project.projectDir, includes: 'README.md')
-        }
-    }
-}
-
 tasks.withType(KotlinCompile).configureEach {
     dependsOn(tasks.generateGrammarSource)
     dependsOn(tasks.generateSources)
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
     compilerOptions {
         jvmTarget = JvmTarget.JVM_21
     }
