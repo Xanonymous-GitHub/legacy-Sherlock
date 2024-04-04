@@ -3,7 +3,7 @@ package uk.ac.warwick.dcs.sherlock.engine;
 import org.apache.commons.io.FilenameUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Responsible for all classloading and reflection
@@ -67,7 +66,7 @@ public class AnnotationLoader {
                     e.printStackTrace();
                 }
                 return null;
-            }).collect(Collectors.toList()));
+            }).toList());
 
             //Load libs to
             File libs = new File(FilenameUtils.separatorsToSystem(modulesPath + "libs/"));
@@ -101,8 +100,12 @@ public class AnnotationLoader {
         ConfigurationBuilder config = new ConfigurationBuilder();
         config.addClassLoaders(SherlockEngine.classloader);
         config.setUrls(moduleURLS);
-        config.setScanners(new SubTypesScanner(), new TypeAnnotationsScanner(), new MethodAnnotationsScanner());
-        config.filterInputsBy(new FilterBuilder().include(".*class"));
+        config.setScanners(
+                Scanners.SubTypes,
+                Scanners.TypesAnnotated,
+                Scanners.MethodsAnnotated
+        );
+        config.filterInputsBy(new FilterBuilder().includePattern(".*class"));
         this.ref = new Reflections(config);
     }
 
