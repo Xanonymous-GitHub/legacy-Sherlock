@@ -1,13 +1,13 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.repositories
 
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.CrudRepository
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter
 
 /**
  * The database repository that stores the parameters for each detector
  */
-interface TParameterRepository : JpaRepository<TParameter?, Long?> {
+interface TParameterRepository : CrudRepository<TParameter?, Long?> {
     /**
      * Finds all the parameters that are linked to the supplied detector
      *

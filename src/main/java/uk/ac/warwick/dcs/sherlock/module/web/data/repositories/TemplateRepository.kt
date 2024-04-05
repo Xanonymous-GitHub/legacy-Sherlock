@@ -1,7 +1,7 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.repositories
 
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template
@@ -9,7 +9,7 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template
 /**
  * The database repository storing the job templates
  */
-interface TemplateRepository : JpaRepository<Template?, Long?> {
+interface TemplateRepository : CrudRepository<Template?, Long?> {
     /**
      * Finds the template with the id supplied only if it is
      * owned by the account supplied or is public
