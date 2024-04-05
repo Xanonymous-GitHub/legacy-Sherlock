@@ -152,6 +152,7 @@ class DetectorWrapper {
          */
         get() = detector!!.id
 
+    @Suppress("UNCHECKED_CAST")
     @get:Throws(DetectorNotFound::class)
     val engineDetector: Class<out IDetector<*>?>
         /**
