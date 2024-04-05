@@ -24,7 +24,7 @@ Thumbs.db
 
 # Gradle
 .gradle
-gradle.properties
+!gradle.properties
 !gradle-wrapper.jar
 src/generated
 

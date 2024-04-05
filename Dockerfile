@@ -7,7 +7,7 @@ FROM gradle:7-alpine AS build
 WORKDIR /app
 
 # Copy the Gradle configuration files
-COPY --chown=gradle:gradle build.gradle settings.gradle web-test.gradle gradle.properties gradlew /app/
+COPY --chown=gradle:gradle build.gradle.kts settings.gradle web-test.gradle gradle.properties gradlew /app/
 COPY --chown=gradle:gradle gradlew /app/gradlew
 
 # Load all necessary Gradle dependencies (for caching purposes)
