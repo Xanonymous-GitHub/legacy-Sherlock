@@ -70,13 +70,13 @@ class DetectorController {
         @ModelAttribute("detector") detectorWrapper: DetectorWrapper,
         model: Model
     ): String {
-        val result = parameterForm!!.validate(
+        val validatedResult = parameterForm!!.validate(
             result,
             detectorWrapper.engineParameters,
             detectorWrapper.enginePostProcessingParameters
         )
 
-        if (!result.hasErrors()) {
+        if (!validatedResult.hasErrors()) {
             detectorWrapper.updateParameters(parameterForm, tParameterRepository)
             model.addAttribute("success_msg", "templates.parameters.updated")
         }
