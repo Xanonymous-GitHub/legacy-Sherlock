@@ -100,7 +100,7 @@ public class WorkspaceWrapper {
         List<IWorkspace> iWorkspaces = SherlockEngine.storage.getWorkspaces(engineId);
 
         if (iWorkspaces.size() == 1) {
-            this.iWorkspace = iWorkspaces.get(0);
+            this.iWorkspace = iWorkspaces.getFirst();
         } else {
             throw new IWorkspaceNotFound("Unable to find workspace in engine.");
         }
@@ -235,14 +235,10 @@ public class WorkspaceWrapper {
      */
     public List<ITuple<ISubmission, ISubmission>> addSubmissions(SubmissionsForm submissionsForm) throws NoFilesUploaded, FileUploadFailed {
         int count = 0; //the number of submissions uploaded
-        List<ITuple<ISubmission, ISubmission>> collisions = new ArrayList();
-        boolean multiple = false;
+        List<ITuple<ISubmission, ISubmission>> collisions = new ArrayList<>();
+        boolean multiple = submissionsForm.getFiles().length == 1 && !submissionsForm.getSingle();
 
-        if(submissionsForm.getFiles().length == 1 && !submissionsForm.getSingle()) {
-            multiple = true;
-        }
-
-	    for(MultipartFile file : submissionsForm.getFiles()) {
+        for(MultipartFile file : submissionsForm.getFiles()) {
             if (file.getSize() > 0) {
                 try {
 	                collisions.addAll(SherlockEngine.storage.storeFile(this.getiWorkspace(), file.getOriginalFilename(), file.getBytes(), multiple));
@@ -294,7 +290,7 @@ public class WorkspaceWrapper {
      * @throws NoFilesUploaded if no files were uploaded
      */
     public long runTemplate(TemplateWrapper templateWrapper) throws TemplateContainsNoDetectors, ClassNotFoundException, ParameterNotFound, DetectorNotFound, NoFilesUploaded {
-		if (templateWrapper.getTemplate().detectors.isEmpty())
+		if (templateWrapper.template.detectors.isEmpty())
 		    throw new TemplateContainsNoDetectors("No detectors in chosen template.");
 
 		if (this.getFiles().isEmpty()) {
@@ -303,7 +299,7 @@ public class WorkspaceWrapper {
 
 		IJob job = this.iWorkspace.createJob();
 
-		for (TDetector td : templateWrapper.getTemplate().detectors) {
+		for (TDetector td : templateWrapper.template.detectors) {
             Class<? extends IDetector> detector = (Class<? extends IDetector>) Class.forName(td.name, true, SherlockEngine.classloader);
             job.addDetector(detector);
 		}
