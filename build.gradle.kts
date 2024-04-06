@@ -99,44 +99,9 @@ configurations {
     }
 }
 
-//idea {
-//    module {
-//        contentRoot = file("$projectDir")
-//
-//        sourceDirs.clear()
-//        sourceDirs.add(file("src/main/java"))
-//        sourceDirs.add(file("src/main/antlr"))
-//
-//        resourceDirs.add(file("src/main/resources"))
-//
-//        //generatedSourceDirs - fix for Idea 2018.3
-//        sourceDirs.add(file("${buildLocation}/build-tmp/src/main/antlr"))
-//        excludeDirs.add(file("${buildLocation}/build-tmp/src/main/java"))
-//        excludeDirs.add(file("${buildLocation}/build-tmp/src/test/java"))
-//    }
-//}
-
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs(
-//                "$buildLocation/build-tmp/src/main/java",
-//                "$buildLocation/build-tmp/src/main/antlr"
-//            )
-//        }
-//    }
-//
-//    test {
-//        java {
-//            srcDirs("$buildLocation/build-tmp/src/test/java")
-//        }
-//    }
-//}
-
 tasks {
     withType<KotlinJvmCompile>().configureEach {
         dependsOn(generateGrammarSource)
-//        dependsOn("generateSources")
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
         }
@@ -152,19 +117,6 @@ tasks {
         }
     }
 
-//    register("generateSources", Copy::class) {
-//        from("src/main/java")
-//        exclude("**/sherlock/deprecated/**")
-//        into("$buildLocation/build-tmp/src/main/java")
-////        filter<ReplaceTokens>("VERSION" to project.version)
-//    }
-//
-//    register("generateTestSources", Copy::class) {
-//        from("src/test/java")
-//        exclude("**/sherlock/deprecated/**")
-//        into("$buildLocation/build-tmp/src/test/java")
-//    }
-
     register("deps", Copy::class) {
         from(configurations.runtimeOnly)
         into("$buildLocation/out/lib")
@@ -174,10 +126,6 @@ tasks {
         source = fileTree("src/main/java")
         setDestinationDir(file("${projectDir}/docs"))
     }
-
-//    generateGrammarSource {
-//        outputDirectory = file("${buildLocation}/build-tmp/src/main/antlr/uk/ac/warwick/dcs/sherlock/module/model/base/lang")
-//    }
 
     bootJar {
         destinationDirectory.set(file("$buildLocation/out"))
