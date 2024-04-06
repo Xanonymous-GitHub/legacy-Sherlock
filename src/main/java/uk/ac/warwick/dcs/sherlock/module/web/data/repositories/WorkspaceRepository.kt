@@ -1,12 +1,14 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.repositories
 
 import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Workspace
 
 /**
  * The database repository storing all workspaces
  */
+@Repository
 interface WorkspaceRepository : CrudRepository<Workspace?, Long?> {
     /**
      * Finds all workspaces owned by the supplied account

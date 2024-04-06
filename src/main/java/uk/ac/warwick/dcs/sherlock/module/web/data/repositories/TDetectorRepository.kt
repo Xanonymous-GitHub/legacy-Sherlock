@@ -1,12 +1,14 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.repositories
 
 import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template
 
 /**
  * The database repository storing the detectors for each job template
  */
+@Repository
 interface TDetectorRepository : CrudRepository<TDetector?, Long?> {
     /**
      * Finds the detector with the supplied name that is linked to the

@@ -42,9 +42,8 @@ java {
 }
 
 dependencies {
-    kotlin("kotlin-stdlib", version = kotlinVersion)
-    kotlin("kotlin-reflect", version = kotlinVersion)
-
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-mail:$springBootVersion")
