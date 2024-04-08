@@ -9,7 +9,7 @@ plugins {
     id("org.springframework.boot")
 
     id("io.spring.dependency-management") version "1.1.4"
-    id("org.ajoberstar.grgit") version "3.0.0"
+    id("org.ajoberstar.grgit") version "5.2.2"
     id("antlr")
     id("war")
     id("idea")
