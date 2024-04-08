@@ -72,7 +72,7 @@ dependencies {
     implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("javax.xml.bind:jaxb-api")
-    implementation("org.json:json:20240205")
+    implementation("org.json:json:20240303")
     implementation("org.seleniumhq.selenium:selenium-java:4.19.1")
     implementation("com.h2database:h2:2.2.224")
 
