@@ -57,7 +57,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:10.8.1")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0-M1")
     implementation("org.antlr:antlr4-runtime:4.13.1")
-    implementation("com.google.guava:guava:33.0.0-jre")
+    implementation("com.google.guava:guava:33.1.0-jre")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-compress:1.26.1")
