@@ -9,7 +9,7 @@ plugins {
     id("org.springframework.boot")
 
     id("io.spring.dependency-management") version "1.1.4"
-    id("org.ajoberstar.grgit") version "3.0.0"
+    id("org.ajoberstar.grgit") version "5.2.2"
     id("antlr")
     id("war")
     id("idea")
@@ -54,14 +54,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
 
-    implementation("org.flywaydb:flyway-core:10.8.1")
+    implementation("org.flywaydb:flyway-core:10.11.0")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0-M1")
     implementation("org.antlr:antlr4-runtime:4.13.1")
-    implementation("com.google.guava:guava:33.0.0-jre")
+    implementation("com.google.guava:guava:33.1.0-jre")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-compress:1.26.1")
-    implementation("commons-io:commons-io:2.15.1")
+    implementation("commons-io:commons-io:2.16.1")
     implementation("commons-codec:commons-codec:1.16.1")
     implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.2")
     implementation("javax.transaction:jta:1.1")
@@ -72,7 +72,7 @@ dependencies {
     implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("javax.xml.bind:jaxb-api")
-    implementation("org.json:json:20240205")
+    implementation("org.json:json:20240303")
     implementation("org.seleniumhq.selenium:selenium-java:4.19.1")
     implementation("com.h2database:h2:2.2.224")
 
