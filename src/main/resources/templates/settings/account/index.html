@@ -18,14 +18,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h5 th:text="#{account.name.title}"></h5>
-                                <div th:replace="fragments/js-area :: js-area(areaid='name-parent', arealink=@{/account/name})"></div>
+                                <div th:replace="~{fragments/js-area :: js-area(areaid='name-parent', arealink=@{/account/name})}"></div>
 
                                 <h5 th:text="#{account.email.title}"></h5>
-                                <div th:replace="fragments/js-area :: js-area(areaid='email-parent', arealink=@{/account/email})"></div>
+                                <div th:replace="~{fragments/js-area :: js-area(areaid='email-parent', arealink=@{/account/email})}"></div>
                             </div>
                             <div class="col-md-6">
                                 <h5 th:text="#{account.password.title}"></h5>
-                                <div th:replace="fragments/js-area :: js-area(areaid='password-parent', arealink=@{/account/password})"></div>
+                                <div th:replace="~{fragments/js-area :: js-area(areaid='password-parent', arealink=@{/account/password})}"></div>
                             </div>
                         </div>
                     </div>

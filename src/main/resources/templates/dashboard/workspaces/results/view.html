@@ -92,7 +92,7 @@
                                         <span th:text="#{workspaces.results.none}"></span>
                                     </th:block>
                                     <th:block th:unless="${results.getResultsMap().empty}">
-                                        <div th:replace="fragments/js-area :: js-area(areaid='graph-parent', arealink=@{/dashboard/workspaces/manage/{id}/results/{job_id}/graph(id=${workspace.getId()},job_id=${results.getPersistentId()})})"></div>
+                                        <div th:replace="~{fragments/js-area :: js-area(areaid='graph-parent', arealink=@{/dashboard/workspaces/manage/{id}/results/{job_id}/graph(id=${workspace.getId()},job_id=${results.getPersistentId()})})}"></div>
                                     </th:block>
                                 </div>
                             </div>

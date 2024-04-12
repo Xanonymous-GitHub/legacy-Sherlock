@@ -14,7 +14,7 @@
 
 <body>
 
-<div th:replace="fragments/header :: header" th:with="page=${page}"></div>
+<div th:replace="~{fragments/header :: header}" th:with="page=${page}"></div>
 
 <div class="d-none">
     <div class="container" id="javascript-error-clone">
@@ -43,7 +43,7 @@
 
 <main layout:fragment="content"></main>
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <div id="modal-container">
     <div class="modal fade" id="modal" tabindex="-1" role="dialog">

@@ -43,7 +43,7 @@
         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#detector-collapse" th:text="#{workspaces.analysis.show_details}"></button>
 
         <div class="collapse" id="detector-collapse">
-            <div th:replace="fragments/js-area :: js-area(areaid='detector-list', arealink=@{/dashboard/templates/details/{id}(id=${templates.get(0).getTemplate().getId()})})"></div>
+            <div th:replace="~{fragments/js-area :: js-area(areaid='detector-list', arealink=@{/dashboard/templates/details/{id}(id=${templates.get(0).getTemplate().getId()})})}"></div>
         </div>
 
         <div class="form-row">

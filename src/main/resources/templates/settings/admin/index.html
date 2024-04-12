@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <h5 th:text="#{admin.accounts.title}"></h5>
-                    <div th:replace="fragments/js-area :: js-area(areaid='list-parent', arealink=@{/admin/list})"></div>
+                    <div th:replace="~{fragments/js-area :: js-area(areaid='list-parent', arealink=@{/admin/list})}"></div>
                 </div>
             </div>
         </div>

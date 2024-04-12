@@ -12,12 +12,12 @@
                     <h4 class="float-left mt-1" th:text="#{workspaces.title}"></h4>
                     <div class="btn-toolbar float-right">
                         <div class="btn-group mr-3remove">
-                            <a class="btn btn-primary" data-js='modal' th:href="@{/dashboard/workspaces/add}" th:text="#{link.add_new}"></a>
+                            <a class="btn btn-primary" data-js="modal" th:href="@{/dashboard/workspaces/add}" th:text="#{link.add_new}"></a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div th:replace="fragments/js-area :: js-area(areaid='list-parent', arealink=@{/dashboard/workspaces/list})"></div>
+                    <div th:replace="~{fragments/js-area :: js-area(areaid='list-parent', arealink=@{/dashboard/workspaces/list})}"></div>
                 </div>
             </div>
         </div>
