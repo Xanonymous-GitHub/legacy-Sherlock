@@ -1,5 +1,10 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" layout:decorate="~{layouts/blank}">
+<!doctype html>
+<html
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layouts/blank}"
+        lang="en"
+>
 <head>
     <title th:text="#{login.title}"></title>
 </head>
@@ -8,7 +13,7 @@
     <form class="form-login text-center" th:action="@{/login}" method="post" data-js="autoSubmit">
         <div class="logo">
             <a class="" th:href="@{/}">
-                <img th:src="@{/img/logo-100.png}">
+                <img th:src="@{/img/logo-100.png}" />
             </a>
         </div>
         <h1 class="h4 mb-4 text-muted" th:text="#{login.title}"></h1>
@@ -20,12 +25,13 @@
             <div class="alert alert-info"><span th:text="#{error.logged_out}"></span></div>
         </div>
 
-        <input type="hidden" id="username" name="username" class="form-control" th:value="${local_username}">
-        <input type="hidden" id="password" name="password" class="form-control" th:value="${local_password}">
-        <input type="checkbox" id="remember-me" name="remember-me" class="d-none" checked="checked">
+        <input type="hidden" id="username" name="username" class="form-control" th:value="${local_username}" />
+        <input type="hidden" id="password" name="password" class="form-control" th:value="${local_password}" />
+        <input type="checkbox" id="remember-me" name="remember-me" class="d-none" checked="checked" />
 
         <div style="width: 400px">
-            <span th:text="#{login.local.start}"></span><button class="btn btn-link" type="submit" th:text="#{login.local.link}"></button><span th:text="#{login.local.end}"></span>
+            <span th:text="#{login.local.start}"></span><button class="btn btn-link" type="submit" th:text="#{login.local.link}"></button
+        ><span th:text="#{login.local.end}"></span>
         </div>
     </form>
 </main>

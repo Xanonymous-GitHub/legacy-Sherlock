@@ -1,5 +1,11 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/default}" th:with="page='admin'">
+<!doctype html>
+<html
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layouts/default}"
+        th:with="page='admin'"
+        lang="en"
+>
 <head>
     <title th:text="#{admin.title}"></title>
 </head>
@@ -12,7 +18,7 @@
                     <h4 class="float-left mt-1" th:text="#{admin.title}"></h4>
                     <div class="btn-toolbar float-right">
                         <div class="btn-group">
-                            <a class="btn btn-primary" data-js='modal' th:href="@{/admin/add}" th:text="#{link.add_new}"></a>
+                            <a class="btn btn-primary" data-js="modal" th:href="@{/admin/add}" th:text="#{link.add_new}"></a>
                         </div>
                     </div>
                 </div>

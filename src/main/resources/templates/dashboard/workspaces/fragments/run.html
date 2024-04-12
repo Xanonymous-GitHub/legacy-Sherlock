@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title></title>
 </head>
 <body>
-
-<form th:action="@{/dashboard/workspaces/manage/{id}/run(id=${workspace.getId()})}" data-js='form' data-js-target="#run-parent" method="post">
+<form th:action="@{/dashboard/workspaces/manage/{id}/run(id=${workspace.getId()})}" data-js="form" data-js-target="#run-parent" method="post">
     <div th:if="${templates.empty}">
         <h6 class="mb-0">
             <span th:text="#{workspaces.analysis.no_templates}"></span>
@@ -25,25 +24,44 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 <!--<label for="template_id" th:text="#{variable.template}"></label>-->
-                <select class="form-control" id="template_id" name="template_id" data-js="select" data-js-target="#detector-list" th:data-js-href="@{/dashboard/templates/details/}">
-                    <option th:if="${template.isOwner()}"
+                <select
+                        class="form-control"
+                        id="template_id"
+                        name="template_id"
+                        data-js="select"
+                        data-js-target="#detector-list"
+                        th:data-js-href="@{/dashboard/templates/details/}"
+                >
+                    <option
+                            th:if="${template.isOwner()}"
                             th:each="template : ${templates}"
                             th:value="${template.getTemplate().getId()}"
-                            th:text="${template.getTemplate().getName()}">
+                            th:text="${template.getTemplate().getName()}"
+                    >
                     </option>
-                    <option th:unless="${template.isOwner()}"
+                    <option
+                            th:unless="${template.isOwner()}"
                             th:each="template : ${templates}"
                             th:value="${template.getTemplate().getId()}"
-                            th:text="${template.getTemplate().getName() + ' (' + template.getOwnerName()} + ')'">
+                            th:text="${template.getTemplate().getName() + ' (' + template.getOwnerName()} + ')'"
+                    >
                     </option>
                 </select>
             </div>
         </div>
 
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#detector-collapse" th:text="#{workspaces.analysis.show_details}"></button>
+        <button
+                class="btn btn-link"
+                type="button"
+                data-toggle="collapse"
+                data-target="#detector-collapse"
+                th:text="#{workspaces.analysis.show_details}"
+        ></button>
 
         <div class="collapse" id="detector-collapse">
-            <div th:replace="~{fragments/js-area :: js-area(areaid='detector-list', arealink=@{/dashboard/templates/details/{id}(id=${templates.get(0).getTemplate().getId()})})}"></div>
+            <div
+                    th:replace="~{fragments/js-area :: js-area(areaid='detector-list', arealink=@{/dashboard/templates/details/{id}(id=${templates.get(0).getTemplate().getId()})})}"
+            ></div>
         </div>
 
         <div class="form-row">
@@ -53,6 +71,5 @@
         </div>
     </div>
 </form>
-
 </body>
 </html>

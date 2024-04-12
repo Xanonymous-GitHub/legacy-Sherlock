@@ -1,17 +1,30 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}" th:with="page='templates'">
+<!doctype html>
+<html
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+        layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
+        th:with="page='templates'"
+        lang="en"
+>
 <head>
     <title th:text="#{templates.add.title}"></title>
 </head>
 <body>
 <div id="add-parent" class="container" layout:fragment="content">
-
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" th:text="#{templates.add.title}"></h5>
             </div>
-            <form th:action="@{/dashboard/templates/add}" data-js='form' data-js-target="#add-parent" id="add-form" th:object="${templateForm}" method="post">
+            <form
+                    th:action="@{/dashboard/templates/add}"
+                    data-js="form"
+                    data-js-target="#add-parent"
+                    id="add-form"
+                    th:object="${templateForm}"
+                    method="post"
+            >
                 <div class="modal-body">
                     <div th:if="${#fields.hasAnyErrors()}">
                         <div class="alert alert-warning" role="alert" th:each="err : ${#fields.allErrors()}" th:text="${err}">...</div>
@@ -26,12 +39,15 @@
 
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label  th:for="*{language}" th:text="#{variable.language}"></label>
-                            <select class="form-control" th:field="*{language}" data-js="select" data-js-target="#detector-list" th:data-js-href="@{/dashboard/templates/detectors/}">
-                                <option th:each="language : ${languageList}"
-                                        th:value="${language}"
-                                        th:text="${language}">
-                                </option>
+                            <label th:for="*{language}" th:text="#{variable.language}"></label>
+                            <select
+                                    class="form-control"
+                                    th:field="*{language}"
+                                    data-js="select"
+                                    data-js-target="#detector-list"
+                                    th:data-js-href="@{/dashboard/templates/detectors/}"
+                            >
+                                <option th:each="language : ${languageList}" th:value="${language}" th:text="${language}"> </option>
                             </select>
                         </div>
                     </div>
@@ -47,15 +63,17 @@
                             <div class="form-group col-md-12">
                                 <th:block th:each="detector : ${detectorList}">
                                     <label class="checkbox-inline" th:for="${detector.getClassName()}">
-                                        <input type="checkbox" th:field="*{detectors}" th:value="${detector.getClassName()}" th:id="${detector.getClassName()}">
+                                        <input type="checkbox" th:field="*{detectors}" th:value="${detector.getClassName()}" th:id="${detector.getClassName()}" />
                                         <span th:text="${detector.getDisplayName()}"></span>
                                         <span
                                                 th:if="${detector.getDescription().length() > 0}"
                                                 th:text="#{tooltip}"
-                                                data-toggle="tooltip" data-placement="top"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
                                                 th:title="${detector.getDescription()}"
                                         ></span>
-                                    </label> <br />
+                                    </label>
+                                    <br />
                                 </th:block>
                                 <span th:if="${detectorList.empty}" th:text="#{templates.no_detectors}"></span>
                             </div>

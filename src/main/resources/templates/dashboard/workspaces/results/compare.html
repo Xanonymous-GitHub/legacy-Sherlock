@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/default}" th:with="page='workspaces'">
+<!doctype html>
+<html
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layouts/default}"
+        th:with="page='workspaces'"
+        lang="en"
+>
 <head>
     <title th:text="#{results.compare.title}"></title>
 </head>
 <body>
-
 <main role="main" class="ml-3 mr-3" id="comparison" layout:fragment="content">
     <script id="compare-data">
         function getMapJSON() {
@@ -27,17 +32,30 @@
                             <div class="col-lg-12">
                                 <h4 class="float-left mt-1">
                                     <span th:text="#{results.compare.title}"></span>
-                                    <a class="btn btn-sm btn-outline-primary" th:classappend="${printing ? '' : 'd-none'}" th:href="@{/dashboard/workspaces/manage/{id}/results/{job_id}/compare/{s1}/{s2}(id=${workspace.getId()},job_id=${results.getPersistentId()},s1=${submission1.getId()},s2=${submission2.getId()})}" th:text="#{error.return}"></a>
-                                    <a class="btn btn-sm btn-outline-primary" th:href="@{/dashboard/workspaces/manage/{id}/results/{job_id}(id=${workspace.getId()},job_id=${results.getPersistentId()})}" th:text="#{results.return}"></a>
+                                    <a
+                                            class="btn btn-sm btn-outline-primary"
+                                            th:classappend="${printing ? '' : 'd-none'}"
+                                            th:href="@{/dashboard/workspaces/manage/{id}/results/{job_id}/compare/{s1}/{s2}(id=${workspace.getId()},job_id=${results.getPersistentId()},s1=${submission1.getId()},s2=${submission2.getId()})}"
+                                            th:text="#{error.return}"
+                                    ></a>
+                                    <a
+                                            class="btn btn-sm btn-outline-primary"
+                                            th:href="@{/dashboard/workspaces/manage/{id}/results/{job_id}(id=${workspace.getId()},job_id=${results.getPersistentId()})}"
+                                            th:text="#{results.return}"
+                                    ></a>
                                 </h4>
                                 <div class="btn-toolbar float-right" th:classappend="${printing ? 'd-none' : ''}">
-                                    <a class="btn btn-primary" th:href="@{/dashboard/workspaces/manage/{id}/results/{job_id}/compare/{s1}/{s2}?print(id=${workspace.getId()},job_id=${results.getPersistentId()},s1=${submission1.getId()},s2=${submission2.getId()})}" th:text="#{link.print}"></a>
+                                    <a
+                                            class="btn btn-primary"
+                                            th:href="@{/dashboard/workspaces/manage/{id}/results/{job_id}/compare/{s1}/{s2}?print(id=${workspace.getId()},job_id=${results.getPersistentId()},s1=${submission1.getId()},s2=${submission2.getId()})}"
+                                            th:text="#{link.print}"
+                                    ></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body"  th:classappend="${printing ? 'd-none' : 'd-block d-lg-none d-xl-none'}">
+                <div class="card-body" th:classappend="${printing ? 'd-none' : 'd-block d-lg-none d-xl-none'}">
                     <div class="alert alert-danger mb-0">
                         <span th:text="#{results.too_small}"></span>
                     </div>
@@ -97,8 +115,18 @@
                                             (<span th:text="#{results.compare.score}"></span><span th:text="${match.getScore()}"></span>)
                                         </th>
                                         <td class="align-middle text-right">
-                                            <button class="btn btn-primary btn-sm" th:text="#{link.show}" data-js="match-show" th:data-js-target="${match.getId()}"></button>
-                                            <button class="btn btn-primary btn-sm d-none" th:text="#{link.hide}" data-js="match-hide" th:data-js-target="${match.getId()}"></button>
+                                            <button
+                                                    class="btn btn-primary btn-sm"
+                                                    th:text="#{link.show}"
+                                                    data-js="match-show"
+                                                    th:data-js-target="${match.getId()}"
+                                            ></button>
+                                            <button
+                                                    class="btn btn-primary btn-sm d-none"
+                                                    th:text="#{link.hide}"
+                                                    data-js="match-hide"
+                                                    th:data-js-target="${match.getId()}"
+                                            ></button>
                                         </td>
                                     </tr>
                                 </th:block>
@@ -180,17 +208,17 @@
 
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th>
-                                                <span th:text="#{results.print.table.reason}"></span>
-                                            </th>
-                                            <th>
-                                                <span th:text="#{results.print.table.score}"></span>
-                                            </th>
-                                            <th>
-                                                <span th:text="#{results.print.table.location}"></span>
-                                            </th>
-                                        </tr>
+                                    <tr>
+                                        <th>
+                                            <span th:text="#{results.print.table.reason}"></span>
+                                        </th>
+                                        <th>
+                                            <span th:text="#{results.print.table.score}"></span>
+                                        </th>
+                                        <th>
+                                            <span th:text="#{results.print.table.location}"></span>
+                                        </th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <th:block th:each="group : ${wrapper.getMatches()}">
@@ -200,23 +228,23 @@
                                             </td>
                                         </tr>
                                         <th:block th:each="match : ${group.value}">
-                                        <tr>
-                                            <td>
-                                                <span th:text="${match.getReason()}"></span>
-                                            </td>
-                                            <td>
-                                                <span th:text="${match.getScore()}"></span>
-                                            </td>
-                                            <td>
-                                                <th:block th:each="entry : ${match.getMap()}">
-                                                    <span th:text="#{results.match.file}"></span>
-                                                    <span th:text="${entry.key.getPersistentId()}"></span>
-                                                    <span th:text="#{results.match.lines}"></span>
-                                                    <span th:text="${match.getFileLines(entry.key)}"></span>
-                                                    <br />
-                                                </th:block>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <span th:text="${match.getReason()}"></span>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${match.getScore()}"></span>
+                                                </td>
+                                                <td>
+                                                    <th:block th:each="entry : ${match.getMap()}">
+                                                        <span th:text="#{results.match.file}"></span>
+                                                        <span th:text="${entry.key.getPersistentId()}"></span>
+                                                        <span th:text="#{results.match.lines}"></span>
+                                                        <span th:text="${match.getFileLines(entry.key)}"></span>
+                                                        <br />
+                                                    </th:block>
+                                                </td>
+                                            </tr>
                                         </th:block>
                                     </th:block>
                                     <tr th:if="${wrapper.getMatches().empty}">
@@ -251,10 +279,13 @@
 
                                                 <div th:id="'id-' + ${file.getPersistentId()}" class="collapse show d-print-block">
                                                     <div class="card-body">
-                                        <pre class="line-numbers" style="height: 800px"
-                                             th:data-file-id="${file.getPersistentId()}"
-                                             th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
-                                             th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}?print(id=${workspace.getId()},submission_id=${submission1.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"></pre>
+                                <pre
+                                        class="line-numbers"
+                                        style="height: 800px"
+                                        th:data-file-id="${file.getPersistentId()}"
+                                        th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
+                                        th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}?print(id=${workspace.getId()},submission_id=${submission1.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"
+                                ></pre>
                                                     </div>
                                                 </div>
                                             </div>
@@ -282,10 +313,13 @@
 
                                                 <div th:id="'id-' + ${file.getPersistentId()}" class="collapse show d-print-block">
                                                     <div class="card-body">
-                                        <pre class="line-numbers" style="height: 800px"
-                                             th:data-file-id="${file.getPersistentId()}"
-                                             th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
-                                             th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}?print(id=${workspace.getId()},submission_id=${submission2.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"></pre>
+                                <pre
+                                        class="line-numbers"
+                                        style="height: 800px"
+                                        th:data-file-id="${file.getPersistentId()}"
+                                        th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
+                                        th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}?print(id=${workspace.getId()},submission_id=${submission2.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"
+                                ></pre>
                                                     </div>
                                                 </div>
                                             </div>
@@ -315,10 +349,13 @@
 
                                                 <div th:id="'id-' + ${file.getPersistentId()}" class="collapse show d-print-block">
                                                     <div class="card-body">
-                                        <pre class="line-numbers" style="height: 800px"
-                                             th:data-file-id="${file.getPersistentId()}"
-                                             th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
-                                             th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}(id=${workspace.getId()},submission_id=${submission1.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"></pre>
+                                <pre
+                                        class="line-numbers"
+                                        style="height: 800px"
+                                        th:data-file-id="${file.getPersistentId()}"
+                                        th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
+                                        th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}(id=${workspace.getId()},submission_id=${submission1.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"
+                                ></pre>
                                                     </div>
                                                 </div>
                                             </div>
@@ -344,10 +381,13 @@
 
                                                 <div th:id="'id-' + ${file.getPersistentId()}" class="collapse show d-print-block">
                                                     <div class="card-body">
-                                        <pre class="line-numbers" style="height: 800px"
-                                             th:data-file-id="${file.getPersistentId()}"
-                                             th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
-                                             th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}(id=${workspace.getId()},submission_id=${submission2.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"></pre>
+                                <pre
+                                        class="line-numbers"
+                                        style="height: 800px"
+                                        th:data-file-id="${file.getPersistentId()}"
+                                        th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
+                                        th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}(id=${workspace.getId()},submission_id=${submission2.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"
+                                ></pre>
                                                     </div>
                                                 </div>
                                             </div>
@@ -362,6 +402,5 @@
         </div>
     </div>
 </main>
-
 </body>
 </html>

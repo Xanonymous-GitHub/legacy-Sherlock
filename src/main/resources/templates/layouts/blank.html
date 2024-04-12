@@ -1,20 +1,19 @@
-<!DOCTYPE HTML>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="img/ico" th:href="@{/img/icon.ico}" href="/img/icon.ico">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" type="img/ico" th:href="@{/img/icon.ico}" href="/img/icon.ico" />
 
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Sherlock</title>
 
-    <link th:href="@{/css/default.css}" href="/css/blank.css"  rel="stylesheet" type="text/css"  />
-    <link th:href="@{/css/blank.css}" href="/css/blank.css"  rel="stylesheet" type="text/css"  />
+    <link th:href="@{/css/default.css}" href="/css/blank.css" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/blank.css}" href="/css/blank.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-
 <main layout:fragment="content"></main>
 
 <script type="text/javascript" th:src="@{'/js/' + ${javascript}}"></script>

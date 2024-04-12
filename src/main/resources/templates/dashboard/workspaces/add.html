@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}" th:with="page='workspaces'">
+<!doctype html>
+<html
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
+        th:with="page='workspaces'"
+        lang="en"
+>
 <head>
     <title th:text="#{workspaces.add.title}"></title>
 </head>
 <body>
-
 <div id="add-parent" class="container" layout:fragment="content">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" th:text="#{workspaces.add.title}"></h5>
             </div>
-            <form th:action="@{/dashboard/workspaces/add}" data-js='form' data-js-target="#add-parent" th:object="${workspaceForm}" method="post">
+            <form th:action="@{/dashboard/workspaces/add}" data-js="form" data-js-target="#add-parent" th:object="${workspaceForm}" method="post">
                 <div class="modal-body">
                     <div th:if="${#fields.hasAnyErrors()}">
                         <div class="alert alert-warning" role="alert" th:each="err : ${#fields.allErrors()}" th:text="${err}">...</div>
@@ -26,12 +31,9 @@
 
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label  th:for="*{language}" th:text="#{variable.language}"></label>
+                            <label th:for="*{language}" th:text="#{variable.language}"></label>
                             <select class="form-control" th:field="*{language}">
-                                <option th:each="language : ${languageList}"
-                                        th:value="${language}"
-                                        th:text="${language}">
-                                </option>
+                                <option th:each="language : ${languageList}" th:value="${language}" th:text="${language}"> </option>
                             </select>
                         </div>
                     </div>
@@ -45,6 +47,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

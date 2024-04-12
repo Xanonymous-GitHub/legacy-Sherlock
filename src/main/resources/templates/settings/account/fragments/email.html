@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title></title>
 </head>
 <body>
-
-<form th:action="@{/account/email}" data-js='form' data-js-target="#email-parent" th:object="${accountEmailForm}" method="post">
+<form th:action="@{/account/email}" data-js="form" data-js-target="#email-parent" th:object="${accountEmailForm}" method="post">
     <div th:if="${#fields.hasAnyErrors()}">
         <div class="alert alert-warning" role="alert" th:each="err : ${#fields.allErrors()}" th:text="${err}">...</div>
     </div>
@@ -17,7 +16,7 @@
     <div class="form-row">
         <div class="form-group col-md-12">
             <label for="email" th:text="#{variable.email}"></label>
-            <input type="email" id="email" name="email" class="form-control" th:placeholder="#{variable.email}" th:value="*{email}">
+            <input type="email" id="email" name="email" class="form-control" th:placeholder="#{variable.email}" th:value="*{email}" />
         </div>
     </div>
 
@@ -33,8 +32,6 @@
             <button type="submit" class="btn btn-primary float-right" th:text="#{link.update}"></button>
         </div>
     </div>
-
 </form>
-
 </body>
 </html>

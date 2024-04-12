@@ -1,17 +1,27 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}" th:with="page='workspaces'">
+<!doctype html>
+<html
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
+        th:with="page='workspaces'"
+        lang="en"
+>
 <head>
     <title th:text="#{templates.delete.title}"></title>
 </head>
 <body>
-
 <div id="delete-parent" class="container" layout:fragment="content">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" th:text="#{templates.delete.title}"></h5>
             </div>
-            <form th:action="@{/dashboard/templates/{id}/delete(id=${template.getTemplate().getId()})}" data-js='form' data-js-target="#delete-parent" method="post">
+            <form
+                    th:action="@{/dashboard/templates/{id}/delete(id=${template.getTemplate().getId()})}"
+                    data-js="form"
+                    data-js-target="#delete-parent"
+                    method="post"
+            >
                 <div class="modal-body">
                     <div class="alert alert-danger" role="alert" th:text="#{templates.delete.warning}"></div>
                 </div>
@@ -24,6 +34,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

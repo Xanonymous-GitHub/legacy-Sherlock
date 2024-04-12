@@ -1,16 +1,17 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <title></title>
 </head>
 
 <body>
-    <div th:fragment="js-area">
-        <div th:id="${areaid}" data-js="area" th:data-js-href="${arealink}">
-            <noscript>
-                <div class="alert alert-danger"><span th:text="#{js.local}"></span></div>
-            </noscript>
-            <img src="/img/load.gif" class="mx-auto d-block" height="75px">
-        </div>
+<div th:fragment="js-area">
+    <div th:id="${areaid}" data-js="area" th:data-js-href="${arealink}">
+        <noscript>
+            <div class="alert alert-danger"><span th:text="#{js.local}"></span></div>
+        </noscript>
+        <img src="/img/load.gif" class="mx-auto d-block" height="75px" />
     </div>
+</div>
 </body>
 </html>
