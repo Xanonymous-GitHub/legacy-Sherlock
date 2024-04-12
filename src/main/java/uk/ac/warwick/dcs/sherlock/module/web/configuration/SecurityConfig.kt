@@ -93,9 +93,6 @@ class SecurityConfig(
         }
         if (environment.activeProfiles.contains("dev")) {
             http.let {
-                it.csrf { config ->
-                    config.disable()
-                }
                 it.headers { config ->
                     config.frameOptions { options -> options.disable() }
                 }
