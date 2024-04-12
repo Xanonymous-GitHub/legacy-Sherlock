@@ -17,6 +17,8 @@ jobs:
       contents: read
 
     strategy:
+      matrix:
+        os: [ubuntu-latest]
       fail-fast: false
 
     steps:
@@ -27,8 +29,12 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: java-kotlin
-        java-version: 21
         build-mode: none
+
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
