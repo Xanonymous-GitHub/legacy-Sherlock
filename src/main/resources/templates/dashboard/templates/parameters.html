@@ -61,7 +61,7 @@
                             </div>
                         </div>
                     </th:block>
-                    <th:block th:if="${parametersMap.empty}">
+                    <th:block th:if="${parametersMap.isEmpty()}">
                         <span th:text="#{templates.parameters.none}"></span>
                     </th:block>
 
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                     </th:block>
-                    <th:block th:if="${postprocessingMap.empty}">
+                    <th:block th:if="${postprocessingMap.isEmpty()}">
                         <span th:text="#{templates.parameters.none}"></span>
                     </th:block>
                 </div>

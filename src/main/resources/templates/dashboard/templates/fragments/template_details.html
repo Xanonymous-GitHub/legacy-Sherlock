@@ -25,7 +25,7 @@
                 </th>
             </tr>
         </th:block>
-        <tr th:if="${detector.getParametersList().empty}">
+        <tr th:if="${detector.getParametersList().isEmpty()}">
             <th>
                 <h6 class="mb-0 ml-3">
                     <span th:text="#{templates.detectors.default}"></span>
@@ -33,7 +33,7 @@
             </th>
         </tr>
     </th:block>
-    <tr th:if="${template.getDetectors().empty}">
+    <tr th:if="${template.getDetectors().isEmpty()}">
         <th>
             <h6 class="mb-0">
                 <span th:text="#{templates.detectors.none}"></span>

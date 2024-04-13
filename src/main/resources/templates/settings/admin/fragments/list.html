@@ -61,7 +61,7 @@
             </td>
         </tr>
     </th:block>
-    <tr th:if="${accounts.empty}">
+    <tr th:if="${accounts.isEmpty()}">
         <th>
             <h5 class="mb-0">
                 <span th:text="#{admin.accounts.none}"></span>

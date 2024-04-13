@@ -6,7 +6,7 @@
 <body>
 <div th:fragment="form-fragment">
     <form
-            th:action="@{/dashboard/templates/manage/{id}/details(id=${template.getTemplate().getId()})}"
+            th:action="@{/dashboard/templates/manage/{id}/details(id=${template.getTemplate().id})}"
             data-js="form"
             data-js-target="#details-parent"
             id="add-form"
@@ -82,7 +82,7 @@
                         </label>
                         <br />
                     </th:block>
-                    <span th:if="${detectorList.empty}" th:text="#{templates.no_detectors}"></span>
+                    <span th:if="${detectorList.isEmpty()}" th:text="#{templates.no_detectors}"></span>
                 </div>
             </div>
         </div>
