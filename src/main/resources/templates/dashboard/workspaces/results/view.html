@@ -126,10 +126,10 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <h4 th:text="#{results.score_distribution}"></h4>
-                                    <th:block th:if="${results.getResultsMap().isEmpty()}">
+                                    <th:block th:if="${results.getResultsMap().empty}">
                                         <span th:text="#{workspaces.results.none}"></span>
                                     </th:block>
-                                    <th:block th:unless="${results.getResultsMap().isEmpty()}">
+                                    <th:block th:unless="${results.getResultsMap().empty}">
                                         <div
                                                 th:replace="~{fragments/js-area :: js-area(areaid='graph-parent', arealink=@{/dashboard/workspaces/manage/{id}/results/{job_id}/graph(id=${workspace.getId()},job_id=${results.getPersistentId()})})}"
                                         ></div>
@@ -201,7 +201,7 @@
                                                 </td>
                                             </tr>
                                         </th:block>
-                                        <tr th:if="${results.getResultsMap().isEmpty()}">
+                                        <tr th:if="${results.getResultsMap().empty}">
                                             <th>
                                                 <h5 class="mb-0">
                                                     <span th:text="#{workspaces.results.none}"></span>

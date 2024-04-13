@@ -117,7 +117,7 @@ class TemplatesController {
         assert(tDetectorRepository != null)
 
         val templateWrapper = TemplateWrapper(templateForm, account.account, templateRepository, tDetectorRepository)
-        return "redirect:/dashboard/templates/manage/" + (templateWrapper.template.id)
+        return "redirect:/dashboard/templates/manage/" + (templateWrapper.template?.id ?: "")
     }
 
     /**

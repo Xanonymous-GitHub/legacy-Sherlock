@@ -6,7 +6,7 @@
 <body>
 <div th:fragment="form-fragment">
     <form
-            th:action="@{/dashboard/templates/manage/{id}/details(id=${templateWrapper.template.id})}"
+            th:action="@{/dashboard/templates/manage/{id}/details(id=${template.getTemplate().getId()})}"
             data-js="form"
             data-js-target="#details-parent"
             id="add-form"
@@ -28,7 +28,7 @@
                 <input
                         type="text"
                         class="form-control"
-                        th:disabled="${!template.isOwner}"
+                        th:disabled="${!template.isOwner()}"
                         id="name"
                         name="name"
                         th:placeholder="#{variable.name}"
@@ -42,7 +42,7 @@
                 <label th:for="*{language}" th:text="#{variable.language}"></label>
                 <select
                         class="form-control"
-                        th:disabled="${!template.isOwner}"
+                        th:disabled="${!template.isOwner()}"
                         th:field="*{language}"
                         data-js="select"
                         data-js-target="#detector-list"
@@ -66,7 +66,7 @@
                         <label class="checkbox-inline" th:for="${detector.getClassName()}">
                             <input
                                     type="checkbox"
-                                    th:disabled="${!template.isOwner}"
+                                    th:disabled="${!template.isOwner()}"
                                     th:field="*{detectors}"
                                     th:value="${detector.getClassName()}"
                                     th:id="${detector.getClassName()}"
@@ -82,7 +82,7 @@
                         </label>
                         <br />
                     </th:block>
-                    <span th:if="${detectorList.isEmpty()}" th:text="#{templates.no_detectors}"></span>
+                    <span th:if="${detectorList.empty}" th:text="#{templates.no_detectors}"></span>
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@
             <div class="form-row">
                 <div class="form-group col-md-12">
                     <label for="isPublic">
-                        <input type="checkbox" th:disabled="${!template.isOwner}" name="isPublic" id="isPublic" th:checked="*{isPublic}" />
+                        <input type="checkbox" th:disabled="${!template.isOwner()}" name="isPublic" id="isPublic" th:checked="*{isPublic}" />
                         <span th:text="#{variable.public_msg}"></span>
                     </label>
                 </div>
@@ -110,7 +110,7 @@
 
         <div class="form-row">
             <div class="form-group col-md-12">
-                <button th:if="${template.isOwner}" type="submit" id="update" class="btn btn-primary float-right" th:text="#{link.update}"></button>
+                <button th:if="${template.isOwner()}" type="submit" id="update" class="btn btn-primary float-right" th:text="#{link.update}"></button>
             </div>
         </div>
     </form>

@@ -140,7 +140,7 @@
                                     </tr>
                                 </th:block>
                             </th:block>
-                            <tr th:if="${wrapper.getMatches().isEmpty()}">
+                            <tr th:if="${wrapper.getMatches().empty}">
                                 <th>
                                     <h5 class="mb-0">
                                         <span th:text="#{results.report.no_matches}"></span>
@@ -271,7 +271,7 @@
                                                 </tr>
                                             </th:block>
                                         </th:block>
-                                        <tr th:if="${wrapper.getMatches().isEmpty()}">
+                                        <tr th:if="${wrapper.getMatches().empty}">
                                             <th colspan="3">
                                                 <h5 class="mb-0">
                                                     <span th:text="#{results.compare.no_matches}"></span>
