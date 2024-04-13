@@ -206,7 +206,7 @@ class TemplateController {
      *
      * @throws TemplateNotFound if the template was not found
      */
-    @ModelAttribute("templateWrapper")
+    @ModelAttribute("template")
     @Throws(TemplateNotFound::class)
     private fun getTemplateWrapper(
         @ModelAttribute("account") account: AccountWrapper,
@@ -214,7 +214,7 @@ class TemplateController {
         model: Model
     ): TemplateWrapper {
         val templateWrapper = TemplateWrapper(pathid, account.account, templateRepository)
-        model.addAttribute("templateWrapper", templateWrapper)
+        model.addAttribute("template", templateWrapper)
         return templateWrapper
     }
 }
