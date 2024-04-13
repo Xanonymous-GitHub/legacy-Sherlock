@@ -18,15 +18,15 @@
         <tr>
             <th class="align-middle">
                 <h5 class="mb-0">
-                    <span th:text="${acc.getUsername()}"></span>
+                    <span th:text="${acc.username}"></span>
                 </h5>
             </th>
             <td class="align-middle">
-                <span th:text="${acc.getEmail()}"></span>
+                <span th:text="${acc.email}"></span>
             </td>
             <td class="align-middle">
-                <th:block th:each="role : ${acc.getRoles()}">
-                    <span class="badge badge-info" th:text="${role.getName()}"></span>
+                <th:block th:each="role : ${acc.roles}">
+                    <span class="badge badge-info" th:text="${role.name}"></span>
                 </th:block>
             </td>
             <td class="align-middle text-right">
@@ -34,8 +34,8 @@
                     <a
                             class="btn btn-primary btn-sm"
                             data-js="modal"
-                            th:classappend="${account.getId() == acc.getId() ? 'disabled' : ''}"
-                            th:href="@{/admin/manage/{id}(id=${acc.getId()})}"
+                            th:classappend="${account.id == acc.id ? 'disabled' : ''}"
+                            th:href="@{/admin/manage/{id}(id=${acc.id})}"
                             th:text="#{link.manage}"
                     ></a>
                     <button
@@ -44,24 +44,24 @@
                             data-toggle="dropdown"
                             aria-haspopup="true"
                             aria-expanded="false"
-                            th:classappend="${account.getId() == acc.getId() ? 'disabled' : ''}"
+                            th:classappend="${account.id == acc.id ? 'disabled' : ''}"
                     >
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" th:if="${account.getId() == acc.getId() ? 'disabled' : ''}">
+                    <div class="dropdown-menu dropdown-menu-right" th:if="${account.id == acc.id ? 'disabled' : ''}">
                         <a
                                 class="dropdown-item change-password"
                                 data-js="modal"
-                                th:href="@{/admin/password/{id}(id=${acc.getId()})}"
+                                th:href="@{/admin/password/{id}(id=${acc.id})}"
                                 th:text="#{link.password}"
                         ></a>
-                        <a class="dropdown-item delete" data-js="modal" th:href="@{/admin/delete/{id}(id=${acc.getId()})}" th:text="#{link.delete}"></a>
+                        <a class="dropdown-item delete" data-js="modal" th:href="@{/admin/delete/{id}(id=${acc.id})}" th:text="#{link.delete}"></a>
                     </div>
                 </div>
             </td>
         </tr>
     </th:block>
-    <tr th:if="${accounts.empty}">
+    <tr th:if="${!accounts.iterator().hasNext()}">
         <th>
             <h5 class="mb-0">
                 <span th:text="#{admin.accounts.none}"></span>
