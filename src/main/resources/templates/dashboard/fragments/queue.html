@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title></title>
 </head>
@@ -54,7 +54,7 @@
             </td>
         </tr>
     </th:block>
-    <tr th:if="${jobs.isEmpty()}">
+    <tr th:if="${jobs.empty}">
         <th>
             <span th:text="#{dashboard.queue.none}"></span>
         </th>
