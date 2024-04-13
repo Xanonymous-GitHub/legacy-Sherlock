@@ -24,9 +24,9 @@
                             <div class="btn-group">
                                 <a
                                         class="btn btn-primary"
-                                        th:if="${template.isOwner()}"
+                                        th:if="${templateWrapper.isOwner}"
                                         data-js="modal"
-                                        th:href="@{/dashboard/templates/{id}/delete(id=${template.getTemplate().getId()})}"
+                                        th:href="@{/dashboard/templates/{id}/delete(id=${templateWrapper.template.id})}"
                                         th:text="#{link.delete}"
                                 ></a>
                             </div>
@@ -39,13 +39,13 @@
                             <div class="col-md-6">
                                 <h5 th:text="#{templates.details.title}"></h5>
                                 <div
-                                        th:replace="~{fragments/js-area :: js-area(areaid='details-parent', arealink=@{/dashboard/templates/manage/{id}/details(id=${template.getTemplate().getId()})})}"
+                                        th:replace="~{fragments/js-area :: js-area(areaid='details-parent', arealink=@{/dashboard/templates/manage/{id}/details(id=${templateWrapper.template.id})})}"
                                 ></div>
                             </div>
                             <div class="col-md-6">
                                 <h5 th:text="#{templates.detectors.title}"></h5>
                                 <div
-                                        th:replace="~{fragments/js-area :: js-area(areaid='detectors-parent', arealink=@{/dashboard/templates/manage/{id}/detectors(id=${template.getTemplate().getId()})})}"
+                                        th:replace="~{fragments/js-area :: js-area(areaid='detectors-parent', arealink=@{/dashboard/templates/manage/{id}/detectors(id=${templateWrapper.template.id})})}"
                                 ></div>
                             </div>
                         </div>

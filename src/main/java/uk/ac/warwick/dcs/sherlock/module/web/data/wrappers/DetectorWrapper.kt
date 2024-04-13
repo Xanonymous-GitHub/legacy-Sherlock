@@ -67,13 +67,17 @@ class DetectorWrapper {
 
         this.detector = optional?.get()
 
-        val templateWrapper = TemplateWrapper(detector!!.template, account)
+        val detectorTemplate = this.detector?.template
 
-        if (!templateWrapper.isOwner && templateWrapper.template?.isPublic == false) {
-            throw DetectorNotFound("Detector not found.")
+        if (detectorTemplate != null) {
+            val templateWrapper = TemplateWrapper(detectorTemplate, account)
+
+            if (!templateWrapper.isOwner && !templateWrapper.template.isPublic) {
+                throw DetectorNotFound("Detector not found.")
+            }
         }
 
-        this.isOwner = templateWrapper.isOwner
+        this.isOwner = detectorTemplate?.account == account
     }
 
     @get:Throws(DetectorNotFound::class)

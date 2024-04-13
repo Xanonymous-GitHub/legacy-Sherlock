@@ -18,35 +18,16 @@ import java.util.function.Consumer
  */
 class TemplateWrapper {
     /**
-     * Get the template
-     *
-     * @return the template
-     */
-    /**
-     * Set the template
-     *
-     * @param template the new template
-     */
-    /**
      * The job template entity
      */
     @JvmField
-    var template: Template?
+    val template: Template
 
-    /**
-     * Whether the template is owned by the current user
-     *
-     * @return the result
-     */
-    /**
-     * Update the isOwned property
-     *
-     * @param owner the new value
-     */
     /**
      * Whether the current user owns the template
      */
-    var isOwner: Boolean = false
+    @JvmField
+    val isOwner: Boolean
 
     /**
      * Initialise the wrapper using the form to create a new template
@@ -65,7 +46,7 @@ class TemplateWrapper {
         tDetectorRepository: TDetectorRepository?
     ) {
         this.template = Template()
-        template!!.account = account
+        template.account = account
         this.isOwner = true
         this.update(templateForm, templateRepository, tDetectorRepository)
     }
@@ -84,11 +65,11 @@ class TemplateWrapper {
         account: Account?,
         templateRepository: TemplateRepository?
     ) {
-        this.template = templateRepository?.findByIdAndPublic(id, account)
+        val foundTemplate = templateRepository?.findByIdAndPublic(id, account)
+            ?: throw TemplateNotFound("Template not found.")
 
-        if (this.template == null) throw TemplateNotFound("Template not found.")
-
-        if (template!!.account === account) this.isOwner = true
+        this.template = foundTemplate
+        this.isOwner = foundTemplate.account === account
     }
 
     /**
@@ -97,10 +78,9 @@ class TemplateWrapper {
      * @param template the template to manage
      * @param account the account of the current user
      */
-    constructor(template: Template?, account: Account?) {
+    constructor(template: Template, account: Account?) {
         this.template = template
-
-        if (this.template!!.account === account) this.isOwner = true
+        this.isOwner = template.account === account
     }
 
     val ownerName: String?
@@ -109,7 +89,7 @@ class TemplateWrapper {
          *
          * @return the name
          */
-        get() = template!!.account!!.username
+        get() = template.account!!.username
 
     val isPublic: Boolean
         /**
@@ -117,7 +97,7 @@ class TemplateWrapper {
          *
          * @return the result
          */
-        get() = template!!.isPublic
+        get() = template.isPublic
 
     val detectors: List<DetectorWrapper>
         /**
@@ -127,7 +107,7 @@ class TemplateWrapper {
          */
         get() {
             val wrapperList: MutableList<DetectorWrapper> = ArrayList()
-            template!!.detectors.forEach(Consumer { d: TDetector? ->
+            template.detectors.forEach(Consumer { d: TDetector? ->
                 wrapperList.add(
                     DetectorWrapper(
                         d,
@@ -155,19 +135,19 @@ class TemplateWrapper {
     ) {
         if (!this.isOwner) throw NotTemplateOwner("You are not the owner of this template.")
 
-        template!!.name = templateForm.getName()
-        template!!.language = templateForm.getLanguage()
-        template!!.isPublic = templateForm.isPublic()
-        templateRepository?.save(template!!)
+        template.name = templateForm.getName()
+        template.language = templateForm.getLanguage()
+        template.isPublic = templateForm.isPublic()
+        templateRepository?.save(template)
 
-        val activeDetectors = EngineDetectorWrapper.getDetectorNames(template!!.language)
+        val activeDetectors = EngineDetectorWrapper.getDetectorNames(template.language)
 
         val toRemove: MutableList<String?> = ArrayList()
 
         val toAdd: MutableList<String?> = ArrayList(templateForm.getDetectors())
-        template!!.detectors.forEach(Consumer { d: TDetector -> toAdd.remove(d.name) })
+        template.detectors.forEach(Consumer { d: TDetector -> toAdd.remove(d.name) })
 
-        template!!.detectors.forEach(Consumer { d: TDetector -> toRemove.add(d.name) })
+        template.detectors.forEach(Consumer { d: TDetector -> toRemove.add(d.name) })
         toRemove.removeAll(templateForm.getDetectors())
 
         for (add in toAdd) {
@@ -181,7 +161,7 @@ class TemplateWrapper {
         }
 
         val toCheck: MutableList<String?> = ArrayList(toAdd)
-        template!!.detectors.forEach(Consumer { d: TDetector -> toCheck.add(d.name) })
+        template.detectors.map { d: TDetector -> d.name }.forEach { toCheck.add(it) }
         toCheck.removeAll(toRemove)
 
         for (check in toCheck) {
@@ -211,12 +191,12 @@ class TemplateWrapper {
     ): Template {
         val template = Template()
         template.account = account?.account
-        template.language = this.template!!.language
+        template.language = this.template.language
         template.isPublic = false
-        template.name = this.template!!.name + " - Copy"
+        template.name = this.template.name + " - Copy"
         templateRepository?.save(template)
 
-        for (detector in this.template!!.detectors) {
+        for (detector in this.template.detectors) {
             val newDetector = TDetector(detector.name, template)
 
             tDetectorRepository?.save(newDetector)
@@ -247,7 +227,7 @@ class TemplateWrapper {
     fun delete(templateRepository: TemplateRepository?) {
         if (!this.isOwner) throw NotTemplateOwner("You are not the owner of this template.")
 
-        templateRepository?.delete(template!!)
+        templateRepository?.delete(template)
     }
 
     companion object {
@@ -260,10 +240,14 @@ class TemplateWrapper {
          * @return the list of templates
          */
         fun findByAccountAndPublic(account: Account, templateRepository: TemplateRepository?): List<TemplateWrapper> {
-            val wrapperList: MutableList<TemplateWrapper> = ArrayList()
+            val wrapperList = mutableListOf<TemplateWrapper>()
             val templateList = templateRepository?.findByAccountAndPublic(account)
-            templateList!!.forEach(Consumer { t: Template? -> wrapperList.add(TemplateWrapper(t, account)) })
-            return wrapperList
+            println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            println(templateList?.size)
+            println(templateList)
+            return templateList?.mapNotNull {
+                it?.let { TemplateWrapper(it, account) }
+            } ?: wrapperList
         }
 
         /**
@@ -281,10 +265,11 @@ class TemplateWrapper {
             templateRepository: TemplateRepository?,
             language: String?
         ): List<TemplateWrapper> {
-            val wrapperList: MutableList<TemplateWrapper> = ArrayList()
+            val wrapperList = mutableListOf<TemplateWrapper>()
             val templateList = templateRepository?.findByAccountAndPublicAndLanguage(account, language)
-            templateList!!.forEach(Consumer { t: Template? -> wrapperList.add(TemplateWrapper(t, account)) })
-            return wrapperList
+            return templateList?.mapNotNull {
+                it?.let { TemplateWrapper(it, account) }
+            } ?: wrapperList
         }
     }
 }

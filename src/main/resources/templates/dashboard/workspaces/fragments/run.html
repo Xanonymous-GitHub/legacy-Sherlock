@@ -5,7 +5,7 @@
 </head>
 <body>
 <form th:action="@{/dashboard/workspaces/manage/{id}/run(id=${workspace.getId()})}" data-js="form" data-js-target="#run-parent" method="post">
-    <div th:if="${templates.empty}">
+    <div th:if="${templates.isEmpty()}">
         <h6 class="mb-0">
             <span th:text="#{workspaces.analysis.no_templates}"></span>
         </h6>
@@ -20,7 +20,7 @@
         <div class="alert alert-warning"><span th:text="#{${warning_msg}}"></span></div>
     </div>
 
-    <div th:unless="${templates.empty}">
+    <div th:unless="${templates.isEmpty()}">
         <div class="form-row">
             <div class="form-group col-md-12">
                 <!--<label for="template_id" th:text="#{variable.template}"></label>-->
@@ -33,17 +33,17 @@
                         th:data-js-href="@{/dashboard/templates/details/}"
                 >
                     <option
-                            th:if="${template.isOwner()}"
-                            th:each="template : ${templates}"
-                            th:value="${template.getTemplate().getId()}"
-                            th:text="${template.getTemplate().getName()}"
+                            th:if="${templateWrapper.isOwner}"
+                            th:each="templateWrapper : ${templates}"
+                            th:value="${templateWrapper.template.id}"
+                            th:text="${templateWrapper.template.name}"
                     >
                     </option>
                     <option
-                            th:unless="${template.isOwner()}"
-                            th:each="template : ${templates}"
-                            th:value="${template.getTemplate().getId()}"
-                            th:text="${template.getTemplate().getName() + ' (' + template.getOwnerName()} + ')'"
+                            th:unless="${templateWrapper.isOwner}"
+                            th:each="templateWrapper : ${templates}"
+                            th:value="${templateWrapper.template.id}"
+                            th:text="${templateWrapper.template.name + ' (' + templateWrapper.getOwnerName()} + ')'"
                     >
                     </option>
                 </select>

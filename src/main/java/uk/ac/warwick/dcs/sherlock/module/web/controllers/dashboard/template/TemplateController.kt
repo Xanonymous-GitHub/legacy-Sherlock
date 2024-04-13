@@ -68,7 +68,7 @@ class TemplateController {
         if (!isAjax) throw NotAjaxRequest("/dashboard/templates/manage/$pathid")
 
         model.addAttribute("templateForm", TemplateForm(templateWrapper))
-        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.template?.language))
+        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.template.language))
         model.addAttribute("languageList", SherlockRegistry.getLanguages())
         return "dashboard/templates/fragments/details"
     }
@@ -106,7 +106,7 @@ class TemplateController {
         }
 
         model.addAttribute("templateForm", templateForm)
-        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.template?.language))
+        model.addAttribute("detectorList", EngineDetectorWrapper.getDetectors(templateWrapper.template.language))
         model.addAttribute("languageList", SherlockRegistry.getLanguages())
         return "dashboard/templates/fragments/details"
     }
