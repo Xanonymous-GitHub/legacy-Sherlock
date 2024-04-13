@@ -1,7 +1,7 @@
 <!doctype html>
 <html
         xmlns:layout="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
+        xmlns:th="https://www.thymeleaf.org"
         layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
         th:with="page='workspaces'"
         lang="en"
@@ -17,7 +17,7 @@
                 <h5 class="modal-title" th:text="#{templates.delete.title}"></h5>
             </div>
             <form
-                    th:action="@{/dashboard/templates/{id}/delete(id=${template.getTemplate().getId()})}"
+                    th:action="@{/dashboard/templates/{id}/delete(id=${templateWrapper.template.id})}"
                     data-js="form"
                     data-js-target="#delete-parent"
                     method="post"
