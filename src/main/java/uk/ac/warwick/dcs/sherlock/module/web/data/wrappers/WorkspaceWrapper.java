@@ -311,12 +311,11 @@ public class WorkspaceWrapper {
 		    for (DetectorWrapper detectorWrapper : templateWrapper.getDetectors()) {
 		        if (task.getDetector().getName().equals(detectorWrapper.getEngineDetector().getName())) {
 		            for (ParameterWrapper parameterWrapper : detectorWrapper.getParametersList()) {
-		                logger.info("Detector "
-                                + task.getDetector().getName()
-                                + " has had parameter "
-                                + parameterWrapper.getParameterObj().getDisplayName()
-                                + " set to "
-                                + parameterWrapper.getParameter().value);
+                        logger.info("Detector {} has had parameter {} set to {}",
+                                task.getDetector().getName(),
+                                parameterWrapper.getParameterObj().getDisplayName(),
+                                parameterWrapper.getParameter().value
+                        );
 		                task.setParameter(parameterWrapper.getParameterObj(), parameterWrapper.getParameter().value);
                     }
                 }
@@ -340,6 +339,7 @@ public class WorkspaceWrapper {
         List<Workspace> workspaces = workspaceRepository.findByAccount(account);
         List<WorkspaceWrapper> wrappers = new ArrayList<>();
 
+        assert workspaces != null;
         for (Workspace workspace : workspaces) {
             try {
                 wrappers.add(new WorkspaceWrapper(workspace));
