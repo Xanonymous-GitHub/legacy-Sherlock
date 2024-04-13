@@ -242,9 +242,6 @@ class TemplateWrapper {
         fun findByAccountAndPublic(account: Account, templateRepository: TemplateRepository?): List<TemplateWrapper> {
             val wrapperList = mutableListOf<TemplateWrapper>()
             val templateList = templateRepository?.findByAccountAndPublic(account)
-            println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            println(templateList?.size)
-            println(templateList)
             return templateList?.mapNotNull {
                 it?.let { TemplateWrapper(it, account) }
             } ?: wrapperList
