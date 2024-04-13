@@ -60,7 +60,7 @@
 
         <div class="collapse" id="detector-collapse">
             <div
-                    th:replace="~{fragments/js-area :: js-area(areaid='detector-list', arealink=@{/dashboard/templates/details/{id}(id=${templates.get(0).getTemplate().getId()})})}"
+                    th:replace="~{fragments/js-area :: js-area(areaid='detector-list', arealink=@{/dashboard/templates/details/{id}(id=${templates.get(0).template.id})})}"
             ></div>
         </div>
 
