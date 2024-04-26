@@ -2,27 +2,28 @@ package uk.ac.warwick.dcs.sherlock.api.util;
 
 /**
  * Basic tuple interface
+ *
  * @param <K> key type
  * @param <V> value type
  */
 public interface ITuple<K, V> {
 
-	ITuple clone();
+    ITuple clone();
 
-	boolean equals(ITuple tuple);
+    boolean equals(ITuple tuple);
 
-	K getKey();
+    K getKey();
 
-	void setKey(K key);
+    void setKey(K key);
 
-	V getValue();
+    V getValue();
 
-	void setValue(V value);
+    void setValue(V value);
 
-	boolean keyEquals(ITuple tuple);
+    boolean keyEquals(ITuple tuple);
 
-	String toString();
+    String toString();
 
-	boolean valueEquals(ITuple tuple);
+    boolean valueEquals(ITuple tuple);
 
 }

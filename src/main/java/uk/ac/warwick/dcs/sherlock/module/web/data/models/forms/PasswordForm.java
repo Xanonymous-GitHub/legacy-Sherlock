@@ -10,7 +10,8 @@ public class PasswordForm {
     @ValidPassword
     public String confirmPassword;
 
-    public PasswordForm() { }
+    public PasswordForm() {
+    }
 
     public String getConfirmPassword() {
         return confirmPassword;

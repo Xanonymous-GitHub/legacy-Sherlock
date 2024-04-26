@@ -6,10 +6,7 @@ import uk.ac.warwick.dcs.sherlock.module.model.base.preprocessing.VariableExtrac
 
 public class VariableNameDetector extends PairwiseDetector<VariableNameDetectorWorker> {
 
-	/*@AdjustableParameter (name = "Test Param", defaultValue = 0, minimumBound = 0, maxumumBound = 10, step = 1, description = "A test parameter which is not used")
-	public int testParam;*/
-
-	public VariableNameDetector() {
-		super("Variable Name Detector", "Detector which scores files based on how many variables are exactly duplicated between them", VariableNameDetectorWorker.class, PreProcessingStrategy.of("variables", VariableExtractor.class));
-	}
+    public VariableNameDetector() {
+        super("Variable Name Detector", "Detector which scores files based on how many variables are exactly duplicated between them", VariableNameDetectorWorker.class, PreProcessingStrategy.of("variables", VariableExtractor.class));
+    }
 }

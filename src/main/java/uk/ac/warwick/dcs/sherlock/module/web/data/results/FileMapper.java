@@ -18,13 +18,12 @@ public class FileMapper {
     /**
      * A map linking each file id (Long) to the line mapper
      */
-    private Map<Long, LineMapper> map;
+    private final Map<Long, LineMapper> map;
 
     /**
      * Initialise the file mapper
      *
      * @param matches the list of matches to initialise with
-     *
      * @throws MapperException if add match was called after fill
      */
     public FileMapper(Map<String, List<FileMatch>> matches) throws MapperException {
@@ -64,7 +63,7 @@ public class FileMapper {
         JSONObject object = new JSONObject();
 
         for (Map.Entry<Long, LineMapper> entry : map.entrySet()) {
-            object.put(""+entry.getKey(), entry.getValue().toJSON());
+            object.put("" + entry.getKey(), entry.getValue().toJSON());
         }
 
         return object;
@@ -73,11 +72,10 @@ public class FileMapper {
     /**
      * Get the list of plagiarised line numbers converted to a comma separated list for
      * a specific file in the map
-     *
+     * <p>
      * e.g. if lines 2-10 are mapped to a match, this would return "2,3,4,5,6,7,8,9,10"
      *
      * @param fileId the id of the file to get the highlighted lines for
-     *
      * @return the comma separated list, or an empty list if the file isn't found
      */
     public String getHighlightedLines(long fileId) {

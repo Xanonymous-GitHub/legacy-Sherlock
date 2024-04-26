@@ -1,8 +1,8 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 
 import uk.ac.warwick.dcs.sherlock.api.annotation.AdjustableParameterObj;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.ParameterNotFound;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.ParameterNotFound;
 
 import java.util.Map;
 
@@ -24,8 +24,7 @@ public class ParameterWrapper {
      * Initialise the wrapper class using the parameter entity
      *
      * @param tParameter the parameter to manage
-     * @param map the adjustable parameter map for the detector
-     *
+     * @param map        the adjustable parameter map for the detector
      * @throws ParameterNotFound if the parameter was not found in the map
      */
     public ParameterWrapper(TParameter tParameter, Map<String, AdjustableParameterObj> map) throws ParameterNotFound {
@@ -40,6 +39,7 @@ public class ParameterWrapper {
 
     /**
      * Get the display name for this parameter
+     *
      * @return the display name
      */
     public String getDisplayName() {

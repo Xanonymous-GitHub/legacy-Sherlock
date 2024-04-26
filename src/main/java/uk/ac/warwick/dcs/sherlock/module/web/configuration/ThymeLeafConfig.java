@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ThymeLeafConfig {
 
-	/**
-	 * Enables layouts by adding an additional dialect to the template engine
-	 *
-	 * @return the layout dialect
-	 */
-	@Bean
-	public LayoutDialect layoutDialect() {
-		return new LayoutDialect();
-	}
+    /**
+     * Enables layouts by adding a dialect to the template engine
+     *
+     * @return the layout dialect
+     */
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
+    }
 }

@@ -16,7 +16,6 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.models.internal.SubmissionScor
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.MapperException;
 
 import java.util.*;
-import java.util.stream.*;
 
 /**
  * Stores all the data for the compare submissions page or the submission report page
@@ -25,38 +24,31 @@ public class SubmissionResultsData {
     /**
      * The job showing the results for
      */
-    private IJob job;
-
+    private final IJob job;
+    /**
+     * The first submission
+     */
+    private final ISubmission submission1;
+    /**
+     * The list of matches between the submissions, grouped into larger groups
+     */
+    private final Map<String, List<FileMatch>> matches;
+    /**
+     * The list of submissions matched to this one
+     */
+    private final List<SubmissionScore> submissions;
+    /**
+     * The file mapper linking the lines in each file to a match
+     */
+    private final FileMapper fileMapper;
     /**
      * The summary (if it's a report)
      */
     private String summary = "";
-
-    /**
-     * The first submission
-     */
-    private ISubmission submission1;
-
     /**
      * The second submission, null if not comparing
      */
     private ISubmission submission2;
-
-    /**
-     * The list of matches between the submissions, grouped into larger groups
-     */
-    private Map<String, List<FileMatch>> matches;
-
-    /**
-     * The list of submissions matched to this one
-     */
-    private List<SubmissionScore> submissions;
-
-    /**
-     * The file mapper linking the lines in each file to a match
-     */
-    private FileMapper fileMapper;
-
     /**
      * The score for the first submission
      */
@@ -65,9 +57,8 @@ public class SubmissionResultsData {
     /**
      * Initialise the report data object
      *
-     * @param job the job getting the results from
+     * @param job        the job getting the results from
      * @param submission the submission to report
-     *
      * @throws MapperException thrown if the FileMapper isn't initialised correctly
      */
     public SubmissionResultsData(IJob job, ISubmission submission) throws MapperException {
@@ -94,7 +85,7 @@ public class SubmissionResultsData {
             this.summary = result.getValue();
 
             //Loop through the submission groups, adding all the matches
-            for (SubmissionMatchGroup group : result.getKey()){
+            for (SubmissionMatchGroup group : result.getKey()) {
                 this.matches.put(group.getReason(), new ArrayList<>());
                 group.getMatches().forEach(m -> this.matches.get(group.getReason()).add(new FileMatch(m)));
             }
@@ -102,14 +93,14 @@ public class SubmissionResultsData {
 
             //Fetch the submission summary for this submission
             List<ISubmissionSummary> summaryList = report.GetMatchingSubmissions();
-            summaryList = summaryList.stream().filter(s -> s.getPersistentId() == submission1.getId()).collect(Collectors.toList());
+            summaryList = summaryList.stream().filter(s -> s.getPersistentId() == submission1.getId()).toList();
 
             //Create a map linking submission ids to their names
             Map<Long, String> idToName = new HashMap<>();
             job.getWorkspace().getSubmissions().forEach(s -> idToName.put(s.getId(), s.getName()));
 
             if (summaryList.size() == 1) {
-                ISubmissionSummary summary = summaryList.get(0);
+                ISubmissionSummary summary = summaryList.getFirst();
 
                 this.score = summary.getScore() * 100;
 
@@ -137,10 +128,9 @@ public class SubmissionResultsData {
     /**
      * Initialise the comparison data object
      *
-     * @param job the job getting the results from
+     * @param job         the job getting the results from
      * @param submission1 the first submission to compare
      * @param submission2 the second submission to compare
-     *
      * @throws MapperException thrown if the FileMapper isn't initialised correctly
      */
     public SubmissionResultsData(IJob job, ISubmission submission1, ISubmission submission2) throws MapperException {
@@ -167,7 +157,7 @@ public class SubmissionResultsData {
 
             //Loop through the submission groups, adding all the matches
             List<SubmissionMatchGroup> list = report.GetSubmissionComparison(compare);
-            for (SubmissionMatchGroup group : list){
+            for (SubmissionMatchGroup group : list) {
                 this.matches.put(group.getReason(), new ArrayList<>());
                 group.getMatches().forEach(m -> this.matches.get(group.getReason()).add(new FileMatch(m)));
             }
@@ -219,7 +209,7 @@ public class SubmissionResultsData {
      *
      * @return the list
      */
-    public Map<String,List<FileMatch>> getMatches() {
+    public Map<String, List<FileMatch>> getMatches() {
         return matches;
     }
 
@@ -257,7 +247,7 @@ public class SubmissionResultsData {
      *
      * @return the JSON object as a string
      */
-    public String getMapJSON(){
+    public String getMapJSON() {
         return fileMapper.toJSON().toString();
     }
 
@@ -279,8 +269,6 @@ public class SubmissionResultsData {
     }
 
     /**
-     *
-     * @return
      */
     public Map<ISubmission, SortedMap<Long, ISourceFile>> getMatchedFiles() {
         Map<ISubmission, SortedMap<Long, ISourceFile>> map = new HashMap<>();
@@ -309,11 +297,10 @@ public class SubmissionResultsData {
     /**
      * Get the list of plagiarised line numbers converted to a comma separated list for
      * a specific file in the map
-     *
+     * <p>
      * e.g. if lines 2-10 are mapped to a match, this would return "2,3,4,5,6,7,8,9,10"
      *
      * @param fileId the id of the file to get the highlighted lines for
-     *
      * @return the comma separated list, or an empty list if the file isn't found
      */
     public String getHighlightedLines(long fileId) {

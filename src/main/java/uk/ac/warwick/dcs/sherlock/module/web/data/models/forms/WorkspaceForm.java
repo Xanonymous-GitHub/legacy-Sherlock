@@ -1,10 +1,9 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
-import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.WorkspaceWrapper;
-import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidLanguage;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.WorkspaceWrapper;
+import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidLanguage;
 
 /**
  * The form to add/modify workspaces
@@ -26,7 +25,8 @@ public class WorkspaceForm {
     @ValidLanguage
     public String language;
 
-    public WorkspaceForm() { }
+    public WorkspaceForm() {
+    }
 
     public WorkspaceForm(WorkspaceWrapper workspaceWrapper) {
         this.name = workspaceWrapper.getName();

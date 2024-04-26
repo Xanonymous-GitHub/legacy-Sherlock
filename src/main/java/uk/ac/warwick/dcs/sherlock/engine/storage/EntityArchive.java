@@ -1,253 +1,240 @@
 package uk.ac.warwick.dcs.sherlock.engine.storage;
 
+import jakarta.validation.constraints.NotNull;
+import uk.ac.warwick.dcs.sherlock.api.component.IJob;
 import uk.ac.warwick.dcs.sherlock.api.component.ISourceFile;
 import uk.ac.warwick.dcs.sherlock.api.component.ISubmission;
-import uk.ac.warwick.dcs.sherlock.api.component.IJob;
 import uk.ac.warwick.dcs.sherlock.api.component.WorkStatus;
 
 import javax.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * ISubmission object for base storage implementation
  */
-@Entity (name = "Archive")
+@Entity(name = "Archive")
 public class EntityArchive implements ISubmission, Serializable {
 
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final List<EntityArchive> children = new ArrayList<>();
+    @OneToMany(mappedBy = "archive", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final List<EntityFile> files = new ArrayList<>();
+    boolean pending;
+    @Transient
+    EntityWorkspace pendingWorkspace;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private EntityWorkspace workspace;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private EntityArchive parent;
 
-	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
-	private long id;
+    public EntityArchive() {
+        super();
+    }
 
-	private String name;
-	boolean pending;
+    public EntityArchive(String name) {
+        this(null, name, null);
+    }
 
-	@ManyToOne (fetch = FetchType.LAZY)
-	private EntityWorkspace workspace;
+    EntityArchive(EntityWorkspace pendingWorkspace, String name) {
+        this(pendingWorkspace, name, null);
+    }
 
-	@Transient
-	EntityWorkspace pendingWorkspace;
+    EntityArchive(String name, EntityArchive archive) {
+        this(null, name, archive);
+    }
 
-	@ManyToOne (fetch = FetchType.LAZY)
-	private EntityArchive parent;
+    EntityArchive(EntityWorkspace pendingWorkspace, String name, EntityArchive archive) {
+        super();
+        this.name = name;
+        this.pending = pendingWorkspace != null;
+        this.parent = archive;
+        this.workspace = null;
+        this.pendingWorkspace = pendingWorkspace;
 
-	@OneToMany (mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<EntityArchive> children = new ArrayList<>();
+        if (archive != null) {
+            archive.getChildren_().add(this);
+            this.pending = archive.pending;
+        }
+    }
 
-	@OneToMany (mappedBy = "archive", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<EntityFile> files = new ArrayList<>();
+    @Override
+    public int compareTo(@NotNull ISubmission o) {
+        return this.name.compareTo(o.getName());
+    }
 
-	public EntityArchive() {
-		super();
-	}
+    @Override
+    public boolean equals(ISubmission o) {
+        return o.getId() == this.id;
+    }
 
-	public EntityArchive(String name) {
-		this(null, name, null);
-	}
+    @Override
+    public List<ISourceFile> getAllFiles() {
+        return this.parent == null ? this.getAllFilesRecursive(new LinkedList<>()) : this.parent.getAllFiles();
+    }
 
-	EntityArchive(EntityWorkspace pendingWorkspace, String name) {
-		this(pendingWorkspace, name, null);
-	}
+    @Override
+    public List<ISubmission> getContainedDirectories() {
+        BaseStorage.instance.database.refreshObject(this);
+        return new LinkedList<>(this.getChildren());
+    }
 
-	EntityArchive(String name, EntityArchive archive) {
-		this(null, name, archive);
-	}
+    @Override
+    public List<ISourceFile> getContainedFiles() {
+        BaseStorage.instance.database.refreshObject(this);
+        return new LinkedList<>(this.getFiles());
+    }
 
-	EntityArchive(EntityWorkspace pendingWorkspace, String name, EntityArchive archive) {
-		super();
-		this.name = name;
-		this.pending = pendingWorkspace != null;
-		this.parent = archive;
-		this.workspace = null;
-		this.pendingWorkspace = pendingWorkspace;
+    @Override
+    public int getFileCount() {
+        BaseStorage.instance.database.refreshObject(this);
+        return this.files.size() + this.children.stream().mapToInt(EntityArchive::getFileCount).sum();
+    }
 
-		if (archive != null) {
-			archive.getChildren_().add(this);
-			this.pending = archive.pending;
-		}
-	}
+    @Override
+    public long getId() {
+        return this.parent == null ? this.id : this.parent.getId();
+    }
 
-	@Override
-	public int compareTo(@NotNull ISubmission o) {
-		return this.name.compareTo(o.getName());
-	}
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-	@Override
-	public boolean equals(ISubmission o) {
-		return o.getId() == this.id;
-	}
+    @Override
+    public ISubmission getParent() {
+        return this.parent;
+    }
 
-	@Override
-	public List<ISourceFile> getAllFiles() {
-		return this.parent == null ? this.getAllFilesRecursive(new LinkedList<>()) : this.parent.getAllFiles();
-	}
+    void setParent(EntityArchive archive) {
+        this.parent = archive;
+        this.parent.getChildren_().add(this);
 
-	@Override
-	public List<ISubmission> getContainedDirectories() {
-		BaseStorage.instance.database.refreshObject(this);
-		return new LinkedList<>(this.getChildren());
-	}
+        BaseStorage.instance.database.storeObject(this);
 
-	@Override
-	public List<ISourceFile> getContainedFiles() {
-		BaseStorage.instance.database.refreshObject(this);
-		return new LinkedList<>(this.getFiles());
-	}
+        List<ISourceFile> children = this.getAllFilesRecursive(new LinkedList<>());
+        children.forEach(f -> BaseStorage.instance.filesystem.updateFileArchive((EntityFile) f, ((EntityFile) f).getArchive()));
+    }
 
-	@Override
-	public int getFileCount() {
-		BaseStorage.instance.database.refreshObject(this);
-		return (this.files != null ? this.files.size() : 0) + (this.children != null ? this.children.stream().mapToInt(EntityArchive::getFileCount).sum() : 0);
-	}
+    @Override
+    public int getTotalFileCount() {
+        return this.parent != null ? this.parent.getTotalFileCount() : this.getFileCount();
+    }
 
-	@Override
-	public long getId() {
-		return this.parent == null ? this.id : this.parent.getId();
-	}
+    @Override
+    public boolean hasParent() {
+        return this.parent != null;
+    }
 
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public void remove() {
+        //Set all the jobs as having missing files
+        if (this.getWorkspace() != null) {
+            for (IJob job : this.getWorkspace().getJobs()) {
+                job.setStatus(WorkStatus.MISSING_FILES);
+            }
+        }
 
-	@Override
-	public ISubmission getParent() {
-		return this.parent;
-	}
+        BaseStorage.instance.database.refreshObject(this);
+        for (EntityArchive child : this.children) {
+            child.remove();
+        }
 
-	void setParent(EntityArchive archive) {
-		this.parent = archive;
-		this.parent.getChildren_().add(this);
+        files.forEach(EntityFile::remove_);
 
-		BaseStorage.instance.database.storeObject(this);
+        try {
+            BaseStorage.instance.database.refreshObject(this);
+            BaseStorage.instance.database.removeObject(this);
+        } catch (Exception ignored) {
+        }
+    }
 
-		List<ISourceFile> children = this.getAllFilesRecursive(new LinkedList<>());
-		children.forEach(f -> BaseStorage.instance.filesystem.updateFileArchive((EntityFile) f, ((EntityFile) f).getArchive()));
-	}
+    void clean() {
+        if (this.parent != null) {
+            this.parent.clean();
+        } else {
+            this.cleanRecursive();
+        }
+    }
 
-	@Override
-	public int getTotalFileCount() {
-		return this.parent != null ? this.parent.getTotalFileCount() : this.getFileCount();
-	}
+    List<EntityArchive> getChildren() {
+        BaseStorage.instance.database.refreshObject(this);
+        return this.children;
+    }
 
-	@Override
-	public boolean hasParent() {
-		return this.parent != null;
-	}
+    List<EntityArchive> getChildren_() {
+        return this.children;
+    }
 
-	@Override
-	public void remove() {
-		//Set all the jobs as having missing files
-		if (this.getWorkspace() != null) {
-			for (IJob job : this.getWorkspace().getJobs()) {
-				job.setStatus(WorkStatus.MISSING_FILES);
-			}
-		}
+    List<EntityFile> getFiles() {
+        BaseStorage.instance.database.refreshObject(this);
+        return this.files;
+    }
 
-		BaseStorage.instance.database.refreshObject(this);
-		if (this.children != null) {
-			for (EntityArchive child : this.children) {
-				child.remove();
-			}
-		}
+    List<EntityFile> getFiles_() {
+        return this.files;
+    }
 
-		if (this.files != null) {
-			files.forEach(EntityFile::remove_);
-		}
+    EntityArchive getParent_() {
+        return this.parent;
+    }
 
-		try {
-			BaseStorage.instance.database.refreshObject(this);
-			BaseStorage.instance.database.removeObject(this);
-		}
-		catch (Exception ignored) {
-		}
-	}
+    EntityWorkspace getWorkspace() {
+        return this.parent != null ? this.parent.getWorkspace() : this.workspace;
+    }
 
-	void clean() {
-		if (this.parent != null) {
-			this.parent.clean();
-		}
-		else {
-			this.cleanRecursive();
-		}
-	}
+    public void setSubmissionArchive(EntityWorkspace workspace) {
+        this.workspace = workspace;
+        this.parent = null;
+    }
 
-	List<EntityArchive> getChildren() {
-		BaseStorage.instance.database.refreshObject(this);
-		return this.children;
-	}
+    void writeToPendingWorkspace() {
+        if (this.pending && this.pendingWorkspace != null && this.workspace == null) {
+            this.pendingWorkspace.getSubmissions().stream().filter(s -> s.getName().equals(this.name)).forEach(ISubmission::remove);
 
-	List<EntityArchive> getChildren_() {
-		return this.children;
-	}
+            this.setPendingRecursive(false);
+            this.setSubmissionArchive(this.pendingWorkspace);
+            BaseStorage.instance.database.storeObject(this);
+            BaseStorage.instance.database.refreshObject(this.workspace);
+        }
+    }
 
-	List<EntityFile> getFiles() {
-		BaseStorage.instance.database.refreshObject(this);
-		return this.files;
-	}
+    private void cleanRecursive() {
+        BaseStorage.instance.database.refreshObject(this);
+        for (EntityArchive child : this.children) {
+            child.cleanRecursive();
+        }
 
-	List<EntityFile> getFiles_() {
-		return this.files;
-	}
+        if (this.getFileCount() == 0) {
+            this.remove();
+        }
+    }
 
-	EntityArchive getParent_() {
-		return this.parent;
-	}
+    private void setPendingRecursive(boolean pending) {
+        this.children.forEach(a -> a.setPendingRecursive(pending));
+        this.pending = pending;
+    }
 
-	EntityWorkspace getWorkspace() {
-		return this.parent != null ? this.parent.getWorkspace() : this.workspace;
-	}
+    private List<ISourceFile> getAllFilesRecursive(List<ISourceFile> filesRec) {
+        BaseStorage.instance.database.refreshObject(this);
 
-	public void setSubmissionArchive(EntityWorkspace workspace) {
-		this.workspace = workspace;
-		this.parent = null;
-	}
+        for (EntityArchive child : this.children) {
+            child.getAllFilesRecursive(filesRec);
+        }
 
-	void writeToPendingWorkspace() {
-		if (this.pending && this.pendingWorkspace != null && this.workspace == null) {
-			this.pendingWorkspace.getSubmissions().stream().filter(s -> s.getName().equals(this.name)).forEach(ISubmission::remove);
+        if (!this.files.isEmpty()) {
+            filesRec.addAll(new LinkedList<>(this.files));
+        }
 
-			this.setPendingRecursive(false);
-			this.setSubmissionArchive(this.pendingWorkspace);
-			BaseStorage.instance.database.storeObject(this);
-			BaseStorage.instance.database.refreshObject(this.workspace);
-		}
-	}
-
-	private void cleanRecursive() {
-		BaseStorage.instance.database.refreshObject(this);
-		if (this.children != null) {
-			for (EntityArchive child : this.children) {
-				child.cleanRecursive();
-			}
-		}
-
-		if (this.getFileCount() == 0) {
-			this.remove();
-		}
-	}
-
-	private void setPendingRecursive(boolean pending) {
-		this.children.forEach(a -> a.setPendingRecursive(pending));
-		this.pending = pending;
-	}
-
-	private List<ISourceFile> getAllFilesRecursive(List<ISourceFile> filesRec) {
-		BaseStorage.instance.database.refreshObject(this);
-
-		if (this.children != null) {
-			for (EntityArchive child : this.children) {
-				child.getAllFilesRecursive(filesRec);
-			}
-		}
-
-		if (this.files != null && this.files.size() > 0) {
-			filesRec.addAll(new LinkedList<>(this.files));
-		}
-
-		return filesRec;
-	}
+        return filesRec;
+    }
 }

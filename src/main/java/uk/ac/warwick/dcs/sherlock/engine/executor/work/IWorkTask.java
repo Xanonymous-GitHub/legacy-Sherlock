@@ -5,21 +5,21 @@ import uk.ac.warwick.dcs.sherlock.api.model.detection.ModelDataItem;
 import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.PreProcessingStrategy;
 import uk.ac.warwick.dcs.sherlock.engine.executor.JobStatus;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Access interface for work tasks
  */
 public interface IWorkTask {
 
-	void addModelDataItem(ModelDataItem item);
+    void addModelDataItem(ModelDataItem item);
 
-	Class<? extends IDetector> getDetector();
+    Class<? extends IDetector> getDetector();
 
-	String getLanguage();
+    String getLanguage();
 
-	List<PreProcessingStrategy> getPreProcessingStrategies();
+    List<PreProcessingStrategy> getPreProcessingStrategies();
 
-	JobStatus getJobStatus();
+    JobStatus getJobStatus();
 
 }

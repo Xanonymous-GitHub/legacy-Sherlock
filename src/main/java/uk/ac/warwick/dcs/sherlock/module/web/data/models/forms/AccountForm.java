@@ -1,12 +1,12 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Role;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidPassword;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -35,7 +35,8 @@ public class AccountForm {
     @ValidPassword
     public String oldPassword;
 
-    public AccountForm() { }
+    public AccountForm() {
+    }
 
     public AccountForm(Account account) {
         this.name = account.username;

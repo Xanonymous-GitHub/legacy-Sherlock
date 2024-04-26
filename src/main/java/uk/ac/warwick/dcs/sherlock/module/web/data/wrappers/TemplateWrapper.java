@@ -1,18 +1,19 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
-import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter;
-import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TParameterRepository;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.TemplateNotFound;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector;
+import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Template;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.TemplateForm;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TDetectorRepository;
+import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TParameterRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TemplateRepository;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.TemplateNotFound;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The wrapper that manages the job templates
@@ -31,11 +32,10 @@ public class TemplateWrapper {
     /**
      * Initialise the wrapper using the form to create a new template
      *
-     * @param templateForm the form to use
-     * @param account the account of current user
-     * @param templateRepository the database repository
+     * @param templateForm        the form to use
+     * @param account             the account of current user
+     * @param templateRepository  the database repository
      * @param tDetectorRepository the database repository
-     *
      * @throws NotTemplateOwner if the user is not the owner of the template
      */
     public TemplateWrapper(
@@ -53,10 +53,9 @@ public class TemplateWrapper {
     /**
      * Initialise the template wrapper using an id to find one in the database
      *
-     * @param id the id of the template
-     * @param account the account of the current user
+     * @param id                 the id of the template
+     * @param account            the account of the current user
      * @param templateRepository the database repository
-     *
      * @throws TemplateNotFound if the template was not found
      */
     public TemplateWrapper(
@@ -77,13 +76,43 @@ public class TemplateWrapper {
      * Initialise the template wrapper using an existing template
      *
      * @param template the template to manage
-     * @param account the account of the current user
+     * @param account  the account of the current user
      */
-    public TemplateWrapper(Template template, Account account)  {
+    public TemplateWrapper(Template template, Account account) {
         this.template = template;
 
         if (this.template.account == account)
             this.isOwner = true;
+    }
+
+    /**
+     * Get the list of templates that are public or owned by the user
+     *
+     * @param account            the account of the current user
+     * @param templateRepository the database repository
+     * @return the list of templates
+     */
+    public static List<TemplateWrapper> findByAccountAndPublic(Account account, TemplateRepository templateRepository) {
+        List<TemplateWrapper> wrapperList = new ArrayList<>();
+        List<Template> templateList = templateRepository.findByAccountAndPublic(account);
+        Objects.requireNonNull(templateList).forEach(t -> wrapperList.add(new TemplateWrapper(t, account)));
+        return wrapperList;
+    }
+
+    /**
+     * Get the list of templates that are public, owned by the user and filter
+     * by the language supplied
+     *
+     * @param account            the account of the current user
+     * @param templateRepository the database repository
+     * @param language           the language to filter by
+     * @return the list of templates
+     */
+    public static List<TemplateWrapper> findByAccountAndPublicAndLanguage(Account account, TemplateRepository templateRepository, String language) {
+        List<TemplateWrapper> wrapperList = new ArrayList<>();
+        List<Template> templateList = templateRepository.findByAccountAndPublicAndLanguage(account, language);
+        Objects.requireNonNull(templateList).forEach(t -> wrapperList.add(new TemplateWrapper(t, account)));
+        return wrapperList;
     }
 
     /**
@@ -105,7 +134,7 @@ public class TemplateWrapper {
     }
 
     /**
-     *  Whether or not the template is owned by the current user
+     * Whether or not the template is owned by the current user
      *
      * @return the result
      */
@@ -128,7 +157,7 @@ public class TemplateWrapper {
      * @return the name
      */
     public String getOwnerName() {
-        return this.template.account.username;
+        return Objects.requireNonNull(this.template.account).username;
     }
 
     /**
@@ -154,10 +183,9 @@ public class TemplateWrapper {
     /**
      * Update the template using the form supplied
      *
-     * @param templateForm the form to use
-     * @param templateRepository the database repository
+     * @param templateForm               the form to use
+     * @param templateRepository         the database repository
      * @param templateDetectorRepository the database repository
-     *
      * @throws NotTemplateOwner if the user is not the template owner
      */
     public void update(
@@ -189,7 +217,7 @@ public class TemplateWrapper {
 
         for (String remove : toRemove) {
             templateDetectorRepository.delete(
-                    templateDetectorRepository.findByNameAndTemplate(remove, template)
+                    Objects.requireNonNull(templateDetectorRepository.findByNameAndTemplate(remove, template))
             );
         }
 
@@ -200,7 +228,7 @@ public class TemplateWrapper {
         for (String check : toCheck) {
             if (!activeDetectors.contains(check)) {
                 templateDetectorRepository.delete(
-                        templateDetectorRepository.findByNameAndTemplate(check, template)
+                        Objects.requireNonNull(templateDetectorRepository.findByNameAndTemplate(check, template))
                 );
             }
         }
@@ -209,11 +237,10 @@ public class TemplateWrapper {
     /**
      * Make a copy the template
      *
-     * @param account the account of the current user
-     * @param templateRepository the database repository
-     * @param tDetectorRepository the database repository
+     * @param account              the account of the current user
+     * @param templateRepository   the database repository
+     * @param tDetectorRepository  the database repository
      * @param tParameterRepository the database repository
-     *
      * @return the new template
      */
     public Template copy(
@@ -254,7 +281,6 @@ public class TemplateWrapper {
      * Delete the template
      *
      * @param templateRepository the database repository
-     *
      * @throws NotTemplateOwner if the user is not the template owner
      */
     public void delete(TemplateRepository templateRepository) throws NotTemplateOwner {
@@ -262,37 +288,5 @@ public class TemplateWrapper {
             throw new NotTemplateOwner("You are not the owner of this template.");
 
         templateRepository.delete(this.template);
-    }
-
-    /**
-     * Get the list of templates that are public or owned by the user
-     *
-     * @param account the account of the current user
-     * @param templateRepository the database repository
-     *
-     * @return the list of templates
-     */
-    public static List<TemplateWrapper> findByAccountAndPublic(Account account, TemplateRepository templateRepository) {
-        List<TemplateWrapper> wrapperList = new ArrayList<>();
-        List<Template> templateList = templateRepository.findByAccountAndPublic(account);
-        templateList.forEach(t -> wrapperList.add(new TemplateWrapper(t, account)));
-        return wrapperList;
-    }
-
-    /**
-     * Get the list of templates that are public, owned by the user and filter
-     * by the language supplied
-     *
-     * @param account the account of the current user
-     * @param templateRepository the database repository
-     * @param language the language to filter by
-     *
-     * @return the list of templates
-     */
-    public static List<TemplateWrapper> findByAccountAndPublicAndLanguage(Account account, TemplateRepository templateRepository, String language) {
-        List<TemplateWrapper> wrapperList = new ArrayList<>();
-        List<Template> templateList = templateRepository.findByAccountAndPublicAndLanguage(account, language);
-        templateList.forEach(t -> wrapperList.add(new TemplateWrapper(t, account)));
-        return wrapperList;
     }
 }

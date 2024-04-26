@@ -1,18 +1,18 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 
-import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 import uk.ac.warwick.dcs.sherlock.api.annotation.AdjustableParameterObj;
 import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector;
+import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 import uk.ac.warwick.dcs.sherlock.engine.SherlockEngine;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.DetectorNotFound;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.ParameterNotFound;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TParameter;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.forms.ParameterForm;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TDetectorRepository;
 import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.TParameterRepository;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.DetectorNotFound;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.NotTemplateOwner;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.ParameterNotFound;
 
 import java.util.*;
 
@@ -33,13 +33,14 @@ public class DetectorWrapper {
     /**
      * Empty initialiser
      */
-    public DetectorWrapper() {}
+    public DetectorWrapper() {
+    }
 
     /**
      * Initialise the wrapper with a template that has already been loaded
      *
      * @param tDetector the detector to manage
-     * @param isOwner whether the account owns the detector
+     * @param isOwner   whether the account owns the detector
      */
     public DetectorWrapper(TDetector tDetector, boolean isOwner) {
         this.tDetector = tDetector;
@@ -50,10 +51,9 @@ public class DetectorWrapper {
      * Initialise the wrapper by trying to find a detector that is
      * either owned by the account or is public
      *
-     * @param id the template id to find
-     * @param account the account of the current user
+     * @param id                  the template id to find
+     * @param account             the account of the current user
      * @param tDetectorRepository the detector database repository
-     *
      * @throws DetectorNotFound if the detector wasn't found
      */
     public DetectorWrapper(
@@ -78,7 +78,7 @@ public class DetectorWrapper {
     }
 
     /**
-     *  Whether or not the template is owned by the current user
+     * Whether or not the template is owned by the current user
      *
      * @return the result
      */
@@ -88,6 +88,7 @@ public class DetectorWrapper {
 
     /**
      * Get the detector
+     *
      * @return the detector
      */
     public TDetector getDetector() {
@@ -107,7 +108,6 @@ public class DetectorWrapper {
      * Get the list of adjustable parameters for this detector
      *
      * @return the list of adjustable parameters
-     *
      * @throws DetectorNotFound if the detector no longer exists
      */
     public List<AdjustableParameterObj> getEngineParameters() throws DetectorNotFound {
@@ -125,7 +125,6 @@ public class DetectorWrapper {
      * Get the list of adjustable postprocessing parameters for this detector
      *
      * @return the list of adjustable postprocessing parameters
-     *
      * @throws DetectorNotFound if the detector no longer exists
      */
     public List<AdjustableParameterObj> getEnginePostProcessingParameters() throws DetectorNotFound {
@@ -143,7 +142,6 @@ public class DetectorWrapper {
      * Get the adjustable parameters for this detector as a map
      *
      * @return the map of adjustable parameters
-     *
      * @throws DetectorNotFound if the detector no longer exists
      */
     public Map<String, AdjustableParameterObj> getEngineParametersMap() throws DetectorNotFound {
@@ -175,7 +173,6 @@ public class DetectorWrapper {
      * Get the engine object for this detector
      *
      * @return the IDetector
-     *
      * @throws DetectorNotFound if the engine detector no longer exists
      */
     public Class<? extends IDetector> getEngineDetector() throws DetectorNotFound {
@@ -192,7 +189,6 @@ public class DetectorWrapper {
      * Get the engine wrapper for this detector
      *
      * @return the engine detector wrapper
-     *
      * @throws DetectorNotFound if the engine detector no longer exists
      */
     public EngineDetectorWrapper getWrapper() throws DetectorNotFound {
@@ -209,9 +205,7 @@ public class DetectorWrapper {
      * Get the list of parameters for this detector
      *
      * @return the list of parameters
-     *
-     * @throws ParameterNotFound
-     * @throws DetectorNotFound if the engine detector no longer exists
+     * @throws DetectorNotFound  if the engine detector no longer exists
      */
     public List<ParameterWrapper> getParametersList() throws DetectorNotFound, ParameterNotFound {
         List<ParameterWrapper> list = new ArrayList<>();
@@ -230,7 +224,7 @@ public class DetectorWrapper {
     /**
      * Update the parameters for this detector
      *
-     * @param parameterForm the form to use
+     * @param parameterForm        the form to use
      * @param tParameterRepository the database repository
      */
     public void updateParameters(ParameterForm parameterForm, TParameterRepository tParameterRepository) throws NotTemplateOwner {
@@ -238,7 +232,7 @@ public class DetectorWrapper {
             throw new NotTemplateOwner("You are not the owner of this template.");
 
         List<TParameter> currentParameters = tParameterRepository.findBytDetector(this.tDetector);
-        tParameterRepository.deleteAll(currentParameters);
+        tParameterRepository.deleteAll(Objects.requireNonNull(currentParameters));
 
         for (Map.Entry<String, Float> entry : parameterForm.getParameters().entrySet()) {
             TParameter parameter = new TParameter(entry.getKey(), entry.getValue(), false, this.tDetector);

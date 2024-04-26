@@ -1,9 +1,9 @@
 package uk.ac.warwick.dcs.sherlock.module.web.validation.annotations;
 
-import uk.ac.warwick.dcs.sherlock.module.web.validation.validators.ValidLanguageValidator;
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import uk.ac.warwick.dcs.sherlock.module.web.validation.validators.ValidLanguageValidator;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,6 +24,8 @@ public @interface ValidLanguage {
      * @return the message key
      */
     String message() default "{error.language.not_found}";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

@@ -18,33 +18,29 @@ public class LineMapper {
     /**
      * The id of the mapped file
      */
-    private long fileId;
-
+    private final long fileId;
+    /**
+     * A temporary map used internally to calculate the other two maps
+     */
+    private final SortedMap<Integer, List<CodeBlock>> tempMap;
+    /**
+     * Links every line number to a match id so that the UI can
+     * highlight each line with the match's colour code
+     * <p>
+     * NB: lines with no matches are excluded from the map
+     */
+    private final SortedMap<Integer, Integer> visibleMatches;
+    /**
+     * Links every line number to a list of match ids that occur on that
+     * line
+     * <p>
+     * NB: lines with no matches are excluded from the map
+     */
+    private final SortedMap<Integer, List<Integer>> allMatches;
     /**
      * The highest line number found in a matched code block
      */
     private int maxLineNum;
-
-    /**
-     * A temporary map used internally to calculate the other two maps
-     */
-    private SortedMap<Integer, List<CodeBlock>> tempMap;
-
-    /**
-     * Links every line number to a match id so that the UI can
-     * highlight each line with the match's colour code
-     *
-     * NB: lines with no matches are excluded from the map
-     */
-    private SortedMap<Integer, Integer> visibleMatches;
-
-    /**
-     * Links every line number to a list of match ids that occur on that
-     * line
-     *
-     * NB: lines with no matches are excluded from the map
-     */
-    private SortedMap<Integer, List<Integer>> allMatches;
 
     /**
      * Initialise an empty instance of line mapper
@@ -62,7 +58,7 @@ public class LineMapper {
     /**
      * Initialise the line mapper and fill with a list of matches
      *
-     * @param fileId the id of the file being mapped
+     * @param fileId  the id of the file being mapped
      * @param matches the list of matches to fill the map with
      */
     public LineMapper(long fileId, List<FileMatch> matches) {
@@ -89,12 +85,11 @@ public class LineMapper {
      * elements in it, all others should only contain one element.
      *
      * @param match the match to insert into the map
-     *
      * @throws MapperException if add match was called after fill
      */
     public void AddMatch(FileMatch match) throws MapperException {
         //This function can only run if the fill function has not been ran
-        if (visibleMatches.keySet().size() > 0) {
+        if (!visibleMatches.keySet().isEmpty()) {
             throw new MapperException("Attempted to add match after map has already been filled.");
         }
 
@@ -131,13 +126,13 @@ public class LineMapper {
      * This function needs to be called after all the matches have been added
      * using the "addMatch" method, it will then fill in the gaps from the start
      * line number to the end line number for each code block.
-     *
+     * <p>
      * e.g. if there was a match from lines 2-4, the previous method would add
      * an entry on line 2, while this method will add values on lines 3 and 4.
-     *
+     * <p>
      * If there are overlaps, it will pick the newest code block and if multiple
      * code blocks start on the same line, it will pick the shortest one.
-     *
+     * <p>
      * e.g. If Block #1 has lines 2-7 and Block #2 has lines 3-5:
      * 1: None
      * 2: #1
@@ -147,12 +142,12 @@ public class LineMapper {
      * 6: #1
      * 7: #1
      * 8: None
-     *
+     * <p>
      * This is not a perfect algorithm, and some matches/code blocks will not
      * be displayed at all however there will be a list of matches on the page
      * for the user to see all of them and it ensures that as many different
      * matches are displayed as possible.
-     *
+     * <p>
      * The function also populates a "allMatches" map which has a list of every
      * match found on each line. This is not currently used by anything else.
      */
@@ -179,7 +174,7 @@ public class LineMapper {
             activeBlocks.removeAll(remove);
 
             //Check if the line exists
-            if (tempMap.containsKey(line) ) {
+            if (tempMap.containsKey(line)) {
                 //Check if actively writing
                 if (visibleBlock.isPresent()) {
                     //Store in the stack if so
@@ -207,7 +202,7 @@ public class LineMapper {
             }
 
             //If there is nothing actively writing, loop through until the stack is empty
-            while(!visibleBlock.isPresent() && !visibleStack.empty()) {
+            while (!visibleBlock.isPresent() && !visibleStack.empty()) {
                 //Fetch the first block
                 CodeBlock block = visibleStack.pop();
 
@@ -222,7 +217,7 @@ public class LineMapper {
                 visibleMatches.put(line, visibleBlock.get().getMatchId());
             }
 
-            if (activeBlocks.size() > 0) {
+            if (!activeBlocks.isEmpty()) {
                 List<Integer> list = new ArrayList<>();
 
                 for (CodeBlock block : activeBlocks) {
@@ -242,7 +237,7 @@ public class LineMapper {
     public JSONObject toJSON() {
         JSONObject highlight = new JSONObject();
         for (Map.Entry<Integer, Integer> entry : visibleMatches.entrySet()) {
-            highlight.put(""+entry.getKey(), entry.getValue());
+            highlight.put("" + entry.getKey(), entry.getValue());
         }
 
         JSONObject all = new JSONObject();
@@ -253,7 +248,7 @@ public class LineMapper {
                 array.put(id);
             }
 
-            all.put(""+entry.getKey(), array);
+            all.put("" + entry.getKey(), array);
         }
 
         JSONObject result = new JSONObject();
@@ -265,7 +260,7 @@ public class LineMapper {
 
     /**
      * Get the list of plagiarised line numbers converted to a comma separated list
-     *
+     * <p>
      * e.g. if lines 2-10 are mapped to a match, this would return "2,3,4,5,6,7,8,9,10"
      *
      * @return the comma separated list

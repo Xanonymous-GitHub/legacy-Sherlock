@@ -1,10 +1,10 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.TemplateWrapper;
 import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidLanguage;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +33,8 @@ public class TemplateForm {
 
     public List<String> detectors = new ArrayList<>();
 
-    public TemplateForm() { }
+    public TemplateForm() {
+    }
 
     public TemplateForm(String language) {
         this.language = language;
@@ -80,7 +81,10 @@ public class TemplateForm {
     }
 
     //Required for form binding
-    public boolean getIsPublic() {return isPublic; }
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
     public void setIsPublic(boolean aPublic) {
         isPublic = aPublic;
     }

@@ -1,9 +1,10 @@
 package uk.ac.warwick.dcs.sherlock.api.model.preprocessing;
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.Vocabulary;
 import uk.ac.warwick.dcs.sherlock.api.util.IndexedString;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Interface to define the final step in file preprocessing, it turns the list of tokens into a list of strings paired with their respective line numbers.
@@ -12,14 +13,13 @@ import java.util.*;
  */
 public interface ITokenStringifier {
 
-	/**
-	 * Transform list of tokens into a list of indexed strings, where each string is a line of the original file, and the index of the string is the line number
-	 *
-	 * @param tokens the list of preprocessed tokens
-	 * @param vocab  lexer vocabulary (for tokenising)
-	 *
-	 * @return list of line number indexed strings
-	 */
-	List<IndexedString> processTokens(List<? extends Token> tokens, Vocabulary vocab);
+    /**
+     * Transform list of tokens into a list of indexed strings, where each string is a line of the original file, and the index of the string is the line number
+     *
+     * @param tokens the list of preprocessed tokens
+     * @param vocab  lexer vocabulary (for tokenising)
+     * @return list of line number indexed strings
+     */
+    List<IndexedString> processTokens(List<? extends Token> tokens, Vocabulary vocab);
 
 }

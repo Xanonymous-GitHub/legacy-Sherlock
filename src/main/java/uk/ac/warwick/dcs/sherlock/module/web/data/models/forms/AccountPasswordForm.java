@@ -1,10 +1,9 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
-import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.PasswordsMatch;
-import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidPassword;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.PasswordsMatch;
+import uk.ac.warwick.dcs.sherlock.module.web.validation.annotations.ValidPassword;
 
 /**
  * The form for changing an account password
@@ -28,7 +27,9 @@ public class AccountPasswordForm {
 
     public String confirmPassword;
 
-    public AccountPasswordForm() { }
+    public AccountPasswordForm() {
+    }
+
     public String getOldPassword() {
         return oldPassword;
     }

@@ -5,24 +5,24 @@ package uk.ac.warwick.dcs.sherlock.api.event;
  */
 public class EventBus {
 
-	private static IEventBus bus;
+    private static IEventBus bus;
 
-	/**
-	 * Publish an event to the bus
-	 *
-	 * @param event to publish
-	 */
-	public static void publishEvent(IEvent event) {
-		bus.publishEvent(event);
-	}
+    /**
+     * Publish an event to the bus
+     *
+     * @param event to publish
+     */
+    public static void publishEvent(IEvent event) {
+        bus.publishEvent(event);
+    }
 
-	/**
-	 * Attempts to register an object as an event subscriber, all methods with @EventHandler annotation will be registered
-	 *
-	 * @param subscriber instance of a class to register
-	 */
-	public static void registerEventSubscriber(Object subscriber) {
-		bus.registerEventSubscriber(subscriber);
-	}
+    /**
+     * Attempts to register an object as an event subscriber, all methods with @EventHandler annotation will be registered
+     *
+     * @param subscriber instance of a class to register
+     */
+    public static void registerEventSubscriber(Object subscriber) {
+        bus.registerEventSubscriber(subscriber);
+    }
 
 }

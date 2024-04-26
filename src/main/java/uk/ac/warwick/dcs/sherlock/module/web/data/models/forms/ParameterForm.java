@@ -2,10 +2,12 @@ package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
 import org.springframework.validation.BindingResult;
 import uk.ac.warwick.dcs.sherlock.api.annotation.AdjustableParameterObj;
-import uk.ac.warwick.dcs.sherlock.module.web.exceptions.DetectorNotFound;
 import uk.ac.warwick.dcs.sherlock.module.web.data.wrappers.DetectorWrapper;
+import uk.ac.warwick.dcs.sherlock.module.web.exceptions.DetectorNotFound;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The form for changing parameters on a template detector
@@ -15,7 +17,8 @@ public class ParameterForm {
     private Map<String, Float> parameters = new HashMap<>();
     private Map<String, Float> postprocessing = new HashMap<>();
 
-    public ParameterForm() {}
+    public ParameterForm() {
+    }
 
     public ParameterForm(DetectorWrapper detectorWrapper) throws DetectorNotFound {
         List<AdjustableParameterObj> parameterObjList = detectorWrapper.getEngineParameters();
@@ -73,10 +76,8 @@ public class ParameterForm {
      * - That the min bound, max bound and step restrictions are respected
      * If any conditions are not met, add errors to the binding result object
      *
-     * @param result the result holder for a DataBinder
-     * @param post
+     * @param result           the result holder for a DataBinder
      * @param parameterObjList the list of parameters to validate the form against
-     *
      * @return the updated results holder
      */
     public BindingResult validate(BindingResult result, List<AdjustableParameterObj> parameterObjList, boolean post) {

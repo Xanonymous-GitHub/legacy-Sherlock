@@ -3,16 +3,12 @@ package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import uk.ac.warwick.dcs.sherlock.api.component.ISourceFile;
-import uk.ac.warwick.dcs.sherlock.api.component.ISubmission;
+import uk.ac.warwick.dcs.sherlock.api.component.*;
+import uk.ac.warwick.dcs.sherlock.api.exception.SubmissionUnsupportedException;
+import uk.ac.warwick.dcs.sherlock.api.exception.WorkspaceUnsupportedException;
 import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector;
 import uk.ac.warwick.dcs.sherlock.api.util.ITuple;
 import uk.ac.warwick.dcs.sherlock.engine.SherlockEngine;
-import uk.ac.warwick.dcs.sherlock.api.component.IJob;
-import uk.ac.warwick.dcs.sherlock.api.component.ITask;
-import uk.ac.warwick.dcs.sherlock.api.component.IWorkspace;
-import uk.ac.warwick.dcs.sherlock.api.exception.SubmissionUnsupportedException;
-import uk.ac.warwick.dcs.sherlock.api.exception.WorkspaceUnsupportedException;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Account;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.TDetector;
 import uk.ac.warwick.dcs.sherlock.module.web.data.models.db.Workspace;
@@ -22,7 +18,9 @@ import uk.ac.warwick.dcs.sherlock.module.web.data.repositories.WorkspaceReposito
 import uk.ac.warwick.dcs.sherlock.module.web.exceptions.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The wrapper that manages the workspaces
@@ -41,8 +39,8 @@ public class WorkspaceWrapper {
      * Initialise the workspace wrapper using the workspace form to create
      * a new workspace
      *
-     * @param workspaceForm the form
-     * @param account the account of the current user
+     * @param workspaceForm       the form
+     * @param account             the account of the current user
      * @param workspaceRepository the database repository
      */
     public WorkspaceWrapper(
@@ -59,7 +57,6 @@ public class WorkspaceWrapper {
      * Initialise the workspace wrapper using an existing workspace
      *
      * @param workspace the workspace to manage
-     *
      * @throws IWorkspaceNotFound if the workspace entity was not found in the engine
      */
     public WorkspaceWrapper(Workspace workspace) throws IWorkspaceNotFound {
@@ -69,11 +66,10 @@ public class WorkspaceWrapper {
     /**
      * Initialise the workspace wrapper using an id to find one in the database
      *
-     * @param id the id of the account to find
-     * @param account the account of the current user
+     * @param id                  the id of the account to find
+     * @param account             the account of the current user
      * @param workspaceRepository the database repository
-     *
-     * @throws WorkspaceNotFound if the workspace was not found in the web database
+     * @throws WorkspaceNotFound  if the workspace was not found in the web database
      * @throws IWorkspaceNotFound if the workspace entity was not found in the engine
      */
     public WorkspaceWrapper(long id, Account account, WorkspaceRepository workspaceRepository)
@@ -87,10 +83,33 @@ public class WorkspaceWrapper {
     }
 
     /**
+     * Gets the list of workspaces owned by the current user
+     *
+     * @param account             the account of the current user
+     * @param workspaceRepository the database repository
+     * @return the list of workspaces
+     */
+    public static List<WorkspaceWrapper> findByAccount(Account account, WorkspaceRepository workspaceRepository) {
+        List<Workspace> workspaces = workspaceRepository.findByAccount(account);
+        List<WorkspaceWrapper> wrappers = new ArrayList<>();
+
+        assert workspaces != null;
+        for (Workspace workspace : workspaces) {
+            try {
+                wrappers.add(new WorkspaceWrapper(workspace));
+            } catch (IWorkspaceNotFound iWorkspaceNotFound) {
+                //Workspace no longer found in Engine database, remove from UI database
+                workspaceRepository.delete(workspace);
+            }
+        }
+
+        return wrappers;
+    }
+
+    /**
      * Finish initialising the wrapper
      *
      * @param workspace the workspace ot initialise the wrapper with
-     *
      * @throws IWorkspaceNotFound if the workspace entity was not found in the engine
      */
     private void init(Workspace workspace) throws IWorkspaceNotFound {
@@ -100,7 +119,7 @@ public class WorkspaceWrapper {
         List<IWorkspace> iWorkspaces = SherlockEngine.storage.getWorkspaces(engineId);
 
         if (iWorkspaces.size() == 1) {
-            this.iWorkspace = iWorkspaces.get(0);
+            this.iWorkspace = iWorkspaces.getFirst();
         } else {
             throw new IWorkspaceNotFound("Unable to find workspace in engine.");
         }
@@ -152,12 +171,30 @@ public class WorkspaceWrapper {
     }
 
     /**
+     * Set the workspace name
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.iWorkspace.setName(name);
+    }
+
+    /**
      * Get the workspace language
      *
      * @return the language
      */
     public String getLanguage() {
         return this.iWorkspace.getLanguage();
+    }
+
+    /**
+     * Set the workspace language
+     *
+     * @param language the new language
+     */
+    public void setLanguage(String language) {
+        this.iWorkspace.setLanguage(language);
     }
 
     /**
@@ -188,24 +225,6 @@ public class WorkspaceWrapper {
     }
 
     /**
-     * Set the workspace name
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-        this.iWorkspace.setName(name);
-    }
-
-    /**
-     * Set the workspace language
-     *
-     * @param language the new language
-     */
-    public void setLanguage(String language) {
-        this.iWorkspace.setLanguage(language);
-    }
-
-    /**
      * Update the workspace using the workspace form
      *
      * @param workspaceForm the form to use
@@ -221,7 +240,7 @@ public class WorkspaceWrapper {
      * @param workspaceRepository the database repository
      */
     public void delete(WorkspaceRepository workspaceRepository) {
-    	this.iWorkspace.remove();
+        this.iWorkspace.remove();
         workspaceRepository.delete(this.workspace);
     }
 
@@ -229,23 +248,18 @@ public class WorkspaceWrapper {
      * Add submissions to this workspace
      *
      * @param submissionsForm the form to use
-     *
-     * @throws NoFilesUploaded if no files were uploaded
+     * @throws NoFilesUploaded  if no files were uploaded
      * @throws FileUploadFailed if uploading the files failed
      */
     public List<ITuple<ISubmission, ISubmission>> addSubmissions(SubmissionsForm submissionsForm) throws NoFilesUploaded, FileUploadFailed {
         int count = 0; //the number of submissions uploaded
-        List<ITuple<ISubmission, ISubmission>> collisions = new ArrayList();
-        boolean multiple = false;
+        List<ITuple<ISubmission, ISubmission>> collisions = new ArrayList<>();
+        boolean multiple = submissionsForm.getFiles().length == 1 && !submissionsForm.getSingle();
 
-        if(submissionsForm.getFiles().length == 1 && !submissionsForm.getSingle()) {
-            multiple = true;
-        }
-
-	    for(MultipartFile file : submissionsForm.getFiles()) {
+        for (MultipartFile file : submissionsForm.getFiles()) {
             if (file.getSize() > 0) {
                 try {
-	                collisions.addAll(SherlockEngine.storage.storeFile(this.getiWorkspace(), file.getOriginalFilename(), file.getBytes(), multiple));
+                    collisions.addAll(SherlockEngine.storage.storeFile(this.getiWorkspace(), file.getOriginalFilename(), file.getBytes(), multiple));
                 } catch (IOException | WorkspaceUnsupportedException e) {
                     throw new FileUploadFailed(e.getMessage());
                 }
@@ -286,73 +300,47 @@ public class WorkspaceWrapper {
      * Runs a template on a workspace
      *
      * @param templateWrapper the template to run
-     *
      * @throws TemplateContainsNoDetectors if there are no detectors in the template
-     * @throws ClassNotFoundException if the detector no longer exists
-     * @throws ParameterNotFound if the parameter no longer exists
-     * @throws DetectorNotFound if the detector no longer exists
-     * @throws NoFilesUploaded if no files were uploaded
+     * @throws ClassNotFoundException      if the detector no longer exists
+     * @throws ParameterNotFound           if the parameter no longer exists
+     * @throws DetectorNotFound            if the detector no longer exists
+     * @throws NoFilesUploaded             if no files were uploaded
      */
     public long runTemplate(TemplateWrapper templateWrapper) throws TemplateContainsNoDetectors, ClassNotFoundException, ParameterNotFound, DetectorNotFound, NoFilesUploaded {
-		if (templateWrapper.getTemplate().detectors.isEmpty())
-		    throw new TemplateContainsNoDetectors("No detectors in chosen template.");
+        if (templateWrapper.getTemplate().detectors.isEmpty())
+            throw new TemplateContainsNoDetectors("No detectors in chosen template.");
 
-		if (this.getFiles().isEmpty()) {
-		    throw new NoFilesUploaded("No files in workspace");
+        if (this.getFiles().isEmpty()) {
+            throw new NoFilesUploaded("No files in workspace");
         }
 
-		IJob job = this.iWorkspace.createJob();
+        IJob job = this.iWorkspace.createJob();
 
-		for (TDetector td : templateWrapper.getTemplate().detectors) {
+        for (TDetector td : templateWrapper.getTemplate().detectors) {
             Class<? extends IDetector> detector = (Class<? extends IDetector>) Class.forName(td.name, true, SherlockEngine.classloader);
             job.addDetector(detector);
-		}
+        }
 
         job.prepare();
 
-		Logger logger = LoggerFactory.getLogger(WorkspaceWrapper.class);
-		for (ITask task : job.getTasks()) {
-		    for (DetectorWrapper detectorWrapper : templateWrapper.getDetectors()) {
-		        if (task.getDetector().getName().equals(detectorWrapper.getEngineDetector().getName())) {
-		            for (ParameterWrapper parameterWrapper : detectorWrapper.getParametersList()) {
+        Logger logger = LoggerFactory.getLogger(WorkspaceWrapper.class);
+        for (ITask task : job.getTasks()) {
+            for (DetectorWrapper detectorWrapper : templateWrapper.getDetectors()) {
+                if (task.getDetector().getName().equals(detectorWrapper.getEngineDetector().getName())) {
+                    for (ParameterWrapper parameterWrapper : detectorWrapper.getParametersList()) {
                         logger.info("Detector {} has had parameter {} set to {}",
                                 task.getDetector().getName(),
                                 parameterWrapper.getParameterObj().getDisplayName(),
                                 parameterWrapper.getParameter().value
                         );
-		                task.setParameter(parameterWrapper.getParameterObj(), parameterWrapper.getParameter().value);
+                        task.setParameter(parameterWrapper.getParameterObj(), parameterWrapper.getParameter().value);
                     }
                 }
             }
         }
 
-		SherlockEngine.executor.submitJob(job);
+        SherlockEngine.executor.submitJob(job);
 
-		return job.getPersistentId();
-    }
-
-    /**
-     * Gets the list of workspaces owned by the current user
-     *
-     * @param account the account of the current user
-     * @param workspaceRepository the database repository
-     *
-     * @return the list of workspaces
-     */
-    public static List<WorkspaceWrapper> findByAccount(Account account, WorkspaceRepository workspaceRepository) {
-        List<Workspace> workspaces = workspaceRepository.findByAccount(account);
-        List<WorkspaceWrapper> wrappers = new ArrayList<>();
-
-        assert workspaces != null;
-        for (Workspace workspace : workspaces) {
-            try {
-                wrappers.add(new WorkspaceWrapper(workspace));
-            } catch (IWorkspaceNotFound iWorkspaceNotFound) {
-                //Workspace no longer found in Engine database, remove from UI database
-                workspaceRepository.delete(workspace);
-            }
-        }
-
-        return wrappers;
+        return job.getPersistentId();
     }
 }

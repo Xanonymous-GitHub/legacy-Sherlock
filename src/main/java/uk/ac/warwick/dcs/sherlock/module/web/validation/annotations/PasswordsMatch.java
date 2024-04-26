@@ -1,9 +1,9 @@
 package uk.ac.warwick.dcs.sherlock.module.web.validation.annotations;
 
-import uk.ac.warwick.dcs.sherlock.module.web.validation.validators.PasswordsMatchValidator;
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import uk.ac.warwick.dcs.sherlock.module.web.validation.validators.PasswordsMatchValidator;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,6 +24,8 @@ public @interface PasswordsMatch {
      * @return the message key
      */
     String message() default "{error.confirm_password.not_matching}";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

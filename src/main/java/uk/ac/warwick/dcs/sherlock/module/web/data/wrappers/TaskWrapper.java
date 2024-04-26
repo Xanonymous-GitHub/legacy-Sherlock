@@ -1,13 +1,12 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 
-import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 import uk.ac.warwick.dcs.sherlock.api.annotation.AdjustableParameterObj;
 import uk.ac.warwick.dcs.sherlock.api.component.ITask;
+import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * The wrapper that manages the task
@@ -16,12 +15,12 @@ public class TaskWrapper {
     /**
      * The task entity
      */
-    private ITask task;
+    private final ITask task;
 
     /**
      * The detector wrapper
      */
-    private EngineDetectorWrapper detectorWrapper;
+    private final EngineDetectorWrapper detectorWrapper;
 
     /**
      * Initialise the wrapper using the task supplied
@@ -48,7 +47,7 @@ public class TaskWrapper {
      * @return the string result
      */
     public String getParameterString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         List<AdjustableParameterObj> parameters = SherlockRegistry.getDetectorAdjustableParameters(task.getDetector());
         List<AdjustableParameterObj> postprocessing = SherlockRegistry.getPostProcessorAdjustableParametersFromDetector(task.getDetector());
@@ -58,16 +57,16 @@ public class TaskWrapper {
                 List<AdjustableParameterObj> para = new ArrayList<>();
                 List<AdjustableParameterObj> post = new ArrayList<>();
                 if (parameters != null && postprocessing != null) {
-                    para = parameters.stream().filter(p -> (p.getReference()).equals(entry.getKey())).collect(Collectors.toList());
-                    post = postprocessing.stream().filter(p -> (p.getReference()).equals(entry.getKey())).collect(Collectors.toList());
+                    para = parameters.stream().filter(p -> (p.getReference()).equals(entry.getKey())).toList();
+                    post = postprocessing.stream().filter(p -> (p.getReference()).equals(entry.getKey())).toList();
                 }
 
                 if (para.size() == 1) {
-                    result += para.get(0).getDisplayName() + " = " + entry.getValue() + "<br /><br />";
+                    result.append(para.getFirst().getDisplayName()).append(" = ").append(entry.getValue()).append("<br /><br />");
                 } else if (post.size() == 1) {
-                    result += "Post: " + post.get(0).getDisplayName() + " = " + entry.getValue() + "<br /><br />";
+                    result.append("Post: ").append(post.getFirst().getDisplayName()).append(" = ").append(entry.getValue()).append("<br /><br />");
                 } else {
-                    result += entry.getKey() + "=" + entry.getValue() + "<br /><br />";
+                    result.append(entry.getKey()).append("=").append(entry.getValue()).append("<br /><br />");
                 }
             }
         }

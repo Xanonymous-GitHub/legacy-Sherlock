@@ -1,11 +1,10 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.models.forms;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * The form to upload submission(s)
@@ -18,11 +17,12 @@ public class SubmissionsForm {
     public boolean single;
 
     @NotNull(message = "{error.duplicate}")
-    @Min(value=0, message = "{error.duplicate}")
-    @Max(value=2, message = "{error.duplicate}")
+    @Min(value = 0, message = "{error.duplicate}")
+    @Max(value = 2, message = "{error.duplicate}")
     public int duplicate;
 
-    public SubmissionsForm() { }
+    public SubmissionsForm() {
+    }
 
     public SubmissionsForm(MultipartFile[] files, boolean single) {
         this.files = files;

@@ -45,7 +45,7 @@ class FileMatch(match: SubmissionMatch) {
     /**
      * The reason this match was detected
      */
-    val reason: String = match.reason
+    val reason: String = match.reason()
 
     /**
      * Get the score for this match
@@ -74,17 +74,17 @@ class FileMatch(match: SubmissionMatch) {
      * @param match the engine match to initialise this object with
      */
     init {
-        for (item in match.items) {
+        for (item in match.items()) {
             val blocks: MutableList<CodeBlock> = ArrayList()
-            item.lineNumbers.forEach(Consumer { t: ITuple<Int?, Int?> ->
+            item.lineNumbers().forEach(Consumer { t: ITuple<Int?, Int?> ->
                 blocks.add(
                     CodeBlock(
                         t.key!!, t.value!!
                     )
                 )
             })
-            map[item.file] = blocks
-            this.score = item.score * 100
+            map[item.file()] = blocks
+            this.score = item.score() * 100
         }
 
         //        this.score = match.getScore();

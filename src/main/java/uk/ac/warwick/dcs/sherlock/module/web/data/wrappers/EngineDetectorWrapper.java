@@ -1,10 +1,11 @@
 package uk.ac.warwick.dcs.sherlock.module.web.data.wrappers;
 
-import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector;
+import uk.ac.warwick.dcs.sherlock.api.registry.SherlockRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -41,6 +42,34 @@ public class EngineDetectorWrapper {
         this.displayName = SherlockRegistry.getDetectorDisplayName(detector);
         this.languages = SherlockRegistry.getDetectorLanguages(detector);
         this.description = SherlockRegistry.getDetectorDescription(detector);
+    }
+
+    /**
+     * Get the list of detector wrappers for a language
+     *
+     * @param language the language to filter by
+     * @return the list of wrappers
+     */
+    public static List<EngineDetectorWrapper> getDetectors(String language) {
+        List<EngineDetectorWrapper> list = new ArrayList<>();
+        if (Objects.requireNonNull(SherlockRegistry.getLanguages()).contains(language)) {
+            Objects.requireNonNull(SherlockRegistry.getDetectors(language)).forEach(d -> list.add(new EngineDetectorWrapper(d)));
+        }
+        return list;
+    }
+
+    /**
+     * Get the list of detector names for a language
+     *
+     * @param language the language to filter by
+     * @return the list of names
+     */
+    public static List<String> getDetectorNames(String language) {
+        List<String> list = new ArrayList<>();
+        if (Objects.requireNonNull(SherlockRegistry.getLanguages()).contains(language)) {
+            Objects.requireNonNull(SherlockRegistry.getDetectors(language)).forEach(d -> list.add(d.getName()));
+        }
+        return list;
     }
 
     /**
@@ -113,35 +142,5 @@ public class EngineDetectorWrapper {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * Get the list of detector wrappers for a language
-     *
-     * @param language the language to filter by
-     *
-     * @return the list of wrappers
-     */
-    public static List<EngineDetectorWrapper> getDetectors(String language) {
-        List<EngineDetectorWrapper> list = new ArrayList<>();
-        if (SherlockRegistry.getLanguages().contains(language)) {
-            SherlockRegistry.getDetectors(language).forEach(d -> list.add(new EngineDetectorWrapper(d)));
-        }
-        return list;
-    }
-
-    /**
-     * Get the list of detector names for a language
-     *
-     * @param language the language to filter by
-     *
-     * @return the list of names
-     */
-    public static List<String> getDetectorNames(String language) {
-        List<String> list = new ArrayList<>();
-        if (SherlockRegistry.getLanguages().contains(language)) {
-            SherlockRegistry.getDetectors(language).forEach(d -> list.add(d.getName()));
-        }
-        return list;
     }
 }

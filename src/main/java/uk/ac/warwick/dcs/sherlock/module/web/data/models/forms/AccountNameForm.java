@@ -20,9 +20,10 @@ public class AccountNameForm {
     })
     public String username;
 
-    public AccountNameForm() { }
+    public AccountNameForm() {
+    }
 
-    public AccountNameForm(Account account){
+    public AccountNameForm(Account account) {
         this.username = account.username;
     }
 
