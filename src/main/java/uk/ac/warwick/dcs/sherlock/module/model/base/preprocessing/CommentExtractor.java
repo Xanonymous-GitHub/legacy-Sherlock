@@ -1,10 +1,13 @@
 package uk.ac.warwick.dcs.sherlock.module.model.base.preprocessing;
 
-import org.antlr.v4.runtime.*;
-import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.ILexerSpecification;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.Vocabulary;
 import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.IGeneralPreProcessor;
+import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.ILexerSpecification;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class CommentExtractor implements IGeneralPreProcessor {
 

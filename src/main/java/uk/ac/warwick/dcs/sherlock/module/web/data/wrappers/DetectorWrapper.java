@@ -205,7 +205,7 @@ public class DetectorWrapper {
      * Get the list of parameters for this detector
      *
      * @return the list of parameters
-     * @throws DetectorNotFound  if the engine detector no longer exists
+     * @throws DetectorNotFound if the engine detector no longer exists
      */
     public List<ParameterWrapper> getParametersList() throws DetectorNotFound, ParameterNotFound {
         List<ParameterWrapper> list = new ArrayList<>();

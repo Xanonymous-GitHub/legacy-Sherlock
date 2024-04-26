@@ -269,6 +269,7 @@ public class SubmissionResultsData {
     }
 
     /**
+     *
      */
     public Map<ISubmission, SortedMap<Long, ISourceFile>> getMatchedFiles() {
         Map<ISubmission, SortedMap<Long, ISourceFile>> map = new HashMap<>();

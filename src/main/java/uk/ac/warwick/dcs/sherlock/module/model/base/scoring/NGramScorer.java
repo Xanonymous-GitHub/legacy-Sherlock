@@ -217,7 +217,6 @@ public class NGramScorer {
 
         /**
          * Constructor, initialises storage and adds first element.
-         *
          */
         public MatchList(NgramMatch pair) {
             matches = new ArrayList<>();
