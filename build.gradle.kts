@@ -192,7 +192,8 @@ tasks {
     }
 
     bootRun {
-        mainClass = "$group.launch.SherlockClient"
+        // We can not use `$group.launch.SherlockClient` here because the class is not compiled yet
+        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
         jvmArgs = listOf("-Dspring.profiles.active=dev", "-Dspring.output.ansi.enabled=ALWAYS")
     }
 
