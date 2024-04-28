@@ -1,3 +1,34 @@
+/*
+ [The "BSD licence"]
+ Copyright (c) 2013 Terence Parr, Sam Harwell
+ Copyright (c) 2017 Ivan Kochurkin (upgrade to Java 8)
+ Copyright (c) 2021 Michał Lorek (upgrade to Java 11)
+ Copyright (c) 2022 Michał Lorek (upgrade to Java 17)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 // $antlr-format alignTrailingComments true, columnLimit 150, minEmptyLines 1, maxEmptyLinesToKeep 1, reflowComments false, useTab false
 // $antlr-format allowShortRulesOnASingleLine false, allowShortBlocksOnASingleLine true, alignSemicolons hanging, alignColons hanging
 
@@ -7,372 +38,211 @@ options {
     tokenVocab = JavaLexer;
 }
 
-//=============
-
-start_
-    : compilationUnit EOF
-    ;
-
-// Paragraph 3.10
-// --------------
-
-literal
-    : IntegerLiteral
-    | FloatingPointLiteral
-    | BooleanLiteral
-    | CharacterLiteral
-    | StringLiteral
-    | TextBlock
-    | NullLiteral
-    ;
-
-// Paragraph 3.8
-// -------------
-
-typeIdentifier
-    : Identifier
-    ;
-
-unqualifiedMethodIdentifier
-    : Identifier
-    ;
-
-// Paragraph 4.1 // Type is not used.
-// Type    ::=      primitiveType
-//          |       referenceType
-//          ;
-
-// Paragraph 4.2
-// -------------
-
-primitiveType
-    : annotation* (numericType | 'boolean')
-    ;
-
-numericType
-    : integralType
-    | floatingPointType
-    ;
-
-integralType
-    : 'byte'
-    | 'short'
-    | 'int'
-    | 'long'
-    | 'char'
-    ;
-
-floatingPointType
-    : 'float'
-    | 'double'
-    ;
-
-// Paragraph 4.3
-// -------------
-
-referenceType
-    : classOrInterfaceType
-    | typeVariable
-    | arrayType
-    ;
-
-// replace classType in classOrInterfaceType
-
-// classOrInterfaceType
-//         : classType
-//         | interfaceType
-//         ;
-//
-
-// classOrInterfaceType
-//         :                                      annotation* typeIdentifier typeArguments? coit
-//         |             packageName          '.' annotation* typeIdentifier typeArguments? coit
-//         |             classOrInterfaceType '.' annotation* typeIdentifier typeArguments?
-//         | interfaceType coit
-//         ;
-//
-
-coit
-    : '.' annotation* typeIdentifier typeArguments? coit?
-    ;
-
-classOrInterfaceType
-    : (packageName '.')? annotation* typeIdentifier typeArguments? coit?
-    ;
-
-classType
-    : annotation* typeIdentifier typeArguments?
-    | packageName '.' annotation* typeIdentifier typeArguments?
-    | classOrInterfaceType '.' annotation* typeIdentifier typeArguments?
-    ;
-
-interfaceType
-    : classType
-    ;
-
-typeVariable
-    : annotation* typeIdentifier
-    ;
-
-arrayType
-    : primitiveType dims
-    | classType dims
-    | typeVariable dims
-    ;
-
-dims
-    : annotation* '[' ']' (annotation* '[' ']')*
-    ;
-
-// Paragraph 4.4
-// -------------
-
-typeParameter
-    : typeParameterModifier* typeIdentifier typeBound?
-    ;
-
-typeParameterModifier
-    : annotation
-    ;
-
-typeBound
-    : 'extends' (typeVariable | classOrInterfaceType additionalBound*)
-    ;
-
-additionalBound
-    : '&' interfaceType
-    ;
-
-// Paragraph 4.5.1
-// ---------------
-
-typeArguments
-    : '<' typeArgumentList '>'
-    ;
-
-typeArgumentList
-    : typeArgument (',' typeArgument)*
-    ;
-
-typeArgument
-    : referenceType
-    | wildcard
-    ;
-
-wildcard
-    : annotation* '?' wildcardBounds?
-    ;
-
-wildcardBounds
-    : 'extends' referenceType
-    | 'super' referenceType
-    ;
-
-// Paragraph 6.5
-// -------------
-
-moduleName
-    : Identifier ('.' moduleName)?
-    // left recursion --> right recursion
-    ;
-
-packageName
-    : Identifier ('.' packageName)?
-    // left recursion --> right recursion
-    ;
-
-typeName
-    : packageName ('.' typeIdentifier)?
-    ;
-
-packageOrTypeName
-    : Identifier ('.' packageOrTypeName)?
-    // left recursion --> right recursion
-    ;
-
-expressionName
-    : (ambiguousName '.')? Identifier
-    ;
-
-methodName
-    : unqualifiedMethodIdentifier
-    ;
-
-ambiguousName
-    : Identifier ('.' ambiguousName)?
-    // left recursion --> right recursion
-    ;
-
-// Paragraph 7.3
-// -------------
-
 compilationUnit
-    : ordinaryCompilationUnit
-    | modularCompilationUnit
+    : packageDeclaration? (importDeclaration | ';')* (typeDeclaration | ';')*
+    | moduleDeclaration EOF
     ;
-
-ordinaryCompilationUnit
-    : packageDeclaration? importDeclaration* topLevelClassOrInterfaceDeclaration*
-    ;
-
-modularCompilationUnit
-    : importDeclaration* moduleDeclaration
-    ;
-
-// Paragraph 7.4
-// -------------
 
 packageDeclaration
-    : packageModifier* 'package' Identifier ('.' Identifier)* ';'
+    : annotation* PACKAGE qualifiedName ';'
     ;
-
-packageModifier
-    : annotation
-    ;
-
-// Paragraph 7.5
-// -------------
 
 importDeclaration
-    : singleTypeImportDeclaration
-    | typeImportOnDemandDeclaration
-    | singleStaticImportDeclaration
-    | staticImportOnDemandDeclaration
+    : IMPORT STATIC? qualifiedName ('.' '*')? ';'
     ;
 
-singleTypeImportDeclaration
-    : 'import' typeName ';'
+typeDeclaration
+    : classOrInterfaceModifier* (
+        classDeclaration
+        | enumDeclaration
+        | interfaceDeclaration
+        | annotationTypeDeclaration
+        | recordDeclaration
+    )
     ;
 
-typeImportOnDemandDeclaration
-    : 'import' packageOrTypeName '.' '*' ';'
+modifier
+    : classOrInterfaceModifier
+    | NATIVE
+    | SYNCHRONIZED
+    | TRANSIENT
+    | VOLATILE
     ;
 
-singleStaticImportDeclaration
-    : 'import' 'static' typeName '.' Identifier ';'
+classOrInterfaceModifier
+    : annotation
+    | PUBLIC
+    | PROTECTED
+    | PRIVATE
+    | STATIC
+    | ABSTRACT
+    | FINAL // FINAL for class only -- does not apply to interfaces
+    | STRICTFP
+    | SEALED     // Java17
+    | NON_SEALED // Java17
     ;
 
-staticImportOnDemandDeclaration
-    : 'import' 'static' typeName '.' '*' ';'
+variableModifier
+    : FINAL
+    | annotation
     ;
-
-// Paragraph 7.6
-// -------------
-
-topLevelClassOrInterfaceDeclaration
-    : classDeclaration
-    | interfaceDeclaration
-    | ';'
-    ;
-
-// Paragraph 7.7
-// -------------
-
-moduleDeclaration
-    : annotation* 'open'? 'module' Identifier ('.' Identifier)* '{' moduleDirective* '}'
-    ;
-
-moduleDirective
-    : 'requires' requiresModifier* moduleName ';'
-    | 'exports' packageName ('to' moduleName ( ',' moduleName)*)? ';'
-    | 'opens' packageName ('to' moduleName ( ',' moduleName)*)? ';'
-    | 'uses' typeName ';'
-    | 'provides' typeName 'with' typeName ( ',' typeName)* ';'
-    ;
-
-requiresModifier
-    : 'transitive'
-    | 'static'
-    ;
-
-// Paragraph 8.1
-// -------------
 
 classDeclaration
-    : normalClassDeclaration
-    | enumDeclaration
-    | recordDeclaration
-    ;
-
-normalClassDeclaration
-    : classModifier* 'class' typeIdentifier typeParameters? classExtends? classImplements? classPermits? classBody
-    ;
-
-classModifier
-    : annotation
-    | 'public'
-    | 'protected'
-    | 'private'
-    | 'abstract'
-    | 'static'
-    | 'final'
-    | 'sealed'
-    | 'non-sealed'
-    | 'strictfp'
+    : CLASS identifier typeParameters? (EXTENDS typeType)? (IMPLEMENTS typeList)? (
+        PERMITS typeList
+    )? // Java17
+    classBody
     ;
 
 typeParameters
-    : '<' typeParameterList '>'
+    : '<' typeParameter (',' typeParameter)* '>'
     ;
 
-typeParameterList
-    : typeParameter (',' typeParameter)*
+typeParameter
+    : annotation* identifier (EXTENDS annotation* typeBound)?
     ;
 
-classExtends
-    : 'extends' classType
+typeBound
+    : typeType ('&' typeType)*
     ;
 
-classImplements
-    : 'implements' interfaceTypeList
+enumDeclaration
+    : ENUM identifier (IMPLEMENTS typeList)? '{' enumConstants? ','? enumBodyDeclarations? '}'
     ;
 
-interfaceTypeList
-    : interfaceType (',' interfaceType)*
+enumConstants
+    : enumConstant (',' enumConstant)*
     ;
 
-classPermits
-    : 'permits' typeName (',' typeName)*
+enumConstant
+    : annotation* identifier arguments? classBody?
+    ;
+
+enumBodyDeclarations
+    : ';' classBodyDeclaration*
+    ;
+
+interfaceDeclaration
+    : INTERFACE identifier typeParameters? (EXTENDS typeList)? (PERMITS typeList)? interfaceBody
     ;
 
 classBody
     : '{' classBodyDeclaration* '}'
     ;
 
-classBodyDeclaration
-    : classMemberDeclaration
-    | instanceInitializer
-    | staticInitializer
-    | constructorDeclaration
+interfaceBody
+    : '{' interfaceBodyDeclaration* '}'
     ;
 
-classMemberDeclaration
-    : fieldDeclaration
+classBodyDeclaration
+    : ';'
+    | STATIC? block
+    | modifier* memberDeclaration
+    ;
+
+memberDeclaration
+    : recordDeclaration //Java17
     | methodDeclaration
-    | classDeclaration
+    | genericMethodDeclaration
+    | fieldDeclaration
+    | constructorDeclaration
+    | genericConstructorDeclaration
     | interfaceDeclaration
+    | annotationTypeDeclaration
+    | classDeclaration
+    | enumDeclaration
+    ;
+
+/* We use rule this even for void methods which cannot have [] after parameters.
+   This simplifies grammar and we can consider void to be a type, which
+   renders the [] matching as a context-sensitive issue or a semantic check
+   for invalid return type after parsing.
+ */
+methodDeclaration
+    : typeTypeOrVoid identifier formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
+    ;
+
+methodBody
+    : block
     | ';'
     ;
 
-// Paragraph 8.3
-// -------------
+typeTypeOrVoid
+    : typeType
+    | VOID
+    ;
+
+genericMethodDeclaration
+    : typeParameters methodDeclaration
+    ;
+
+genericConstructorDeclaration
+    : typeParameters constructorDeclaration
+    ;
+
+constructorDeclaration
+    : identifier formalParameters (THROWS qualifiedNameList)? constructorBody = block
+    ;
+
+compactConstructorDeclaration
+    : modifier* identifier constructorBody = block
+    ;
 
 fieldDeclaration
-    : fieldModifier* unannType variableDeclaratorList ';'
+    : typeType variableDeclarators ';'
     ;
 
-fieldModifier
+interfaceBodyDeclaration
+    : modifier* interfaceMemberDeclaration
+    | ';'
+    ;
+
+interfaceMemberDeclaration
+    : recordDeclaration // Java17
+    | constDeclaration
+    | interfaceMethodDeclaration
+    | genericInterfaceMethodDeclaration
+    | interfaceDeclaration
+    | annotationTypeDeclaration
+    | classDeclaration
+    | enumDeclaration
+    ;
+
+constDeclaration
+    : typeType constantDeclarator (',' constantDeclarator)* ';'
+    ;
+
+constantDeclarator
+    : identifier ('[' ']')* '=' variableInitializer
+    ;
+
+// Early versions of Java allows brackets after the method name, eg.
+// public int[] return2DArray() [] { ... }
+// is the same as
+// public int[][] return2DArray() { ... }
+interfaceMethodDeclaration
+    : interfaceMethodModifier* interfaceCommonBodyDeclaration
+    ;
+
+// Java8
+interfaceMethodModifier
     : annotation
-    | 'public'
-    | 'protected'
-    | 'private'
-    | 'static'
-    | 'final'
-    | 'transient'
-    | 'volatile'
+    | PUBLIC
+    | ABSTRACT
+    | DEFAULT
+    | STATIC
+    | STRICTFP
     ;
 
-variableDeclaratorList
+genericInterfaceMethodDeclaration
+    : interfaceMethodModifier* typeParameters interfaceCommonBodyDeclaration
+    ;
+
+interfaceCommonBodyDeclaration
+    : annotation* typeTypeOrVoid identifier formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
+    ;
+
+variableDeclarators
     : variableDeclarator (',' variableDeclarator)*
     ;
 
@@ -381,215 +251,186 @@ variableDeclarator
     ;
 
 variableDeclaratorId
-    : Identifier dims?
+    : identifier ('[' ']')*
     ;
 
 variableInitializer
-    : expression
-    | arrayInitializer
+    : arrayInitializer
+    | expression
     ;
 
-unannType
-    : unannPrimitiveType
-    | unannReferenceType
+arrayInitializer
+    : '{' (variableInitializer (',' variableInitializer)* ','?)? '}'
     ;
 
-unannPrimitiveType
-    : numericType
-    | 'boolean'
+classOrInterfaceType
+    : (identifier typeArguments? '.')* typeIdentifier typeArguments?
     ;
 
-unannReferenceType
-    : unannClassOrInterfaceType
-    | unannTypeVariable
-    | unannArrayType
+typeArgument
+    : typeType
+    | annotation* '?' ((EXTENDS | SUPER) typeType)?
     ;
 
-// Replace unannClassType in unannClassOrInterfaceType
-
-// unannClassOrInterfaceType
-//         : unannClassType
-//         | unannInterfaceType
-//         ;
-//
-
-unannClassOrInterfaceType
-    : (packageName '.' annotation*)? typeIdentifier typeArguments? uCOIT?
+qualifiedNameList
+    : qualifiedName (',' qualifiedName)*
     ;
 
-uCOIT
-    : '.' annotation* typeIdentifier typeArguments? uCOIT?
-    ;
-
-unannClassType
-    : typeIdentifier typeArguments?
-    | (packageName | unannClassOrInterfaceType) '.' annotation* typeIdentifier typeArguments?
-    ;
-
-unannInterfaceType
-    : unannClassType
-    ;
-
-unannTypeVariable
-    : typeIdentifier
-    ;
-
-unannArrayType
-    : (unannPrimitiveType | unannClassOrInterfaceType | unannTypeVariable) dims
-    ;
-
-// Paragraph 8.4
-// -------------
-
-methodDeclaration
-    : methodModifier* methodHeader methodBody
-    ;
-
-methodModifier
-    : annotation
-    | 'public'
-    | 'protected'
-    | 'private'
-    | 'abstract'
-    | 'static'
-    | 'final'
-    | 'synchronized'
-    | 'native'
-    | 'strictfp'
-    ;
-
-methodHeader
-    : (typeParameters annotation*)? result methodDeclarator throwsT?
-    ;
-
-result
-    : unannType
-    | 'void'
-    ;
-
-methodDeclarator
-    : Identifier '(' (receiverParameter ',')? formalParameterList? ')' dims?
+formalParameters
+    : '(' (
+        receiverParameter?
+        | receiverParameter (',' formalParameterList)?
+        | formalParameterList?
+    ) ')'
     ;
 
 receiverParameter
-    : annotation* unannType (Identifier '.')? 'this'
+    : typeType (identifier '.')* THIS
     ;
 
 formalParameterList
-    : formalParameter (',' formalParameter)*
+    : formalParameter (',' formalParameter)* (',' lastFormalParameter)?
+    | lastFormalParameter
     ;
 
 formalParameter
-    : variableModifier* unannType variableDeclaratorId
-    | variableArityParameter
+    : variableModifier* typeType variableDeclaratorId
     ;
 
-variableArityParameter
-    : variableModifier* unannType annotation* '...' Identifier
+lastFormalParameter
+    : variableModifier* typeType annotation* '...' variableDeclaratorId
     ;
 
-variableModifier
-    : annotation
-    | 'final'
+// local variable type inference
+lambdaLVTIList
+    : lambdaLVTIParameter (',' lambdaLVTIParameter)*
     ;
 
-throwsT
-    : 'throws' exceptionTypeList
+lambdaLVTIParameter
+    : variableModifier* VAR identifier
     ;
 
-exceptionTypeList
-    : exceptionType (',' exceptionType)*
+qualifiedName
+    : identifier ('.' identifier)*
     ;
 
-exceptionType
-    : classType
-    | typeVariable
+literal
+    : integerLiteral
+    | floatLiteral
+    | CHAR_LITERAL
+    | STRING_LITERAL
+    | BOOL_LITERAL
+    | NULL_LITERAL
+    | TEXT_BLOCK // Java17
     ;
 
-methodBody
-    : block
-    | ';'
+integerLiteral
+    : DECIMAL_LITERAL
+    | HEX_LITERAL
+    | OCT_LITERAL
+    | BINARY_LITERAL
     ;
 
-// Paragraph 8.6
-// -------------
-
-instanceInitializer
-    : block
+floatLiteral
+    : FLOAT_LITERAL
+    | HEX_FLOAT_LITERAL
     ;
 
-// Paragraph 8.7
-// -------------
-
-staticInitializer
-    : 'static' block
+// ANNOTATIONS
+altAnnotationQualifiedName
+    : (identifier DOT)* '@' identifier
     ;
 
-// Paragraph 8.8
-// -------------
-
-constructorDeclaration
-    : constructorModifier* constructorDeclarator throwsT? constructorBody
+annotation
+    : ('@' qualifiedName | altAnnotationQualifiedName) (
+        '(' ( elementValuePairs | elementValue)? ')'
+    )?
     ;
 
-constructorModifier
-    : annotation
-    | 'public'
-    | 'protected'
-    | 'private'
+elementValuePairs
+    : elementValuePair (',' elementValuePair)*
     ;
 
-constructorDeclarator
-    : typeParameters? simpleTypeName '(' (receiverParameter ',')? formalParameterList? ')'
+elementValuePair
+    : identifier '=' elementValue
     ;
 
-simpleTypeName
-    : typeIdentifier
+elementValue
+    : expression
+    | annotation
+    | elementValueArrayInitializer
     ;
 
-constructorBody
-    : '{' explicitConstructorInvocation? blockStatements? '}'
+elementValueArrayInitializer
+    : '{' (elementValue (',' elementValue)*)? ','? '}'
     ;
 
-explicitConstructorInvocation
-    : typeArguments? ('this' | 'super') '(' argumentList? ')' ';'
-    | (expressionName | primary) '.' typeArguments? 'super' '(' argumentList? ')' ';'
+annotationTypeDeclaration
+    : '@' INTERFACE identifier annotationTypeBody
     ;
 
-// Paragraph 8.9
-// -------------
-
-enumDeclaration
-    : classModifier* 'enum' typeIdentifier classImplements? enumBody
+annotationTypeBody
+    : '{' annotationTypeElementDeclaration* '}'
     ;
 
-enumBody
-    : '{' enumConstantList? ','? enumBodyDeclarations? '}'
-    // It is not my  grammarmistake! It is based on //docs.oracle.com/javase/specs/jls/se20/jls20.pdf.
-    // Notice, javac accepts "enum One { ,  }" and also "enum Two { , ; {} }"
+annotationTypeElementDeclaration
+    : modifier* annotationTypeElementRest
+    | ';' // this is not allowed by the grammar, but apparently allowed by the actual compiler
     ;
 
-enumConstantList
-    : enumConstant (',' enumConstant)*
+annotationTypeElementRest
+    : typeType annotationMethodOrConstantRest ';'
+    | classDeclaration ';'?
+    | interfaceDeclaration ';'?
+    | enumDeclaration ';'?
+    | annotationTypeDeclaration ';'?
+    | recordDeclaration ';'? // Java17
     ;
 
-enumConstant
-    : enumConstantModifier* Identifier ('(' argumentList? ')')? classBody?
+annotationMethodOrConstantRest
+    : annotationMethodRest
+    | annotationConstantRest
     ;
 
-enumConstantModifier
-    : annotation
+annotationMethodRest
+    : identifier '(' ')' defaultValue?
     ;
 
-enumBodyDeclarations
-    : ';' classBodyDeclaration*
+annotationConstantRest
+    : variableDeclarators
     ;
 
-// Paragraph 8.10
-// --------------
+defaultValue
+    : DEFAULT elementValue
+    ;
+
+// MODULES - Java9
+
+moduleDeclaration
+    : OPEN? MODULE qualifiedName moduleBody
+    ;
+
+moduleBody
+    : '{' moduleDirective* '}'
+    ;
+
+moduleDirective
+    : REQUIRES requiresModifier* qualifiedName ';'
+    | EXPORTS qualifiedName (TO qualifiedName)? ';'
+    | OPENS qualifiedName (TO qualifiedName)? ';'
+    | USES qualifiedName ';'
+    | PROVIDES qualifiedName WITH qualifiedName ';'
+    ;
+
+requiresModifier
+    : TRANSITIVE
+    | STATIC
+    ;
+
+// RECORDS - Java 17
 
 recordDeclaration
-    : classModifier* 'record' typeIdentifier typeParameters? recordHeader classImplements? recordBody
+    : RECORD identifier typeParameters? recordHeader (IMPLEMENTS typeList)? recordBody
     ;
 
 recordHeader
@@ -601,988 +442,359 @@ recordComponentList
     ;
 
 recordComponent
-    : recordComponentModifier* unannType Identifier
-    | variableArityRecordComponent
-    ;
-
-variableArityRecordComponent
-    : recordComponentModifier* unannType annotation* '...' Identifier
-    ;
-
-recordComponentModifier
-    : annotation
+    : typeType identifier
     ;
 
 recordBody
-    : '{' recordBodyDeclaration* '}'
+    : '{' (classBodyDeclaration | compactConstructorDeclaration)* '}'
     ;
 
-recordBodyDeclaration
-    : classBodyDeclaration
-    | compactConstructorDeclaration
-    ;
-
-compactConstructorDeclaration
-    : constructorModifier* simpleTypeName constructorBody
-    ;
-
-// Paragraph 9.1
-// -------------
-
-interfaceDeclaration
-    : normalInterfaceDeclaration
-    | annotationInterfaceDeclaration
-    ;
-
-normalInterfaceDeclaration
-    : interfaceModifier* 'interface' typeIdentifier typeParameters? interfaceExtends? interfacePermits? interfaceBody
-    ;
-
-interfaceModifier
-    : annotation
-    | 'public'
-    | 'protected'
-    | 'private'
-    | 'abstract'
-    | 'static'
-    | 'sealed'
-    | 'non-sealed'
-    | 'strictfp'
-    ;
-
-interfaceExtends
-    : 'extends' interfaceTypeList
-    ;
-
-interfacePermits
-    : 'permits' typeName (',' typeName)*
-    ;
-
-interfaceBody
-    : '{' interfaceMemberDeclaration* '}'
-    ;
-
-interfaceMemberDeclaration
-    : constantDeclaration
-    | interfaceMethodDeclaration
-    | classDeclaration
-    | interfaceDeclaration
-    | ';'
-    ;
-
-// Paragraph 9.3
-// -------------
-
-constantDeclaration
-    : constantModifier* unannType variableDeclaratorList ';'
-    ;
-
-constantModifier
-    : annotation
-    | 'public'
-    | 'static'
-    | 'final'
-    ;
-
-// Paragraph 9.4
-// -------------
-
-interfaceMethodDeclaration
-    : interfaceMethodModifier* methodHeader methodBody
-    ;
-
-interfaceMethodModifier
-    : annotation
-    | 'public'
-    | 'private'
-    | 'abstract'
-    | 'default'
-    | 'static'
-    | 'strictfp'
-    ;
-
-// Paragraph 9.6
-// -------------
-
-annotationInterfaceDeclaration
-    : interfaceModifier* '@' 'interface' typeIdentifier annotationInterfaceBody
-    ;
-
-annotationInterfaceBody
-    : '{' annotationInterfaceMemberDeclaration* '}'
-    ;
-
-annotationInterfaceMemberDeclaration
-    : annotationInterfaceElementDeclaration
-    | constantDeclaration
-    | classDeclaration
-    | interfaceDeclaration
-    | ';'
-    ;
-
-annotationInterfaceElementDeclaration
-    : annotationInterfaceElementModifier* unannType Identifier '(' ')' dims? defaultValue? ';'
-    ;
-
-annotationInterfaceElementModifier
-    : annotation
-    | 'public'
-    | 'abstract'
-    ;
-
-defaultValue
-    : 'default' elementValue
-    ;
-
-// Paragraph 9.7
-// -------------
-
-annotation
-    : normalAnnotation
-    | markerAnnotation
-    | singleElementAnnotation
-    ;
-
-normalAnnotation
-    : '@' typeName '(' elementValuePairList? ')'
-    ;
-
-elementValuePairList
-    : elementValuePair (',' elementValuePair)*
-    ;
-
-elementValuePair
-    : Identifier '=' elementValue
-    ;
-
-elementValue
-    : conditionalExpression
-    | elementValueArrayInitializer
-    | annotation
-    ;
-
-elementValueArrayInitializer
-    : '{' elementValueList? ','? '}'
-    ;
-
-elementValueList
-    : elementValue (',' elementValue)*
-    ;
-
-markerAnnotation
-    : '@' typeName
-    ;
-
-singleElementAnnotation
-    : '@' typeName '(' elementValue ')'
-    ;
-
-// Paragraph 10.6
-// --------------
-
-arrayInitializer
-    : '{' variableInitializerList? ','? '}'
-    // Strange  ','  ?! staat ook in antlr_java.g4
-    ;
-
-variableInitializerList
-    : variableInitializer (',' variableInitializer)*
-    ;
-
-// Paragraph 14.2
-// --------------
+// STATEMENTS / BLOCKS
 
 block
-    : '{' blockStatements? '}'
-    ;
-
-blockStatements
-    : blockStatement blockStatement*
+    : '{' blockStatement* '}'
     ;
 
 blockStatement
-    : localClassOrInterfaceDeclaration
-    | localVariableDeclarationStatement
+    : localVariableDeclaration ';'
+    | localTypeDeclaration
     | statement
     ;
 
-// Paragraph 14.3
-// --------------
-
-localClassOrInterfaceDeclaration
-    : classDeclaration
-    | normalInterfaceDeclaration
-    ;
-
-// Paragraph 14.4
-// --------------
-
 localVariableDeclaration
-    : variableModifier* localVariableType variableDeclaratorList?
+    : variableModifier* (VAR identifier '=' expression | typeType variableDeclarators)
     ;
 
-localVariableType
-    : unannType
-    | 'var'
+identifier
+    : IDENTIFIER
+    | MODULE
+    | OPEN
+    | REQUIRES
+    | EXPORTS
+    | OPENS
+    | TO
+    | USES
+    | PROVIDES
+    | WITH
+    | TRANSITIVE
+    | YIELD
+    | SEALED
+    | PERMITS
+    | RECORD
+    | VAR
     ;
 
-localVariableDeclarationStatement
-    : localVariableDeclaration ';'
+typeIdentifier // Identifiers that are not restricted for type declarations
+    : IDENTIFIER
+    | MODULE
+    | OPEN
+    | REQUIRES
+    | EXPORTS
+    | OPENS
+    | TO
+    | USES
+    | PROVIDES
+    | WITH
+    | TRANSITIVE
+    | SEALED
+    | PERMITS
+    | RECORD
     ;
 
-// Paragraph 14.5
-// --------------
+localTypeDeclaration
+    : classOrInterfaceModifier* (classDeclaration | interfaceDeclaration | recordDeclaration)
+    ;
 
 statement
-    : statementWithoutTrailingSubstatement
-    | labeledStatement
-    | ifThenStatement
-    | ifThenElseStatement
-    | whileStatement
-    | forStatement
-    ;
-
-statementNoShortIf
-    : statementWithoutTrailingSubstatement
-    | labeledStatementNoShortIf
-    | ifThenElseStatementNoShortIf
-    | whileStatementNoShortIf
-    | forStatementNoShortIf
-    ;
-
-statementWithoutTrailingSubstatement
-    : block
-    | emptyStatement_
-    | expressionStatement
-    | assertStatement
-    | switchStatement
-    | doStatement
-    | breakStatement
-    | continueStatement
-    | returnStatement
-    | synchronizedStatement
-    | throwStatement
-    | tryStatement
-    | yieldStatement
-    ;
-
-// Paragraph 14.6
-// --------------
-
-emptyStatement_
-    : ';'
-    ;
-
-// Paragraph 14.7
-// --------------
-
-labeledStatement
-    : Identifier ':' statement
-    ;
-
-labeledStatementNoShortIf
-    : Identifier ':' statementNoShortIf
-    ;
-
-// Paragraph 14.8
-// --------------
-
-expressionStatement
-    : statementExpression ';'
-    ;
-
-statementExpression
-    : assignment
-    | preIncrementExpression
-    | preDecrementExpression
-    | postIncrementExpression
-    | postDecrementExpression
-    | methodInvocation
-    | classInstanceCreationExpression
-    ;
-
-// Paragraph 14.9
-// --------------
-
-ifThenStatement
-    : 'if' '(' expression ')' statement
-    ;
-
-ifThenElseStatement
-    : 'if' '(' expression ')' statementNoShortIf 'else' statement
-    ;
-
-ifThenElseStatementNoShortIf
-    : 'if' '(' expression ')' statementNoShortIf 'else' statementNoShortIf
-    ;
-
-// Paragraph 14.10
-// ---------------
-
-assertStatement
-    : 'assert' expression (':' expression)? ';'
-    ;
-
-// Paragraph 14.11
-// --------------
-
-switchStatement
-    : 'switch' '(' expression ')' switchBlock
-    ;
-
-switchBlock
-    : '{' switchRule switchRule* '}'
-    | '{' switchBlockStatementGroup* ( switchLabel ':')* '}'
-    ;
-
-switchRule
-    : switchLabel '->' (expression ';' | block | throwStatement)
-    ;
-
-switchBlockStatementGroup
-    : switchLabel ':' (switchLabel ':')* blockStatements
-    ;
-
-switchLabel
-    : 'case' caseConstant (',' caseConstant)*
-    | 'default'
-    ;
-
-caseConstant
-    : conditionalExpression
-    ;
-
-// Paragraph 14.12
-// ---------------
-
-whileStatement
-    : 'while' '(' expression ')' statement
-    ;
-
-whileStatementNoShortIf
-    : 'while' '(' expression ')' statementNoShortIf
-    ;
-
-// Paragraph 14.13
-// ---------------
-
-doStatement
-    : 'do' statement 'while' '(' expression ')' ';'
-    ;
-
-// Paragraph 14.14
-// ---------------
-
-forStatement
-    : basicForStatement
-    | enhancedForStatement
-    ;
-
-forStatementNoShortIf
-    : basicForStatementNoShortIf
-    | enhancedForStatementNoShortIf
-    ;
-
-basicForStatement
-    : 'for' '(' forInit? ';' expression? ';' forUpdate? ')' statement
-    ;
-
-basicForStatementNoShortIf
-    : 'for' '(' forInit? ';' expression? ';' forUpdate? ')' statementNoShortIf
-    ;
-
-forInit
-    : statementExpressionList
-    | localVariableDeclaration
-    ;
-
-forUpdate
-    : statementExpressionList
-    ;
-
-statementExpressionList
-    : statementExpression (',' statementExpression)*
-    ;
-
-enhancedForStatement
-    : 'for' '(' localVariableDeclaration ':' expression ')' statement
-    ;
-
-enhancedForStatementNoShortIf
-    : 'for' '(' localVariableDeclaration ':' expression ')' statementNoShortIf
-    ;
-
-// Paragraph 14.15
-// ---------------
-
-breakStatement
-    : 'break' Identifier? ';'
-    ;
-
-// Paragraph 14.16
-// ---------------
-
-continueStatement
-    : 'continue' Identifier? ';'
-    ;
-
-// Paragraph 14.17
-// ---------------
-
-returnStatement
-    : 'return' expression? ';'
-    ;
-
-// Paragraph 14.18
-// ---------------
-
-throwStatement
-    : 'throw' expression ';'
-    ;
-
-// Paragraph 14.19
-// ---------------
-
-synchronizedStatement
-    : 'synchronized' '(' expression ')' block
-    ;
-
-// Paragraph 14.20
-// ---------------
-
-tryStatement
-    : 'try' block catches
-    | 'try' block finallyBlock
-    | 'try' block catches? finallyBlock
-    | tryWithResourcesStatement
-    ;
-
-catches
-    : catchClause catchClause*
+    : blockLabel = block
+    | ASSERT expression (':' expression)? ';'
+    | IF parExpression statement (ELSE statement)?
+    | FOR '(' forControl ')' statement
+    | WHILE parExpression statement
+    | DO statement WHILE parExpression ';'
+    | TRY block (catchClause+ finallyBlock? | finallyBlock)
+    | TRY resourceSpecification block catchClause* finallyBlock?
+    | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'
+    | SYNCHRONIZED parExpression block
+    | RETURN expression? ';'
+    | THROW expression ';'
+    | BREAK identifier? ';'
+    | CONTINUE identifier? ';'
+    | YIELD expression ';' // Java17
+    | SEMI
+    | statementExpression = expression ';'
+    | switchExpression ';'? // Java17
+    | identifierLabel = identifier ':' statement
     ;
 
 catchClause
-    : 'catch' '(' catchFormalParameter ')' block
-    ;
-
-catchFormalParameter
-    : variableModifier* catchType variableDeclaratorId
+    : CATCH '(' variableModifier* catchType identifier ')' block
     ;
 
 catchType
-    : unannClassType ('|' classType)*
+    : qualifiedName ('|' qualifiedName)*
     ;
 
 finallyBlock
-    : 'finally' block
-    ;
-
-tryWithResourcesStatement
-    : 'try' resourceSpecification block catches? finallyBlock?
+    : FINALLY block
     ;
 
 resourceSpecification
-    : '(' resourceList ';'? ')'
+    : '(' resources ';'? ')'
     ;
 
-resourceList
+resources
     : resource (';' resource)*
     ;
 
 resource
+    : variableModifier* (classOrInterfaceType variableDeclaratorId | VAR identifier) '=' expression
+    | qualifiedName
+    ;
+
+/** Matches cases then statements, both of which are mandatory.
+ *  To handle empty cases at the end, we add switchLabel* to statement.
+ */
+switchBlockStatementGroup
+    : switchLabel+ blockStatement+
+    ;
+
+switchLabel
+    : CASE (
+        constantExpression = expression
+        | enumConstantName = IDENTIFIER
+        | typeType varName = identifier
+    ) ':'
+    | DEFAULT ':'
+    ;
+
+forControl
+    : enhancedForControl
+    | forInit? ';' expression? ';' forUpdate = expressionList?
+    ;
+
+forInit
     : localVariableDeclaration
-    | variableAccess
+    | expressionList
     ;
 
-variableAccess
-    : expressionName
-    | fieldAccess
+enhancedForControl
+    : variableModifier* (typeType | VAR) variableDeclaratorId ':' expression
     ;
 
-// Paragraph 14.21
-//----------------
+// EXPRESSIONS
 
-yieldStatement
-    : 'yield' expression ';'
+parExpression
+    : '(' expression ')'
     ;
 
-// Paragraph 14.30
-// --------------
-
-pattern
-    : typePattern
-    ;
-
-typePattern
-    : localVariableDeclaration
-    ;
-
-// Paragraph 15.2
-// --------------
-
-expression
-    : lambdaExpression
-    | assignmentExpression
-    ;
-
-// Paragraph 15.8
-// --------------
-
-primary
-    : primaryNoNewArray
-    | arrayCreationExpression
-    ;
-
-// Replace classInstanceCreationExpression, fieldAccess, arrayAccess, methodInvocation, and
-// methodReference in primaryNoNewArray.
-// Replace in these two rules primary by primaryNoNewArray.
-
-// primaryNoNewArray
-//         : literal
-//         | classLiteral
-//         | 'this'
-//         | typeName '.' 'this'
-//         | '(' expression ')'
-//         | classInstanceCreationExpression
-//         | fieldAccess
-//         | arrayAccess
-//         | methodInvocation
-//         | methodReference
-//         ;
-//
-
-// primaryNoNewArray
-//         : literal
-//         | classLiteral
-//         | 'this'
-//         | typeName '.' 'this'
-//         | '(' expression ')'
-//         |                                  unqualifiedClassInstanceCreationExpression
-//         | expressionName              '.'  unqualifiedClassInstanceCreationExpression
-//
-//         | primaryNoNewArray           '.'  unqualifiedClassInstanceCreationExpression
-//         | arrayCreationExpression     '.'  unqualifiedClassInstanceCreationExpression
-//
-//         | primaryNoNewArray           '.'  Identifier
-//         | arrayCreationExpression     '.'  Identifier
-//
-//         | 'super'  '.'                     Identifier
-//         | typeName '.' 'super'        '.'  Identifier
-//
-//         | expressionName                         '[' expression ']'
-//         | primaryNoNewArray                      '[' expression ']'
-//         | arrayCreationExpressionWithInitializer '[' expression ']'
-//
-//         | methodName                                                 '(' argumentList? ')'
-//         | typeName                    '.'  typeArguments? Identifier '(' argumentList? ')'
-//         | expressionName              '.'  typeArguments? Identifier '(' argumentList? ')'
-//
-//         | primaryNoNewArray           '.'  typeArguments? Identifier '(' argumentList? ')'
-//         | arrayCreationExpression     '.'  typeArguments? Identifier '(' argumentList? ')'
-//
-//         | 'super'                     '.'  typeArguments? Identifier '(' argumentList? ')'
-//         | typeName       '.' 'super'  '.'  typeArguments? Identifier '(' argumentList? ')'
-//
-//         | expressionName              '::' typeArguments? Identifier
-//
-//         | primaryNoNewArray           '::' typeArguments? Identifier
-//         | arrayCreationExpression     '::' typeArguments? Identifier
-//
-//
-//         | referenceType               '::' typeArguments? Identifier
-//         | 'super'                     '::' typeArguments? Identifier
-//         | typeName '.' 'super'        '::' typeArguments? Identifier
-//         | classType                   '::' typeArguments? 'new'
-//         | arrayType                   '::'                'new'
-//         ;
-//
-
-primaryNoNewArray
-    : literal pNNA?
-    | classLiteral pNNA?
-    | 'this' pNNA?
-    | typeName '.' 'this' pNNA?
-    | '(' expression ')' pNNA?
-    | unqualifiedClassInstanceCreationExpression pNNA?
-    | expressionName '.' unqualifiedClassInstanceCreationExpression pNNA?
-    | arrayCreationExpression '.' unqualifiedClassInstanceCreationExpression pNNA?
-    | arrayCreationExpression '.' Identifier pNNA?
-    | 'super' '.' Identifier pNNA?
-    | typeName '.' 'super' '.' Identifier pNNA?
-    | expressionName '[' expression ']' pNNA?
-    | arrayCreationExpressionWithInitializer '[' expression ']' pNNA?
-    | methodName '(' argumentList? ')' pNNA?
-    | typeName '.' typeArguments? Identifier '(' argumentList? ')' pNNA?
-    | expressionName '.' typeArguments? Identifier '(' argumentList? ')' pNNA?
-    | arrayCreationExpression '.' typeArguments? Identifier '(' argumentList? ')' pNNA?
-    | 'super' '.' typeArguments? Identifier '(' argumentList? ')' pNNA?
-    | typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')' pNNA?
-    | expressionName '::' typeArguments? Identifier pNNA?
-    | arrayCreationExpression '::' typeArguments? Identifier pNNA?
-    | referenceType '::' typeArguments? Identifier pNNA?
-    | 'super' '::' typeArguments? Identifier pNNA?
-    | typeName '.' 'super' '::' typeArguments? Identifier pNNA?
-    | classType '::' typeArguments? 'new' pNNA?
-    | arrayType '::' 'new' pNNA?
-    ;
-
-pNNA
-    : '.' unqualifiedClassInstanceCreationExpression pNNA?
-    | '.' Identifier pNNA?
-    | '[' expression ']' pNNA?
-    | '.' typeArguments? Identifier '(' argumentList? ')' pNNA?
-    | '::' typeArguments? Identifier pNNA?
-    ;
-
-classLiteral
-    : typeName ('[' ']')* '.' 'class'
-    | numericType ( '[' ']')* '.' 'class'
-    | 'boolean' ( '[' ']')* '.' 'class'
-    | 'void' '.' 'class'
-    ;
-
-// Paragraph 15.9
-// --------------
-
-classInstanceCreationExpression
-    : unqualifiedClassInstanceCreationExpression
-    | expressionName '.' unqualifiedClassInstanceCreationExpression
-    | primary '.' unqualifiedClassInstanceCreationExpression
-    ;
-
-unqualifiedClassInstanceCreationExpression
-    : 'new' typeArguments? classOrInterfaceTypeToInstantiate '(' argumentList? ')' classBody?
-    ;
-
-classOrInterfaceTypeToInstantiate
-    : annotation* Identifier ('.' annotation* Identifier)* typeArgumentsOrDiamond?
-    ;
-
-typeArgumentsOrDiamond
-    : typeArguments
-    | '<>'
-    ;
-
-// Paragraph 15.10
-// ---------------
-
-arrayCreationExpression
-    : arrayCreationExpressionWithoutInitializer
-    | arrayCreationExpressionWithInitializer
-    ;
-
-arrayCreationExpressionWithoutInitializer
-    : 'new' primitiveType dimExprs dims?
-    | 'new' classType dimExprs dims?
-    ;
-
-arrayCreationExpressionWithInitializer
-    : 'new' primitiveType dims arrayInitializer
-    | 'new' classOrInterfaceType dims arrayInitializer
-    ;
-
-dimExprs
-    : dimExpr dimExpr*
-    ;
-
-dimExpr
-    : annotation* '[' expression ']'
-    ;
-
-arrayAccess
-    : expressionName '[' expression ']'
-    | primaryNoNewArray '[' expression ']'
-    | arrayCreationExpressionWithInitializer '[' expression ']'
-    ;
-
-// Paragraph 15.11
-// ---------------
-
-fieldAccess
-    : primary '.' Identifier
-    | 'super' '.' Identifier
-    | typeName '.' 'super' '.' Identifier
-    ;
-
-// Paragraph 15.12
-// ---------------
-
-methodInvocation
-    : methodName '(' argumentList? ')'
-    | typeName '.' typeArguments? Identifier '(' argumentList? ')'
-    | expressionName '.' typeArguments? Identifier '(' argumentList? ')'
-    | primary '.' typeArguments? Identifier '(' argumentList? ')'
-    | 'super' '.' typeArguments? Identifier '(' argumentList? ')'
-    | typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'
-    ;
-
-argumentList
+expressionList
     : expression (',' expression)*
     ;
 
-// Paragraph 15.13
-// ---------------
-
-methodReference
-    : expressionName '::' typeArguments? Identifier
-    | primary '::' typeArguments? Identifier
-    | referenceType '::' typeArguments? Identifier
-    | 'super' '::' typeArguments? Identifier
-    | typeName '.' 'super' '::' typeArguments? Identifier
-    | classType '::' typeArguments? 'new'
-    | arrayType '::' 'new'
+methodCall
+    : (identifier | THIS | SUPER) arguments
     ;
 
-// Paragraph 15.14
-// ---------------
+expression
+    // Expression order in accordance with https://introcs.cs.princeton.edu/java/11precedence/
+    // Level 16, Primary, array and member access
+    : primary
+    | expression '[' expression ']'
+    | expression bop = '.' (
+        identifier
+        | methodCall
+        | THIS
+        | NEW nonWildcardTypeArguments? innerCreator
+        | SUPER superSuffix
+        | explicitGenericInvocation
+    )
+    // Method calls and method references are part of primary, and hence level 16 precedence
+    | methodCall
+    | expression '::' typeArguments? identifier
+    | typeType '::' (typeArguments? identifier | NEW)
+    | classType '::' typeArguments? NEW
+    | switchExpression // Java17
 
-// Replace postIncrementExpression and postDecrementExpression by postfixExpression.
+    // Level 15 Post-increment/decrement operators
+    | expression postfix = ('++' | '--')
 
-// postfixExpression
-//         : primary
-//         | expressionName
-//         | postIncrementExpression
-//         | postDecrementExpression
-//         ;
-//
+    // Level 14, Unary operators
+    | prefix = ('+' | '-' | '++' | '--' | '~' | '!') expression
 
-// postfixExpression
-//         : primary
-//         | expressionName
-//         | postfixExpression '++'
-//         | postfixExpression '--'
-//         ;
-//
+    // Level 13 Cast and object creation
+    | '(' annotation* typeType ('&' typeType)* ')' expression
+    | NEW creator
 
-postfixExpression
-    : primary pfE?
-    | expressionName pfE?
+    // Level 12 to 1, Remaining operators
+    | expression bop = ('*' | '/' | '%') expression           // Level 12, Multiplicative operators
+    | expression bop = ('+' | '-') expression                 // Level 11, Additive operators
+    | expression ('<' '<' | '>' '>' '>' | '>' '>') expression // Level 10, Shift operators
+    | expression bop = ('<=' | '>=' | '>' | '<') expression   // Level 9, Relational operators
+    | expression bop = INSTANCEOF (typeType | pattern)
+    | expression bop = ('==' | '!=') expression                      // Level 8, Equality Operators
+    | expression bop = '&' expression                                // Level 7, Bitwise AND
+    | expression bop = '^' expression                                // Level 6, Bitwise XOR
+    | expression bop = '|' expression                                // Level 5, Bitwise OR
+    | expression bop = '&&' expression                               // Level 4, Logic AND
+    | expression bop = '||' expression                               // Level 3, Logic OR
+    | <assoc = right> expression bop = '?' expression ':' expression // Level 2, Ternary
+    // Level 1, Assignment
+    | <assoc = right> expression bop = (
+        '='
+        | '+='
+        | '-='
+        | '*='
+        | '/='
+        | '&='
+        | '|='
+        | '^='
+        | '>>='
+        | '>>>='
+        | '<<='
+        | '%='
+    ) expression
+
+    // Level 0, Lambda Expression
+    | lambdaExpression // Java8
     ;
 
-pfE
-    : '++' pfE?
-    | '--' pfE?
+// Java17
+pattern
+    : variableModifier* typeType annotation* identifier
     ;
 
-postIncrementExpression
-    : postfixExpression '++'
-    ;
-
-postDecrementExpression
-    : postfixExpression '--'
-    ;
-
-// Paragraph 15.15
-// ---------------
-
-unaryExpression
-    : preIncrementExpression
-    | preDecrementExpression
-    | '+' unaryExpression
-    | '-' unaryExpression
-    | unaryExpressionNotPlusMinus
-    ;
-
-preIncrementExpression
-    : '++' unaryExpression
-    ;
-
-preDecrementExpression
-    : '--' unaryExpression
-    ;
-
-unaryExpressionNotPlusMinus
-    : postfixExpression
-    | '~' unaryExpression
-    | '!' unaryExpression
-    | castExpression
-    | switchExpression
-    ;
-
-// Paragraph 15.16
-// ---------------
-
-castExpression
-    : '(' primitiveType ')' unaryExpression
-    | '(' referenceType additionalBound* ')' unaryExpressionNotPlusMinus
-    | '(' referenceType additionalBound* ')' lambdaExpression
-    ;
-
-// Paragraph 15.17
-// ---------------
-
-multiplicativeExpression
-    : unaryExpression
-    | multiplicativeExpression '*' unaryExpression
-    | multiplicativeExpression '/' unaryExpression
-    | multiplicativeExpression '%' unaryExpression
-    ;
-
-// Paragraph 15.18
-// ---------------
-
-additiveExpression
-    : multiplicativeExpression
-    | additiveExpression '+' multiplicativeExpression
-    | additiveExpression '-' multiplicativeExpression
-    ;
-
-// Paragraph 15.19
-// ---------------
-
-shiftExpression
-    : additiveExpression
-    | shiftExpression '<' '<' additiveExpression
-    | shiftExpression '>' '>' additiveExpression
-    | shiftExpression '>' '>' '>' additiveExpression
-    ;
-
-// Paragraph 15.20
-// ---------------
-
-relationalExpression
-    : shiftExpression
-    | relationalExpression '<' shiftExpression
-    | relationalExpression '>' shiftExpression
-    | relationalExpression '<=' shiftExpression
-    | relationalExpression '>=' shiftExpression
-    //      | instanceofExpression
-    | relationalExpression 'instanceof' (referenceType | pattern)
-    // Solves left recursion with instanceofExpression.
-    ;
-
-// instanceofExpression
-//        : relationalExpression 'instanceof' (referenceType | pattern)
-//        ;
-// Resulted to left recursion with relationalExpression.
-
-// Paragraph 15.21
-// ---------------
-
-equalityExpression
-    : relationalExpression
-    | equalityExpression '==' relationalExpression
-    | equalityExpression '!=' relationalExpression
-    ;
-
-// Paragraph 15.22
-// ---------------
-
-andExpression
-    : equalityExpression
-    | andExpression '&' equalityExpression
-    ;
-
-exclusiveOrExpression
-    : andExpression
-    | exclusiveOrExpression '^' andExpression
-    ;
-
-inclusiveOrExpression
-    : exclusiveOrExpression
-    | inclusiveOrExpression '|' exclusiveOrExpression
-    ;
-
-// Paragraph 15.23
-// ---------------
-
-conditionalAndExpression
-    : inclusiveOrExpression
-    | conditionalAndExpression '&&' inclusiveOrExpression
-    ;
-
-// Paragraph 15.24
-// ---------------
-
-conditionalOrExpression
-    : conditionalAndExpression
-    | conditionalOrExpression '||' conditionalAndExpression
-    ;
-
-// Paragraph 15.25
-// ---------------
-
-conditionalExpression
-    : conditionalOrExpression
-    | conditionalOrExpression '?' expression ':' conditionalExpression
-    | conditionalOrExpression '?' expression ':' lambdaExpression
-    ;
-
-// Paragraph 15.26
-// ---------------
-
-assignmentExpression
-    : conditionalExpression
-    | assignment
-    ;
-
-assignment
-    : leftHandSide assignmentOperator expression
-    ;
-
-leftHandSide
-    : expressionName
-    | fieldAccess
-    | arrayAccess
-    ;
-
-assignmentOperator
-    : '='
-    | '*='
-    | '/='
-    | '%='
-    | '+='
-    | '-='
-    | '<<='
-    | '>>='
-    | '>>>='
-    | '&='
-    | '^='
-    | '|='
-    ;
-
-// Paragraph 15.27
-// ---------------
-
+// Java8
 lambdaExpression
     : lambdaParameters '->' lambdaBody
     ;
 
+// Java8
 lambdaParameters
-    : '(' lambdaParameterList? ')'
-    | Identifier
+    : identifier
+    | '(' formalParameterList? ')'
+    | '(' identifier (',' identifier)* ')'
+    | '(' lambdaLVTIList? ')'
     ;
 
-lambdaParameterList
-    : lambdaParameter (',' lambdaParameter)*
-    | Identifier ( ',' Identifier)*
-    ;
-
-lambdaParameter
-    : variableModifier* lambdaParameterType variableDeclaratorId
-    | variableArityParameter
-    ;
-
-lambdaParameterType
-    : unannType
-    | 'var'
-    ;
-
+// Java8
 lambdaBody
     : expression
     | block
     ;
 
-// Paragraph 15.28
-// ---------------
-
-switchExpression
-    : 'switch' '(' expression ')' switchBlock
+primary
+    : '(' expression ')'
+    | THIS
+    | SUPER
+    | literal
+    | identifier
+    | typeTypeOrVoid '.' CLASS
+    | nonWildcardTypeArguments (explicitGenericInvocationSuffix | THIS arguments)
     ;
 
-// Paragraph 15.29
-// ---------------
+// Java17
+switchExpression
+    : SWITCH parExpression '{' switchLabeledRule* '}'
+    ;
 
-constantExpression
-    : expression
+// Java17
+switchLabeledRule
+    : CASE (expressionList | NULL_LITERAL | guardedPattern) (ARROW | COLON) switchRuleOutcome
+    | DEFAULT (ARROW | COLON) switchRuleOutcome
+    ;
+
+// Java17
+guardedPattern
+    : '(' guardedPattern ')'
+    | variableModifier* typeType annotation* identifier ('&&' expression)*
+    | guardedPattern '&&' expression
+    ;
+
+// Java17
+switchRuleOutcome
+    : block
+    | blockStatement*
+    ;
+
+classType
+    : (classOrInterfaceType '.')? annotation* identifier typeArguments?
+    ;
+
+creator
+    : nonWildcardTypeArguments? createdName classCreatorRest
+    | createdName arrayCreatorRest
+    ;
+
+createdName
+    : identifier typeArgumentsOrDiamond? ('.' identifier typeArgumentsOrDiamond?)*
+    | primitiveType
+    ;
+
+innerCreator
+    : identifier nonWildcardTypeArgumentsOrDiamond? classCreatorRest
+    ;
+
+arrayCreatorRest
+    : ('[' ']')+ arrayInitializer
+    | ('[' expression ']')+ ('[' ']')*
+    ;
+
+classCreatorRest
+    : arguments classBody?
+    ;
+
+explicitGenericInvocation
+    : nonWildcardTypeArguments explicitGenericInvocationSuffix
+    ;
+
+typeArgumentsOrDiamond
+    : '<' '>'
+    | typeArguments
+    ;
+
+nonWildcardTypeArgumentsOrDiamond
+    : '<' '>'
+    | nonWildcardTypeArguments
+    ;
+
+nonWildcardTypeArguments
+    : '<' typeList '>'
+    ;
+
+typeList
+    : typeType (',' typeType)*
+    ;
+
+typeType
+    : annotation* (classOrInterfaceType | primitiveType) (annotation* '[' ']')*
+    ;
+
+primitiveType
+    : BOOLEAN
+    | CHAR
+    | BYTE
+    | SHORT
+    | INT
+    | LONG
+    | FLOAT
+    | DOUBLE
+    ;
+
+typeArguments
+    : '<' typeArgument (',' typeArgument)* '>'
+    ;
+
+superSuffix
+    : arguments
+    | '.' typeArguments? identifier arguments?
+    ;
+
+explicitGenericInvocationSuffix
+    : SUPER superSuffix
+    | identifier arguments
+    ;
+
+arguments
+    : '(' expressionList? ')'
     ;
