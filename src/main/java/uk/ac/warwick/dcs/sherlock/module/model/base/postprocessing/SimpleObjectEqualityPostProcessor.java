@@ -12,9 +12,6 @@ import java.util.Map;
 
 public class SimpleObjectEqualityPostProcessor implements IPostProcessor<SimpleObjectEqualityRawResult> {
 
-	/*@AdjustableParameter (name = "Test Param", defaultValue = 0, minimumBound = 0, maxumumBound = 10, step = 1)
-	public int testParam;*/
-
     @Override
     public ModelTaskProcessedResults processResults(List<ISourceFile> files, List<SimpleObjectEqualityRawResult> rawResults) {
         ModelTaskProcessedResults results = new ModelTaskProcessedResults();

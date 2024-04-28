@@ -120,8 +120,6 @@ public class NGramScorer {
                 file_list.add(pair.files[i]);
                 file_info.add(new FileInfo(pair.similarity, pair.lines.get(i)));
                 // create a new match list and add the pair to it
-//				match_list.add(file);
-//				file_matches.add(new MatchList(pair));
             }
         }
     }
