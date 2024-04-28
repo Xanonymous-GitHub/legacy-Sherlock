@@ -99,9 +99,16 @@ configurations {
     }
 }
 
+internal val forcedAntlrPackageName = "$group.module.model.base.lang"
+internal val antlrGenFilesLocation = file(
+    "$projectRootLocation/src/main/java/" +
+        forcedAntlrPackageName.replace('.', '/')
+)
+
 tasks {
     generateGrammarSource {
-        outputDirectory = file("$projectRootLocation/src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang")
+        outputDirectory = antlrGenFilesLocation
+        arguments = listOf("-package", forcedAntlrPackageName)
     }
 
     withType<KotlinJvmCompile>().configureEach {
@@ -133,7 +140,7 @@ tasks {
 
     bootJar {
         destinationDirectory.set(file("$buildLocation/out"))
-        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
+        mainClass = "$group.launch.SherlockClient"
         delete {
             fileTree("$buildLocation/out") {
                 include("*.jar")
@@ -170,7 +177,7 @@ tasks {
 
     bootWar {
         destinationDirectory.set(file("$buildLocation/out"))
-        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockServer"
+        mainClass = "$group.launch.SherlockServer"
         delete {
             fileTree("$buildLocation/out") {
                 include("*.war")
@@ -185,7 +192,11 @@ tasks {
     }
 
     bootRun {
-        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
+        mainClass = "$group.launch.SherlockClient"
         jvmArgs = listOf("-Dspring.profiles.active=dev", "-Dspring.output.ansi.enabled=ALWAYS")
+    }
+
+    clean {
+        delete(antlrGenFilesLocation.path)
     }
 }
