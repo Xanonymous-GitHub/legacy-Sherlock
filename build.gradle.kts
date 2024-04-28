@@ -9,8 +9,9 @@ plugins {
     id("org.springframework.boot")
 
     id("io.spring.dependency-management") version "1.1.4"
-    id("antlr")
-    id("war")
+
+    antlr
+    war
 }
 
 repositories {
@@ -22,6 +23,7 @@ repositories {
 internal val kotlinVersion: String by rootProject.extra
 internal val springBootVersion: String by rootProject.extra
 internal val buildLocation: String = layout.buildDirectory.get().toString()
+internal val projectRootLocation: String = layout.projectDirectory.toString()
 
 group = "uk.ac.warwick.dcs.sherlock"
 version = "release"
@@ -98,6 +100,10 @@ configurations {
 }
 
 tasks {
+    generateGrammarSource {
+        outputDirectory = file("$projectRootLocation/src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang")
+    }
+
     withType<KotlinJvmCompile>().configureEach {
         dependsOn(generateGrammarSource)
         compilerOptions {
