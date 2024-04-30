@@ -18,7 +18,7 @@ COPY --chown=gradle:gradle src ./src
 # Build the application
 RUN --mount=type=secret,id=ADMIN_PASSWORD \
     --mount=type=secret,id=SECURITY_KEY \
-    && export ADMIN_PASSWORD=$(cat /run/secrets/ADMIN_PASSWORD) \
+    export ADMIN_PASSWORD=$(cat /run/secrets/ADMIN_PASSWORD) \
     && export SECURITY_KEY=$(cat /run/secrets/SECURITY_KEY) \
     && ./gradlew --no-daemon bootJar
 
