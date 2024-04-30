@@ -1,21 +1,19 @@
 # syntax=docker/dockerfile:experimental
 
-# For solving https://github.com/sass/dart-sass/issues/617, we shouldn't use alpine image.
 FROM gradle:8-jdk21-alpine AS build
 
 # Set the working directory in the Docker image
 WORKDIR /app
 
 # Copy the Gradle configuration files
-COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties gradlew /app/
-COPY --chown=gradle:gradle gradlew /app/gradlew
+COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties gradlew ./
 
 # Load all necessary Gradle dependencies (for caching purposes)
 RUN gradle wrapper \
     && ./gradlew --no-daemon dependencies
 
 # Copy the source code into the Docker image
-COPY --chown=gradle:gradle src /app/src
+COPY --chown=gradle:gradle src ./src
 
 # Build the application
 RUN ./gradlew --no-daemon build
@@ -42,6 +40,6 @@ USER appuser
 WORKDIR /app
 
 # Copy the built jar file from the build stage
-COPY --from=build --chown=appuser:appuser /app/build/out/*.jar /app/app.jar
+COPY --from=build --chown=appuser:appuser /app/build/out/*.jar ./app.jar
 
 CMD ["java", "-jar", "/app/app.jar"]
