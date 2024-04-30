@@ -42,7 +42,7 @@ class SherlockServer : SpringBootServletInitializer() {
 
     @Bean
     @Primary
-    @Profile("client")
+    @Profile("server")
     fun dataSource(): DataSource {
         return DataSourceBuilder
             .create()

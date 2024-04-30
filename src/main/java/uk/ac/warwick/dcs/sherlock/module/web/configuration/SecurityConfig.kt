@@ -53,6 +53,7 @@ class SecurityConfig(
                 ).also { accountRepository.save(it) }
                 roleRepository.save(Role("USER", account))
                 roleRepository.save(Role("LOCAL_USER", account))
+                roleRepository.save(Role("ADMIN", account))
             }
         } else {
             if (accountRepository.count() == 0L) {
@@ -72,12 +73,9 @@ class SecurityConfig(
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests {
             it.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**").permitAll()
-                .requestMatchers("/", "/terms", "/privacy", "/help/**").permitAll()
+                .requestMatchers("/", "/terms", "/privacy", "/help/**", "/login").permitAll()
                 .requestMatchers("/dashboard/**", "/account/**").hasAuthority("USER")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
-            if (environment.activeProfiles.contains("dev")) {
-                it.requestMatchers("/h2-console/**").permitAll()
-            }
         }.formLogin {
             it.loginPage("/login")
                 .defaultSuccessUrl("/dashboard/index")

@@ -26,7 +26,6 @@ internal val buildLocation: String = layout.buildDirectory.get().toString()
 internal val projectRootLocation: String = layout.projectDirectory.toString()
 
 group = "uk.ac.warwick.dcs.sherlock"
-version = "release"
 description = """Sherlock"""
 
 apply(plugin = "kotlin")
@@ -138,17 +137,19 @@ tasks {
         setDestinationDir(file("${projectDir}/docs"))
     }
 
+    assemble {
+        dependsOn(jar)
+    }
+
     bootJar {
         destinationDirectory.set(file("$buildLocation/out"))
-        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
-        delete {
-            fileTree("$buildLocation/out") {
-                include("*.jar")
-                exclude(archiveFileName.toString())
-                exclude(archiveFile.get().asFile.name)
-                exclude("*-dev.jar")
-            }
-        }
+        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockProdServer"
+        archiveClassifier.set("release")
+    }
+
+    bootWar {
+        destinationDirectory.set(file("$buildLocation/out"))
+        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockServer"
     }
 
     jar {
@@ -161,38 +162,13 @@ tasks {
         enabled = true
         destinationDirectory.set(file("$buildLocation/out"))
         archiveClassifier.set("dev")
-
-        delete {
-            fileTree("$buildLocation/out") {
-                include("*-dev.jar")
-                exclude(archiveFileName.toString())
-                exclude(archiveFile.get().asFile.name)
-            }
-        }
-    }
-
-    assemble {
-        dependsOn(jar)
-    }
-
-    bootWar {
-        destinationDirectory.set(file("$buildLocation/out"))
-        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockServer"
-        delete {
-            fileTree("$buildLocation/out") {
-                include("*.war")
-                exclude(archiveFileName.toString())
-                exclude(archiveFile.get().asFile.name)
-            }
-        }
     }
 
     named("war") {
-        dependsOn(bootJar)
+        dependsOn(bootWar)
     }
 
     bootRun {
-        // We can not use `$group.launch.SherlockClient` here because the class is not compiled yet
         mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
         jvmArgs = listOf("-Dspring.profiles.active=dev", "-Dspring.output.ansi.enabled=ALWAYS")
     }
