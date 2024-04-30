@@ -1,47 +1,43 @@
 # syntax=docker/dockerfile:experimental
 
-# For solving https://github.com/sass/dart-sass/issues/617, we shouldn't use alpine image.
 FROM gradle:8-jdk21-alpine AS build
 
 # Set the working directory in the Docker image
 WORKDIR /app
 
 # Copy the Gradle configuration files
-COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties gradlew /app/
-COPY --chown=gradle:gradle gradlew /app/gradlew
+COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties ./
 
 # Load all necessary Gradle dependencies (for caching purposes)
 RUN gradle wrapper \
     && ./gradlew --no-daemon dependencies
 
 # Copy the source code into the Docker image
-COPY --chown=gradle:gradle src /app/src
+COPY --chown=gradle:gradle src ./src
 
 # Build the application
-RUN ./gradlew --no-daemon build
+RUN ./gradlew --no-daemon bootWar
 
-FROM alpine:latest AS final
+# Get the jetty modules from the ./jetty_modules.ini file outside.
+COPY --chown=gradle:gradle jetty_modules.ini ./
 
-# Install minimal JRE (Java 21) in the Alpine image
-RUN apk --no-cache add openjdk21-jre
+# Save the jetty modules as a file for the final stage.
+RUN grep -E '^[^;].+' jetty_modules.ini | cut -d';' -f1 | tr '\n' ',' | sed 's/,$//' > MODULES
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-# Only for sherlock: we SHOULD create a home directory for the user, since the app will write to it.
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/sherlock" \
-    --shell "/sbin/nologin" \
-    --uid "${UID}" \
-    appuser
-USER appuser
+FROM jetty:12-jre21 AS final
 
 # Set the working directory in the Docker image
-WORKDIR /app
+WORKDIR /var/lib/jetty
 
 # Copy the built jar file from the build stage
-COPY --from=build --chown=appuser:appuser /app/build/out/*.jar /app/app.jar
+COPY --from=build --chown=jetty:jetty /app/build/out/*.war /usr/local/jetty/webapps/ROOT.war
 
-CMD ["java", "-jar", "/app/app.jar"]
+# Copy the jetty modules from the build stage
+COPY --from=build --chown=jetty:jetty /app/MODULES ./MODULES
+
+# Change the home directory to /sherlock
+#RUN usermod -d /sherlock jetty
+
+COPY --chown=jetty:jetty docker-entrypoint.sh ./
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
