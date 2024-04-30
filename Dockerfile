@@ -6,7 +6,7 @@ FROM gradle:8-jdk21-alpine AS build
 WORKDIR /app
 
 # Copy the Gradle configuration files
-COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties gradlew ./
+COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties ./
 
 # Load all necessary Gradle dependencies (for caching purposes)
 RUN gradle wrapper \
