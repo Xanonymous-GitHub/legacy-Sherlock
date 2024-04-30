@@ -16,7 +16,7 @@ RUN gradle wrapper \
 COPY --chown=gradle:gradle src ./src
 
 # Build the application
-RUN ./gradlew --no-daemon build
+RUN ./gradlew --no-daemon bootJar
 
 FROM alpine:latest AS final
 
