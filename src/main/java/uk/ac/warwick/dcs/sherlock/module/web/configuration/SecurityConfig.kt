@@ -73,9 +73,7 @@ class SecurityConfig(
         http.authorizeHttpRequests {
             it.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**").permitAll()
                 .requestMatchers("/", "/terms", "/privacy", "/help/**").permitAll()
-                .requestMatchers("/dashboard/**").hasAuthority("USER")
-                .requestMatchers("/account/**")
-                .hasAuthority(if (environment.activeProfiles.contains("client")) "ADMIN" else "USER")
+                .requestMatchers("/dashboard/**", "/account/**").hasAuthority("USER")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
             if (environment.activeProfiles.contains("dev")) {
                 it.requestMatchers("/h2-console/**").permitAll()
