@@ -1,15 +1,18 @@
 services:
-  app:
-    image: xanonymous/sherlock
-    volumes:
-      - sherlock:/sherlock
-    networks:
-      - sherlock
-    ports:
-      - "8080:8080"
+    app:
+        image: xanonymous/sherlock
+        volumes:
+            - sherlock:/sherlock
+        networks:
+            - sherlock
+        ports:
+            - "8080:8080"
+        environment:
+            - ADMIN_PASSWORD=sherlock
+            - SECURITY_KEY=sherlock
 
 volumes:
-  sherlock:
+    sherlock:
 
 networks:
-  sherlock:
+    sherlock:
