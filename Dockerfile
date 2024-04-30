@@ -16,10 +16,6 @@ RUN gradle wrapper \
 COPY --chown=gradle:gradle src ./src
 
 # Build the application
-ARG SECURITY_KEY
-ARG ADMIN_PASSWORD
-ENV SECURITY_KEY=$SECURITY_KEY
-ENV ADMIN_PASSWORD=$ADMIN_PASSWORD
 RUN ./gradlew --no-daemon bootJar
 
 FROM alpine:edge AS final
@@ -45,5 +41,8 @@ WORKDIR /app
 
 # Copy the built jar file from the build stage
 COPY --from=build --chown=appuser:appuser /app/build/out/*.jar ./app.jar
+
+ENV SECURITY_KEY=sherlock
+ENV ADMIN_PASSWORD=sherlock
 
 CMD ["java", "-jar", "/app/app.jar"]
