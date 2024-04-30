@@ -46,8 +46,8 @@ screenshots
 *.bak
 
 #Minified CSS/JS
-src/main/resources/static/css
-src/main/resources/static/js
+!src/main/resources/static/css
+!src/main/resources/static/js
 ### Java template
 # Compiled class file
 
