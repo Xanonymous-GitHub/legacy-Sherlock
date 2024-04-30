@@ -18,10 +18,7 @@ COPY --chown=gradle:gradle src ./src
 # Build the application
 RUN ./gradlew --no-daemon bootJar
 
-FROM alpine:edge AS final
-
-# Install minimal JRE (Java 21) in the Alpine image
-RUN apk --no-cache add openjdk21-jre
+FROM eclipse-temurin:21-jre-alpine AS final
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
