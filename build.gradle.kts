@@ -140,7 +140,7 @@ tasks {
 
     bootJar {
         destinationDirectory.set(file("$buildLocation/out"))
-        mainClass = "$group.launch.SherlockClient"
+        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
         delete {
             fileTree("$buildLocation/out") {
                 include("*.jar")
@@ -177,7 +177,7 @@ tasks {
 
     bootWar {
         destinationDirectory.set(file("$buildLocation/out"))
-        mainClass = "$group.launch.SherlockServer"
+        mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockServer"
         delete {
             fileTree("$buildLocation/out") {
                 include("*.war")
