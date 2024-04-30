@@ -18,9 +18,9 @@ COPY --chown=gradle:gradle src ./src
 # Build the application
 RUN --mount=type=secret,id=ADMIN_PASSWORD \
     --mount=type=secret,id=SECURITY_KEY \
-    ADMIN_PASSWORD=$(cat /run/secrets/ADMIN_PASSWORD) \
-    SECURITY_KEY=$(cat /run/secrets/SECURITY_KEY) \
-    ./gradlew --no-daemon bootJar
+    && export ADMIN_PASSWORD=$(cat /run/secrets/ADMIN_PASSWORD) \
+    && export SECURITY_KEY=$(cat /run/secrets/SECURITY_KEY) \
+    && ./gradlew --no-daemon bootJar
 
 FROM alpine:edge AS final
 
