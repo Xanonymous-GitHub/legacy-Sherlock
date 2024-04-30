@@ -18,7 +18,7 @@ COPY --chown=gradle:gradle src ./src
 # Build the application
 RUN ./gradlew --no-daemon bootJar
 
-FROM alpine:latest AS final
+FROM alpine:edge AS final
 
 # Install minimal JRE (Java 21) in the Alpine image
 RUN apk --no-cache add openjdk21-jre
