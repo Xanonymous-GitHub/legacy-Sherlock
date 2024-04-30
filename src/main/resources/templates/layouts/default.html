@@ -12,8 +12,8 @@
     <link th:href="@{/css/default.css}" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
-<div th:replace="~{fragments/header :: header}" th:with="page=${page}"></div>
+<body th:with="page=${page}">
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="d-none">
     <div class="container" id="javascript-error-clone">

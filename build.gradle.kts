@@ -67,7 +67,7 @@ dependencies {
     implementation("com.objectdb:objectdb:2.8.9_07")
     implementation("org.yaml:snakeyaml:2.2")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.2.RELEASE")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE")
     implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("javax.xml.bind:jaxb-api")

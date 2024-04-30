@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
     <title></title>
@@ -6,10 +6,15 @@
 
 <body>
 <footer th:fragment="footer" class="blog-footer d-print-none">
-    <p
-    ><span th:text="#{footer.name}"></span> &copy; <a href="https://github.com/Xanonymous-GitHub/sherlock-with-dsl" target="_blank" th:text="#{footer.link}"></a>
-        <span th:text="${#dates.format(#dates.createNow(),'YYYY')}"></span
-        ></p>
+    <p>
+        <span th:text="#{footer.name}"></span> &copy;
+        <a
+            href="https://github.com/Xanonymous-GitHub/sherlock-with-dsl"
+            target="_blank"
+            th:text="#{footer.link}"
+        ></a>
+        <span th:text="${#dates.format(#dates.createNow(),'YYYY')}"></span>
+    </p>
 </footer>
 </body>
 </html>
