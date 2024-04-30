@@ -35,6 +35,14 @@
 
 lexer grammar JavaLexer;
 
+// Custom channels, not officially provided.
+// Since the project has implemented some pre-processing logics for these channels,
+// We need to define them here to make the lexer work properly.
+// Otherwise, the `Registry.checkLexerAgainstSpecification` will get a false result,
+// which makes a preproceesor becomes invalid, and caused the preprocessor not
+// to be added into the `langLexerRef`. (see `Registry.getLexerForStrategy`)
+channels { WHITESPACE, LONG_WHITESPACE, COMMENT}
+
 // Keywords
 
 ABSTRACT     : 'abstract';
@@ -200,9 +208,16 @@ ELLIPSIS : '...';
 
 // Whitespace and comments
 
-WS           : [ \t\r\n\u000C]+ -> channel(HIDDEN);
-COMMENT      : '/*' .*? '*/'    -> channel(HIDDEN);
-LINE_COMMENT : '//' ~[\r\n]*    -> channel(HIDDEN);
+// FIXME: The old version of lexer in this project has made some changes to the official channel configs.
+// See https://github.com/Xanonymous-GitHub/sherlock-with-dsl/commit/1c6365b5ae55974f41eadec835994f6f539f4461
+// For more details about the changes made to the official channel configs.
+BLOCK_COMMENT : '/*' .*? '*/'    -> channel(COMMENT);
+LINE_COMMENT  : '//' ~[\r\n]*    -> channel(COMMENT);
+WS  : [ ] -> channel(WHITESPACE);
+MWS : [ ]+ -> channel(LONG_WHITESPACE);
+TAB : [\t]+ -> skip;
+NEWLINE : [ \t]* [\r\n]+ [ \t]* -> skip;
+// END _FIXME
 
 // Identifiers
 
