@@ -31,4 +31,14 @@ open class Workspace {
         this.account = account
         this.engineId = engineId
     }
+
+    override operator fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Workspace || javaClass != other.javaClass) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }

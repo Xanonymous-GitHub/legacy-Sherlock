@@ -37,4 +37,14 @@ open class Account(
     @JvmField
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
     var templates: MutableSet<Template> = mutableSetOf()
+
+    override operator fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Account || javaClass != other.javaClass) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }

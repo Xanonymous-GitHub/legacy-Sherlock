@@ -22,4 +22,14 @@ open class Role(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     var id: Long = 0
+
+    override operator fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Role || javaClass != other.javaClass) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }

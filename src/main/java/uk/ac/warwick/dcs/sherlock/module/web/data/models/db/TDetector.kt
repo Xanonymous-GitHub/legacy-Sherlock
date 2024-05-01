@@ -32,4 +32,14 @@ open class TDetector(
         get() = parameters.stream().filter { t: TParameter -> !t.postprocessing }.collect(Collectors.toSet())
     val postParameters: Set<TParameter>
         get() = parameters.stream().filter { obj: TParameter -> obj.postprocessing }.collect(Collectors.toSet())
+
+    override operator fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TDetector || javaClass != other.javaClass) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }
