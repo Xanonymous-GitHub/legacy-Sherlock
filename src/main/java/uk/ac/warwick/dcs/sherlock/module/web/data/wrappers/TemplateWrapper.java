@@ -25,9 +25,10 @@ public class TemplateWrapper {
     private Template template;
 
     /**
-     * Whether or not the current user owns the template
+     * Whether the current user owns the template
      */
-    private boolean isOwner = false;
+    // FIXME: this value should be set to false if the user is not the owner.
+    private boolean isOwner;
 
     /**
      * Initialise the wrapper using the form to create a new template
@@ -39,10 +40,10 @@ public class TemplateWrapper {
      * @throws NotTemplateOwner if the user is not the owner of the template
      */
     public TemplateWrapper(
-            TemplateForm templateForm,
-            Account account,
-            TemplateRepository templateRepository,
-            TDetectorRepository tDetectorRepository
+        TemplateForm templateForm,
+        Account account,
+        TemplateRepository templateRepository,
+        TDetectorRepository tDetectorRepository
     ) throws NotTemplateOwner {
         this.template = new Template();
         this.template.account = account;
@@ -59,17 +60,17 @@ public class TemplateWrapper {
      * @throws TemplateNotFound if the template was not found
      */
     public TemplateWrapper(
-            long id,
-            Account account,
-            TemplateRepository templateRepository
+        long id,
+        Account account,
+        TemplateRepository templateRepository
     ) throws TemplateNotFound {
         this.template = templateRepository.findByIdAndPublic(id, account);
 
         if (this.template == null)
             throw new TemplateNotFound("Template not found.");
 
-        if (this.template.account == account)
-            this.isOwner = true;
+        assert this.template.account != null;
+        this.isOwner = this.template.account.equals(account);
     }
 
     /**
@@ -80,9 +81,8 @@ public class TemplateWrapper {
      */
     public TemplateWrapper(Template template, Account account) {
         this.template = template;
-
-        if (this.template.account == account)
-            this.isOwner = true;
+        assert this.template.account != null;
+        this.isOwner = this.template.account.equals(account);
     }
 
     /**
@@ -134,7 +134,7 @@ public class TemplateWrapper {
     }
 
     /**
-     * Whether or not the template is owned by the current user
+     * Whether the template is owned by the current user
      *
      * @return the result
      */
@@ -161,7 +161,7 @@ public class TemplateWrapper {
     }
 
     /**
-     * Whether or not the template is public
+     * Whether the template is public
      *
      * @return the result
      */
@@ -189,9 +189,9 @@ public class TemplateWrapper {
      * @throws NotTemplateOwner if the user is not the template owner
      */
     public void update(
-            TemplateForm templateForm,
-            TemplateRepository templateRepository,
-            TDetectorRepository templateDetectorRepository
+        TemplateForm templateForm,
+        TemplateRepository templateRepository,
+        TDetectorRepository templateDetectorRepository
     ) throws NotTemplateOwner {
         if (!this.isOwner)
             throw new NotTemplateOwner("You are not the owner of this template.");
@@ -217,7 +217,7 @@ public class TemplateWrapper {
 
         for (String remove : toRemove) {
             templateDetectorRepository.delete(
-                    Objects.requireNonNull(templateDetectorRepository.findByNameAndTemplate(remove, template))
+                Objects.requireNonNull(templateDetectorRepository.findByNameAndTemplate(remove, template))
             );
         }
 
@@ -228,7 +228,7 @@ public class TemplateWrapper {
         for (String check : toCheck) {
             if (!activeDetectors.contains(check)) {
                 templateDetectorRepository.delete(
-                        Objects.requireNonNull(templateDetectorRepository.findByNameAndTemplate(check, template))
+                    Objects.requireNonNull(templateDetectorRepository.findByNameAndTemplate(check, template))
                 );
             }
         }
@@ -244,10 +244,10 @@ public class TemplateWrapper {
      * @return the new template
      */
     public Template copy(
-            AccountWrapper account,
-            TemplateRepository templateRepository,
-            TDetectorRepository tDetectorRepository,
-            TParameterRepository tParameterRepository
+        AccountWrapper account,
+        TemplateRepository templateRepository,
+        TDetectorRepository tDetectorRepository,
+        TParameterRepository tParameterRepository
     ) {
         Template template = new Template();
         template.account = account.getAccount();
