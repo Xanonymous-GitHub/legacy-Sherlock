@@ -75,7 +75,7 @@ dependencies {
     implementation("org.seleniumhq.selenium:selenium-java:4.20.0")
     implementation("com.h2database:h2:2.2.224")
 
-    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
+    runtimeOnly("com.mysql:mysql-connector-j:8.4.0")
 
     if (project.gradle.startParameter.taskNames.contains("bootWar")) {
         providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
