@@ -32,7 +32,7 @@ apply(plugin = "kotlin")
 apply(plugin = "project-report")
 
 java {
-    val javaVersion = JavaVersion.VERSION_21
+    val javaVersion = JavaVersion.VERSION_22
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
     toolchain {
@@ -113,7 +113,7 @@ tasks {
     withType<KotlinJvmCompile>().configureEach {
         dependsOn(generateGrammarSource)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_22)
         }
     }
 

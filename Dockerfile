@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:experimental
 
-FROM gradle:8-jdk21-alpine AS build
+FROM gradle:8-jdk22-alpine AS build
 
 # Set the working directory in the Docker image
 WORKDIR /app
@@ -18,7 +18,7 @@ COPY --chown=gradle:gradle src ./src
 # Build the application
 RUN ./gradlew --no-daemon bootJar
 
-FROM eclipse-temurin:21-jre-alpine AS final
+FROM eclipse-temurin:22-jre-alpine AS final
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/

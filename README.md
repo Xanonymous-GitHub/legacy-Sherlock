@@ -12,7 +12,7 @@ User guide can be found at: https://github.com/DCS-Sherlock/Sherlock/wiki
 
 ## Requirements
 
-- JDK 21
+- JDK 22
 - Gradle 8.7
 
 ## IDEA support
