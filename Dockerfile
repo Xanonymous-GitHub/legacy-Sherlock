@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:experimental
 
-FROM gradle:8-jdk-21-and-22-alpine AS build
+FROM gradle:8-jdk22-alpine AS build
 
 # Set the working directory in the Docker image
 WORKDIR /app
