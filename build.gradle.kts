@@ -8,7 +8,7 @@ plugins {
 
     id("org.springframework.boot")
 
-    id("io.spring.dependency-management") version "1.1.4"
+    id("io.spring.dependency-management") version "1.1.5"
 
     antlr
     war
@@ -53,16 +53,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
 
-    implementation("org.flywaydb:flyway-core:10.11.1")
+    implementation("org.flywaydb:flyway-core:10.13.0")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0-M2")
     implementation("org.antlr:antlr4-runtime:4.13.1")
-    implementation("com.google.guava:guava:33.1.0-jre")
+    implementation("com.google.guava:guava:33.2.0-jre")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-compress:1.26.1")
     implementation("commons-io:commons-io:2.16.1")
     implementation("commons-codec:commons-codec:1.17.0")
-    implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.2")
+    implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.3-RC2")
     implementation("javax.transaction:jta:1.1")
     implementation("com.objectdb:objectdb:2.8.9_07")
     implementation("org.yaml:snakeyaml:2.2")
@@ -72,10 +72,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("javax.xml.bind:jaxb-api")
     implementation("org.json:json:20240303")
-    implementation("org.seleniumhq.selenium:selenium-java:4.20.0")
+    implementation("org.seleniumhq.selenium:selenium-java:4.21.0")
     implementation("com.h2database:h2:2.2.224")
 
-    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
+    runtimeOnly("com.mysql:mysql-connector-j:8.4.0")
 
     if (project.gradle.startParameter.taskNames.contains("bootWar")) {
         providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
@@ -83,9 +83,9 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-M2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-M2")
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -114,10 +114,6 @@ tasks {
         dependsOn(generateGrammarSource)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
-        }
-
-        kotlinOptions {
-            freeCompilerArgs += "-Xjsr305=strict"
         }
     }
 
