@@ -54,7 +54,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
 
     implementation("org.flywaydb:flyway-core:10.13.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.1.0-M2")
+    implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     implementation("org.antlr:antlr4-runtime:4.13.1")
     implementation("com.google.guava:guava:33.2.0-jre")
     implementation("org.reflections:reflections:0.10.2")
