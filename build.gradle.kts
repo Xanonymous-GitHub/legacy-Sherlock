@@ -59,7 +59,7 @@ dependencies {
     implementation("com.google.guava:guava:33.2.0-jre")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.apache.commons:commons-lang3:3.14.0")
-    implementation("org.apache.commons:commons-compress:1.26.1")
+    implementation("org.apache.commons:commons-compress:1.26.2")
     implementation("commons-io:commons-io:2.16.1")
     implementation("commons-codec:commons-codec:1.17.0")
     implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.3-RC2")
