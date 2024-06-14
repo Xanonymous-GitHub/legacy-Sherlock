@@ -1,10 +1,10 @@
 <!doctype html>
 <html
-        xmlns:layout="http://www.w3.org/1999/xhtml"
-        xmlns:th="https://www.thymeleaf.org"
-        layout:decorate="~{layouts/default}"
-        th:with="page='home'"
-        lang="en"
+    xmlns:layout="http://www.w3.org/1999/xhtml"
+    xmlns:th="https://www.thymeleaf.org"
+    layout:decorate="~{layouts/default}"
+    th:with="page='home'"
+    lang="en"
 >
 <head>
     <title th:text="#{home.title}"></title>
@@ -22,12 +22,18 @@
                 <span th:text="#{home.intro.start}"></span
                 ><a href="https://warwick.ac.uk/fac/sci/dcs/" target="_blank" th:text="#{home.intro.warwick_link}"></a
                     ><span th:text="#{home.intro.middle}"></span
-                    ><a href="https://github.com/DCS-Sherlock" target="_blank" th:text="#{home.intro.github_link}"></a
+                    ><a
+                        href="https://github.com/Xanonymous-GitHub/sherlock-with-dsl"
+                        target="_blank"
+                        th:text="#{home.intro.github_link}"
+                    ></a
                     ><span th:text="#{home.intro.end}"></span>
                     </p>
                     <p>
-                        <span th:text="#{home.msg.start}"></span><span th:text="${institution}"></span><span th:text="#{home.msg.middle}"></span
-                    ><a th:href="@{${link}}" th:text="${contact}" target="_blank"></a><span th:text="#{home.msg.end}"></span>
+                        <span th:text="#{home.msg.start}"></span><span th:text="${institution}"></span
+                    ><span th:text="#{home.msg.middle}"></span
+                    ><a th:href="@{${link}}" th:text="${contact}" target="_blank"></a
+                    ><span th:text="#{home.msg.end}"></span>
                     </p>
                 </div>
             </div>
