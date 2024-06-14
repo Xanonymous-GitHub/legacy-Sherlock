@@ -43,8 +43,6 @@
 
 <main layout:fragment="content"></main>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
-
 <div id="modal-container">
     <div class="modal fade" id="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -61,6 +59,8 @@
         </div>
     </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script type="text/javascript" th:src="@{'/js/' + ${javascript}}"></script>
 </body>
