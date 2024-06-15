@@ -126,10 +126,6 @@ class AttributesControllerAdvice {
      */
     @ModelAttribute
     fun addJsUrl(model: Model) {
-        if (listOf(*environment!!.activeProfiles).contains("webdev")) {
-            model.addAttribute("javascript", "default.js")
-        } else {
-            model.addAttribute("javascript", "default.min.js")
-        }
+        model.addAttribute("javascript", "default.min.js")
     }
 }
