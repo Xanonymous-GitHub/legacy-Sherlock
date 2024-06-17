@@ -53,7 +53,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
 
-    implementation("org.flywaydb:flyway-core:10.14.0")
+    implementation("org.flywaydb:flyway-core:10.15.0")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     implementation("org.antlr:antlr4-runtime:4.13.1")
     implementation("com.google.guava:guava:33.2.1-jre")
