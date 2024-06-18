@@ -32,7 +32,7 @@ open class Template {
     var account: Account? = null
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "template", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "template", cascade = [CascadeType.REMOVE])
     var detectors: MutableSet<TDetector> = mutableSetOf()
 
     override operator fun equals(other: Any?): Boolean {
