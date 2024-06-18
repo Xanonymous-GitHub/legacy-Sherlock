@@ -25,7 +25,7 @@ open class TDetector(
     var id: Long = 0
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "tDetector", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "tDetector", cascade = [CascadeType.REMOVE])
     var parameters: MutableSet<TParameter> = mutableSetOf()
 
     val detectorParameters: Set<TParameter>

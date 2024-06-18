@@ -27,15 +27,15 @@ open class Account(
     var id: Long = 0
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], mappedBy = "account")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.REMOVE])
     var roles: MutableSet<Role> = mutableSetOf()
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.REMOVE])
     var workspaces: MutableSet<Workspace> = mutableSetOf()
 
     @JvmField
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = [CascadeType.REMOVE])
     var templates: MutableSet<Template> = mutableSetOf()
 
     override operator fun equals(other: Any?): Boolean {
