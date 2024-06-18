@@ -21,6 +21,17 @@ public class EmbeddedDatabase {
         properties.put("javax.persistence.jdbc.user", "admin");
         properties.put("javax.persistence.jdbc.password", "admin");
 
+        // Set the ObjectDB configuration file path
+        // Check for an environment variable that specifies the ObjectDB configuration file path
+        String objectdbConfigPath = System.getenv("OBJECTDB_CONF");
+        if (objectdbConfigPath == null || objectdbConfigPath.isEmpty()) {
+            // Fallback to default configuration file path
+            objectdbConfigPath = "src/main/resources/objectdb.conf";
+        }
+
+        // Set the system property for ObjectDB configuration file
+        System.setProperty("objectdb.conf", objectdbConfigPath);
+
         this.dbFactory = Persistence.createEntityManagerFactory("objectdb:" + SherlockEngine.configuration.getDataPath() + File.separator + "Sherlock.odb", properties);
         this.em = this.dbFactory.createEntityManager();
         this.em.flush();

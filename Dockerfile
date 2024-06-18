@@ -39,7 +39,11 @@ WORKDIR /app
 # Copy the built jar file from the build stage
 COPY --from=build --chown=appuser:appuser /app/build/out/*.jar ./app.jar
 
+# Copy the objectdb configuration file
+COPY src/main/resources/objectdb.conf /app/objectdb.conf
+
 ENV SECURITY_KEY=sherlock
 ENV ADMIN_PASSWORD=sherlock
+ENV OBJECTDB_CONF=/app/objectdb.conf
 
 CMD ["java", "-jar", "/app/app.jar"]
