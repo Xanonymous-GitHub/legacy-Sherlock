@@ -1,33 +1,55 @@
 <!doctype html>
 <html
-        xmlns:layout="http://www.w3.org/1999/xhtml"
-        xmlns:th="https://www.thymeleaf.org"
-        layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
-        th:with="page='workspaces'"
-        lang="en"
+  xmlns:layout="http://www.w3.org/1999/xhtml"
+  xmlns:th="https://www.thymeleaf.org"
+  layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
+  th:with="page='workspaces'"
+  lang="en"
 >
-<head>
+  <head>
     <title th:text="#{workspaces.delete.title}"></title>
-</head>
-<body>
-<div id="add-parent" class="container" layout:fragment="content">
-    <div class="modal-dialog" role="document">
+  </head>
+  <body>
+    <div id="add-parent" class="container" layout:fragment="content">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" th:text="#{workspaces.delete.title}"></h5>
+          <div class="modal-header">
+            <h5 class="modal-title" th:text="#{workspaces.delete.title}"></h5>
+          </div>
+          <form
+            th:action="@{/dashboard/workspaces/{id}/delete(id=${workspace.getId()})}"
+            data-js="form"
+            data-js-target="#add-parent"
+            method="post"
+          >
+            <div class="modal-body">
+              <div
+                class="alert alert-danger"
+                role="alert"
+                th:text="#{workspaces.delete.warning}"
+              ></div>
             </div>
-            <form th:action="@{/dashboard/workspaces/{id}/delete(id=${workspace.getId()})}" data-js="form" data-js-target="#add-parent" method="post">
-                <div class="modal-body">
-                    <div class="alert alert-danger" role="alert" th:text="#{workspaces.delete.warning}"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary d-none js-cancel" data-dismiss="modal" th:text="#{link.cancel}"></button>
-                    <a class="btn btn-secondary js-cancel" th:href="@{/dashboard/workspaces}" th:text="#{link.cancel}"></a>
-                    <button type="submit" class="btn btn-primary" th:text="#{link.delete}"></button>
-                </div>
-            </form>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary d-none js-cancel"
+                data-dismiss="modal"
+                th:text="#{link.cancel}"
+              ></button>
+              <a
+                class="btn btn-secondary js-cancel"
+                th:href="@{/dashboard/workspaces}"
+                th:text="#{link.cancel}"
+              ></a>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                th:text="#{link.delete}"
+              ></button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

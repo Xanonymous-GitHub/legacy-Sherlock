@@ -1,111 +1,145 @@
 <!doctype html>
 <html
-        xmlns:layout="http://www.w3.org/1999/xhtml"
-        xmlns:th="https://www.thymeleaf.org"
-        layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
-        th:with="page='templates'"
-        lang="en"
+  xmlns:layout="http://www.w3.org/1999/xhtml"
+  xmlns:th="https://www.thymeleaf.org"
+  layout:decorate="~{${ajax} ? @{layouts/modal} : @{layouts/default}}"
+  th:with="page='templates'"
+  lang="en"
 >
-<head>
+  <head>
     <title th:text="#{templates.parameters.title}"></title>
-</head>
-<body>
-<div id="parameters-parent" class="container" layout:fragment="content">
-    <div class="modal-dialog" role="document">
+  </head>
+  <body>
+    <div id="parameters-parent" class="container" layout:fragment="content">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" th:text="#{templates.parameters.title}"></h5>
+          <div class="modal-header">
+            <h5
+              class="modal-title"
+              th:text="#{templates.parameters.title}"
+            ></h5>
+          </div>
+          <form
+            th:action="@{/dashboard/templates/manage/detectors/{id}/parameters(id=${detector.getId()})}"
+            data-js="form"
+            data-js-target="#parameters-parent"
+            th:object="${parameterForm}"
+            method="post"
+          >
+            <div class="modal-body">
+              <div th:if="${#fields.hasAnyErrors()}">
+                <div
+                  class="alert alert-warning"
+                  role="alert"
+                  th:each="err : ${#fields.allErrors()}"
+                  th:text="${err}"
+                >
+                  ...
+                </div>
+              </div>
+
+              <div th:if="${success_msg}">
+                <div class="alert alert-info">
+                  <span th:text="#{${success_msg}}"></span>
+                </div>
+              </div>
+
+              <h5 th:text="#{templates.parameters.detector_params}"></h5>
+
+              <th:block th:each="parameter : *{parameters}">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label
+                      th:for="|${'parameters[''' + parameter.key + ''']'}|"
+                    >
+                      <span
+                        th:text="${parametersMap.get(parameter.key).getDisplayName()}"
+                      ></span>
+                      <span
+                        th:if="${parametersMap.get(parameter.key).getDescription().length() > 0}"
+                        th:text="#{tooltip}"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        th:title="${parametersMap.get(parameter.key).getDescription()}"
+                      ></span>
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      th:disabled="${!detector.isOwner() ? true : false}"
+                      th:min="${parametersMap.get(parameter.key).getMinimumBound()}"
+                      th:max="${parametersMap.get(parameter.key).getMaximumBound()}"
+                      th:step="${parametersMap.get(parameter.key).getStep()}"
+                      th:name="|${'parameters[''' + parameter.key + ''']'}|"
+                      th:placeholder="${parametersMap.get(parameter.key).getDisplayName()}"
+                      th:value="${parameter.value}"
+                    />
+                  </div>
+                </div>
+              </th:block>
+              <th:block th:if="${parametersMap.isEmpty()}">
+                <span th:text="#{templates.parameters.none}"></span>
+              </th:block>
+
+              <h5 th:text="#{templates.parameters.postprocessing_params}"></h5>
+
+              <th:block th:each="parameter : *{postprocessing}">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label
+                      th:for="|${'postprocessing[''' + parameter.key + ''']'}|"
+                    >
+                      <span
+                        th:text="${postprocessingMap.get(parameter.key).getDisplayName()}"
+                      ></span>
+                      <span
+                        th:if="${postprocessingMap.get(parameter.key).getDescription().length() > 0}"
+                        th:text="#{tooltip}"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        th:title="${postprocessingMap.get(parameter.key).getDescription()}"
+                      ></span>
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      th:disabled="${!detector.isOwner() ? true : false}"
+                      th:min="${postprocessingMap.get(parameter.key).getMinimumBound()}"
+                      th:max="${postprocessingMap.get(parameter.key).getMaximumBound()}"
+                      th:step="${postprocessingMap.get(parameter.key).getStep()}"
+                      th:name="|${'postprocessing[''' + parameter.key + ''']'}|"
+                      th:placeholder="${postprocessingMap.get(parameter.key).getDisplayName()}"
+                      th:value="${parameter.value}"
+                    />
+                  </div>
+                </div>
+              </th:block>
+              <th:block th:if="${postprocessingMap.isEmpty()}">
+                <span th:text="#{templates.parameters.none}"></span>
+              </th:block>
             </div>
-            <form
-                    th:action="@{/dashboard/templates/manage/detectors/{id}/parameters(id=${detector.getId()})}"
-                    data-js="form"
-                    data-js-target="#parameters-parent"
-                    th:object="${parameterForm}"
-                    method="post"
-            >
-                <div class="modal-body">
-                    <div th:if="${#fields.hasAnyErrors()}">
-                        <div class="alert alert-warning" role="alert" th:each="err : ${#fields.allErrors()}" th:text="${err}">...</div>
-                    </div>
-
-                    <div th:if="${success_msg}">
-                        <div class="alert alert-info"><span th:text="#{${success_msg}}"></span></div>
-                    </div>
-
-                    <h5 th:text="#{templates.parameters.detector_params}"></h5>
-
-                    <th:block th:each="parameter : *{parameters}">
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label th:for="|${'parameters[''' + parameter.key + ''']'}|">
-                                    <span th:text="${parametersMap.get(parameter.key).getDisplayName()}"></span>
-                                    <span
-                                            th:if="${parametersMap.get(parameter.key).getDescription().length() > 0}"
-                                            th:text="#{tooltip}"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            th:title="${parametersMap.get(parameter.key).getDescription()}"
-                                    ></span>
-                                </label>
-                                <input
-                                        type="number"
-                                        class="form-control"
-                                        th:disabled="${!detector.isOwner() ? true : false}"
-                                        th:min="${parametersMap.get(parameter.key).getMinimumBound()}"
-                                        th:max="${parametersMap.get(parameter.key).getMaximumBound()}"
-                                        th:step="${parametersMap.get(parameter.key).getStep()}"
-                                        th:name="|${'parameters[''' + parameter.key + ''']'}|"
-                                        th:placeholder="${parametersMap.get(parameter.key).getDisplayName()}"
-                                        th:value="${parameter.value}"
-                                />
-                            </div>
-                        </div>
-                    </th:block>
-                    <th:block th:if="${parametersMap.isEmpty()}">
-                        <span th:text="#{templates.parameters.none}"></span>
-                    </th:block>
-
-                    <h5 th:text="#{templates.parameters.postprocessing_params}"></h5>
-
-                    <th:block th:each="parameter : *{postprocessing}">
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label th:for="|${'postprocessing[''' + parameter.key + ''']'}|">
-                                    <span th:text="${postprocessingMap.get(parameter.key).getDisplayName()}"></span>
-                                    <span
-                                            th:if="${postprocessingMap.get(parameter.key).getDescription().length() > 0}"
-                                            th:text="#{tooltip}"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            th:title="${postprocessingMap.get(parameter.key).getDescription()}"
-                                    ></span>
-                                </label>
-                                <input
-                                        type="number"
-                                        class="form-control"
-                                        th:disabled="${!detector.isOwner() ? true : false}"
-                                        th:min="${postprocessingMap.get(parameter.key).getMinimumBound()}"
-                                        th:max="${postprocessingMap.get(parameter.key).getMaximumBound()}"
-                                        th:step="${postprocessingMap.get(parameter.key).getStep()}"
-                                        th:name="|${'postprocessing[''' + parameter.key + ''']'}|"
-                                        th:placeholder="${postprocessingMap.get(parameter.key).getDisplayName()}"
-                                        th:value="${parameter.value}"
-                                />
-                            </div>
-                        </div>
-                    </th:block>
-                    <th:block th:if="${postprocessingMap.isEmpty()}">
-                        <span th:text="#{templates.parameters.none}"></span>
-                    </th:block>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary d-none js-cancel" data-dismiss="modal" th:text="#{link.cancel}"></button>
-                    <a class="btn btn-secondary js-cancel" th:href="@{/dashboard/workspaces}" th:text="#{link.cancel}"></a>
-                    <button th:if="${detector.isOwner()}" type="submit" class="btn btn-primary" th:text="#{link.save}"></button>
-                </div>
-            </form>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary d-none js-cancel"
+                data-dismiss="modal"
+                th:text="#{link.cancel}"
+              ></button>
+              <a
+                class="btn btn-secondary js-cancel"
+                th:href="@{/dashboard/workspaces}"
+                th:text="#{link.cancel}"
+              ></a>
+              <button
+                th:if="${detector.isOwner()}"
+                type="submit"
+                class="btn btn-primary"
+                th:text="#{link.save}"
+              ></button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

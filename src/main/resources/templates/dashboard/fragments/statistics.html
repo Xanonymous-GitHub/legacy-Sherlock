@@ -1,26 +1,32 @@
 <!doctype html>
 <html xmlns:th="https://www.thymeleaf.org" lang="en">
-<head>
+  <head>
     <title></title>
-</head>
-<body>
-<div class="row text-center">
-    <div class="col-md-6">
+  </head>
+  <body>
+    <div class="row text-center">
+      <div class="col-md-6">
         <h5>
-            <span th:text="#{dashboard.statistics.workspaces}" class="text-nowrap"></span>
+          <span
+            th:text="#{dashboard.statistics.workspaces}"
+            class="text-nowrap"
+          ></span>
         </h5>
         <p>
-            <span th:text="${workspaces}" class="text-nowrap"></span>
+          <span th:text="${workspaces}" class="text-nowrap"></span>
         </p>
-    </div>
-    <div class="col-md-6">
+      </div>
+      <div class="col-md-6">
         <h5>
-            <span th:text="#{dashboard.statistics.submissions}" class="text-nowrap"></span>
+          <span
+            th:text="#{dashboard.statistics.submissions}"
+            class="text-nowrap"
+          ></span>
         </h5>
         <p>
-            <span th:text="${submissions}" class="text-nowrap"></span>
+          <span th:text="${submissions}" class="text-nowrap"></span>
         </p>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

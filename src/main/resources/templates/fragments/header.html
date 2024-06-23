@@ -1,193 +1,193 @@
 <!doctype html>
 <html
-    xmlns:th="https://www.thymeleaf.org"
-    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-    lang="en"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  lang="en"
 >
-<head>
+  <head>
     <title></title>
-</head>
+  </head>
 
-<body>
-<div th:fragment="header" class="container" id="header">
-    <header class="py-3">
+  <body>
+    <div th:fragment="header" class="container" id="header">
+      <header class="py-3">
         <div class="row">
-            <div class="col-12 logo text-center d-print-none">
-                <a class="" th:href="@{/}">
-                    <img th:src="@{/img/logo-100.png}" />
-                </a>
-            </div>
+          <div class="col-12 logo text-center d-print-none">
+            <a class="" th:href="@{/}">
+              <img th:src="@{/img/logo-100.png}" />
+            </a>
+          </div>
         </div>
-    </header>
+      </header>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="mx-auto order-0">
-            <button
-                class="navbar-toggler m-3"
-                type="button"
-                data-toggle="collapse"
-                data-target=".dual-collapse2"
-            >
-                <span class="navbar-toggler-icon"></span>
-                <span th:text="#{nav.toggle}"></span>
-            </button>
+          <button
+            class="navbar-toggler m-3"
+            type="button"
+            data-toggle="collapse"
+            data-target=".dual-collapse2"
+          >
+            <span class="navbar-toggler-icon"></span>
+            <span th:text="#{nav.toggle}"></span>
+          </button>
         </div>
         <div
-            class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2"
+          class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2"
         >
-            <ul class="navbar-nav mr-auto">
-                <li
-                    class="nav-item"
-                    th:classappend="${page == 'home' ? 'active' : ''}"
-                    sec:authorize="isAnonymous()"
-                >
-                    <a class="nav-link" th:href="@{/}" th:text="#{nav.home}"></a>
-                </li>
-                <li
-                    class="nav-item"
-                    th:classappend="${page == 'home' ? 'active' : ''}"
-                    sec:authorize="isAuthenticated()"
-                >
-                    <a
-                        class="nav-link"
-                        th:href="@{/dashboard/index}"
-                        th:text="#{nav.home}"
-                    ></a>
-                </li>
-                <li
-                    class="nav-item"
-                    th:classappend="${page == 'workspaces' ? 'active' : ''}"
-                    sec:authorize="isAuthenticated()"
-                >
-                    <a
-                        class="nav-link"
-                        th:href="@{/dashboard/workspaces}"
-                        th:text="#{nav.workspaces}"
-                    ></a>
-                </li>
-                <li
-                    class="nav-item"
-                    th:classappend="${page == 'templates' ? 'active' : ''}"
-                    sec:authorize="isAuthenticated()"
-                >
-                    <a
-                        class="nav-link"
-                        th:href="@{/dashboard/templates}"
-                        th:text="#{nav.templates}"
-                    ></a>
-                </li>
-            </ul>
+          <ul class="navbar-nav mr-auto">
+            <li
+              class="nav-item"
+              th:classappend="${page == 'home' ? 'active' : ''}"
+              sec:authorize="isAnonymous()"
+            >
+              <a class="nav-link" th:href="@{/}" th:text="#{nav.home}"></a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${page == 'home' ? 'active' : ''}"
+              sec:authorize="isAuthenticated()"
+            >
+              <a
+                class="nav-link"
+                th:href="@{/dashboard/index}"
+                th:text="#{nav.home}"
+              ></a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${page == 'workspaces' ? 'active' : ''}"
+              sec:authorize="isAuthenticated()"
+            >
+              <a
+                class="nav-link"
+                th:href="@{/dashboard/workspaces}"
+                th:text="#{nav.workspaces}"
+              ></a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${page == 'templates' ? 'active' : ''}"
+              sec:authorize="isAuthenticated()"
+            >
+              <a
+                class="nav-link"
+                th:href="@{/dashboard/templates}"
+                th:text="#{nav.templates}"
+              ></a>
+            </li>
+          </ul>
         </div>
         <div class="navbar-collapse collapse w-100 order-2 dual-collapse2">
-            <ul class="navbar-nav ml-auto">
-                <li
-                    class="nav-item"
-                    th:classappend="${page == 'help' ? 'active' : ''}"
-                >
-                    <a class="nav-link" th:href="@{/help}" th:text="#{nav.help}"></a>
-                </li>
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a
-                        class="nav-link"
-                        th:href="@{/login}"
-                        th:text="#{nav.login}"
-                    ></a>
-                </li>
-                <li
-                    class="nav-item"
-                    sec:authorize="isAuthenticated() && hasAuthority('ADMIN')"
-                >
-                    <a
-                        class="nav-link"
-                        th:href="@{/admin}"
-                        th:classappend="${page == 'settings' ? 'active' : ''}"
-                        th:text="#{nav.settings}"
-                    ></a>
-                </li>
-                <span sec:authorize="isAuthenticated()">
+          <ul class="navbar-nav ml-auto">
+            <li
+              class="nav-item"
+              th:classappend="${page == 'help' ? 'active' : ''}"
+            >
+              <a class="nav-link" th:href="@{/help}" th:text="#{nav.help}"></a>
+            </li>
+            <li class="nav-item" sec:authorize="isAnonymous()">
+              <a
+                class="nav-link"
+                th:href="@{/login}"
+                th:text="#{nav.login}"
+              ></a>
+            </li>
+            <li
+              class="nav-item"
+              sec:authorize="isAuthenticated() && hasAuthority('ADMIN')"
+            >
+              <a
+                class="nav-link"
+                th:href="@{/admin}"
+                th:classappend="${page == 'settings' ? 'active' : ''}"
+                th:text="#{nav.settings}"
+              ></a>
+            </li>
+            <span sec:authorize="isAuthenticated()">
               <li
-                  class="nav-item dropdown"
-                  th:classappend="${page == 'admin' || page == 'account' ? 'active' : ''}"
+                class="nav-item dropdown"
+                th:classappend="${page == 'admin' || page == 'account' ? 'active' : ''}"
               >
                 <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    id="navbarDropdown"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                 >
                   <span th:text="#{nav.hello}"></span>,
                   <span
-                      id="account-username"
-                      th:text="${account.getUsername()}"
+                    id="account-username"
+                    th:text="${account.getUsername()}"
                   ></span
                   >!
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a
-                      class="dropdown-item"
-                      th:href="@{/account}"
-                      th:classappend="${page == 'account' ? 'active' : ''}"
-                      th:text="#{nav.account_settings}"
+                    class="dropdown-item"
+                    th:href="@{/account}"
+                    th:classappend="${page == 'account' ? 'active' : ''}"
+                    th:text="#{nav.account_settings}"
                   ></a>
                   <a
-                      class="dropdown-item"
-                      sec:authorize="isAuthenticated() && hasAuthority('ADMIN')"
-                      th:href="@{/admin}"
-                      th:classappend="${page == 'admin' ? 'active' : ''}"
-                      th:text="#{nav.system_settings}"
+                    class="dropdown-item"
+                    sec:authorize="isAuthenticated() && hasAuthority('ADMIN')"
+                    th:href="@{/admin}"
+                    th:classappend="${page == 'admin' ? 'active' : ''}"
+                    th:text="#{nav.system_settings}"
                   ></a>
                   <div class="dropdown-divider"></div>
                   <form th:action="@{/logout}" id="logout" method="post">
                     <input
-                        type="hidden"
-                        name="${_csrf.parameterName}"
-                        value="${_csrf.token}"
+                      type="hidden"
+                      name="${_csrf.parameterName}"
+                      value="${_csrf.token}"
                     />
                     <button
-                        type="submit"
-                        style="cursor: pointer"
-                        class="dropdown-item"
-                        th:href="@{/logout}"
-                        th:text="#{nav.logout}"
+                      type="submit"
+                      style="cursor: pointer"
+                      class="dropdown-item"
+                      th:href="@{/logout}"
+                      th:text="#{nav.logout}"
                     ></button>
                   </form>
                 </div>
               </li>
             </span>
-            </ul>
+          </ul>
         </div>
-    </nav>
+      </nav>
 
-    <noscript>
+      <noscript>
         <div class="row">
-            <div class="col-12">
-                <div class="alert alert-danger">
-                    <span th:text="#{js.header.start}"></span>
-                    <a
-                        href="https://www.enable-javascript.com/"
-                        target="_blank"
-                        th:text="#{js.header.link}"
-                    ></a
-                    ><span th:text="#{js.header.end}"></span>
-                </div>
+          <div class="col-12">
+            <div class="alert alert-danger">
+              <span th:text="#{js.header.start}"></span>
+              <a
+                href="https://www.enable-javascript.com/"
+                target="_blank"
+                th:text="#{js.header.link}"
+              ></a
+              ><span th:text="#{js.header.end}"></span>
             </div>
+          </div>
         </div>
         <p></p>
-    </noscript>
+      </noscript>
 
-    <th:block th:if="${top_message != null && top_message != ''}">
+      <th:block th:if="${top_message != null && top_message != ''}">
         <div class="row">
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <span th:text="#{${'messages.'+top_message}}"></span>
-                </div>
+          <div class="col-12">
+            <div class="alert alert-info">
+              <span th:text="#{${'messages.'+top_message}}"></span>
             </div>
+          </div>
         </div>
         <p></p>
-    </th:block>
-</div>
-</body>
+      </th:block>
+    </div>
+  </body>
 </html>

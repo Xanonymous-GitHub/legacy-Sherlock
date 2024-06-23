@@ -1,29 +1,37 @@
 <!doctype html>
 <html xmlns:th="https://www.thymeleaf.org" lang="en">
-<head>
+  <head>
     <title></title>
-</head>
-<body>
-<div class="#detector-list">
-    <div class="form-row">
+  </head>
+  <body>
+    <div class="#detector-list">
+      <div class="form-row">
         <div class="form-group col-md-12">
-            <th:block th:each="detector : ${detectorList}">
-                <label class="checkbox-inline" th:for="${detector.getClassName()}">
-                    <input type="checkbox" name="detectors" th:value="${detector.getClassName()}" th:id="${detector.getClassName()}" />
-                    <span th:text="${detector.getDisplayName()}"></span>
-                    <span
-                            th:if="${detector.getDescription().length() > 0}"
-                            th:text="#{tooltip}"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            th:title="${detector.getDescription()}"
-                    ></span>
-                </label>
-                <br />
-            </th:block>
-            <span th:if="${detectorList.isEmpty()}" th:text="#{templates.no_detectors}"></span>
+          <th:block th:each="detector : ${detectorList}">
+            <label class="checkbox-inline" th:for="${detector.getClassName()}">
+              <input
+                type="checkbox"
+                name="detectors"
+                th:value="${detector.getClassName()}"
+                th:id="${detector.getClassName()}"
+              />
+              <span th:text="${detector.getDisplayName()}"></span>
+              <span
+                th:if="${detector.getDescription().length() > 0}"
+                th:text="#{tooltip}"
+                data-toggle="tooltip"
+                data-placement="top"
+                th:title="${detector.getDescription()}"
+              ></span>
+            </label>
+            <br />
+          </th:block>
+          <span
+            th:if="${detectorList.isEmpty()}"
+            th:text="#{templates.no_detectors}"
+          ></span>
         </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

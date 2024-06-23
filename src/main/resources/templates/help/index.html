@@ -1,54 +1,71 @@
 <!doctype html>
 <html
-        xmlns:layout="http://www.w3.org/1999/xhtml"
-        xmlns:th="https://www.thymeleaf.org"
-        layout:decorate="~{layouts/default}"
-        th:with="page='help'"
-        lang="en"
+  xmlns:layout="http://www.w3.org/1999/xhtml"
+  xmlns:th="https://www.thymeleaf.org"
+  layout:decorate="~{layouts/default}"
+  th:with="page='help'"
+  lang="en"
 >
-<head>
+  <head>
     <title th:text="#{help.title}"></title>
-</head>
-<body>
-<main role="main" class="container" layout:fragment="content">
-    <div class="row">
+  </head>
+  <body>
+    <main role="main" class="container" layout:fragment="content">
+      <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h4 class="float-left mt-1" th:text="#{help.title}"></h4>
-                    <div class="btn-toolbar float-right">
-                        <div class="btn-group mr-3">
-                            <a class="btn btn-primary terms" th:href="@{/terms}" th:text="#{terms.link}"></a>
-                        </div>
-                        <div class="btn-group">
-                            <a class="btn btn-primary privacy" th:href="@{/privacy}" th:text="#{privacy.link}"></a>
-                        </div>
-                    </div>
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <h4 class="float-left mt-1" th:text="#{help.title}"></h4>
+              <div class="btn-toolbar float-right">
+                <div class="btn-group mr-3">
+                  <a
+                    class="btn btn-primary terms"
+                    th:href="@{/terms}"
+                    th:text="#{terms.link}"
+                  ></a>
                 </div>
-                <div class="card-body">
-                    <div class="accordion" id="accordion">
-                        <th:block th:each="question : ${questions}">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link" type="button" data-toggle="collapse" th:data-target="${'#q'+question.hashCode()}">
-                                            <span th:text="${question.key}"></span>
-                                        </button>
-                                    </h2>
-                                </div>
-
-                                <div th:id="${'q' + question.hashCode()}" class="collapse" data-parent="#accordion">
-                                    <div class="card-body answer">
-                                        <div th:remove="tag" th:utext="${question.value}"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </th:block>
-                    </div>
+                <div class="btn-group">
+                  <a
+                    class="btn btn-primary privacy"
+                    th:href="@{/privacy}"
+                    th:text="#{privacy.link}"
+                  ></a>
                 </div>
+              </div>
             </div>
+            <div class="card-body">
+              <div class="accordion" id="accordion">
+                <th:block th:each="question : ${questions}">
+                  <div class="card">
+                    <div class="card-header">
+                      <h2 class="mb-0">
+                        <button
+                          class="btn btn-link"
+                          type="button"
+                          data-toggle="collapse"
+                          th:data-target="${'#q'+question.hashCode()}"
+                        >
+                          <span th:text="${question.key}"></span>
+                        </button>
+                      </h2>
+                    </div>
+
+                    <div
+                      th:id="${'q' + question.hashCode()}"
+                      class="collapse"
+                      data-parent="#accordion"
+                    >
+                      <div class="card-body answer">
+                        <div th:remove="tag" th:utext="${question.value}"></div>
+                      </div>
+                    </div>
+                  </div>
+                </th:block>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-</main>
-</body>
+      </div>
+    </main>
+  </body>
 </html>
