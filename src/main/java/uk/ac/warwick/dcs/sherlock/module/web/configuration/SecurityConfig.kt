@@ -72,7 +72,7 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests {
-            it.requestMatchers("/css/**", "/js/**", "/img/**", "/fonts/**").permitAll()
+            it.requestMatchers("/assets/**", "/img/**", "/fonts/**").permitAll()
                 .requestMatchers("/", "/terms", "/privacy", "/help/**", "/login").permitAll()
                 .requestMatchers("/dashboard/**", "/account/**").hasAuthority("USER")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
