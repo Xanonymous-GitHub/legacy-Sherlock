@@ -399,20 +399,20 @@
                             class="collapse show"
                           >
                             <div class="card-body">
-                              <pre
-                                class="line-numbers"
+                              <div
+                                id="code-area-report-1"
                                 th:unless="${printing}"
                                 th:data-file-id="${file.getPersistentId()}"
                                 th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
                                 th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}(id=${workspace.getId()},submission_id=${submission.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"
-                              ></pre>
-                              <pre
-                                class="line-numbers"
+                              ></div>
+                              <div
+                                id="code-area-report-2"
                                 th:if="${printing}"
                                 th:data-file-id="${file.getPersistentId()}"
                                 th:data-line="${wrapper.getHighlightedLines(file.getPersistentId())}"
                                 th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}?print(id=${workspace.getId()},submission_id=${submission.getId()},file_id=${file.getPersistentId()},file_name=${file.getFileIdentifier()})}"
-                              ></pre>
+                              ></div>
                             </div>
                           </div>
                         </div>
@@ -496,10 +496,10 @@
 
                               <div>
                                 <div class="card-body">
-                                  <pre
-                                    class="line-numbers"
+                                  <div
+                                    id="code-area-report-3"
                                     th:data-src="@{/dashboard/workspaces/manage/{id}/submission/{submission_id}/file/{file_id}/{file_name}?print(id=${workspace.getId()},submission_id=${sub.getKey().getId()},file_id=${file.getKey()},file_name=${file.getValue().getFileIdentifier()})}"
-                                  ></pre>
+                                  ></div>
                                 </div>
                               </div>
                             </div>
