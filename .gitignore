@@ -353,4 +353,4 @@ Temporary Items
 
 ### ANTLR templates
 # Ignore ANTLR4 generated files
-src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang/
+!src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang/

@@ -168,8 +168,4 @@ tasks {
         mainClass = "uk.ac.warwick.dcs.sherlock.launch.SherlockClient"
         jvmArgs = listOf("-Dspring.profiles.active=dev", "-Dspring.output.ansi.enabled=ALWAYS")
     }
-
-    clean {
-        delete(antlrGenFilesLocation.path)
-    }
 }
