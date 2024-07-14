@@ -53,7 +53,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
 
-    implementation("org.flywaydb:flyway-core:10.15.0")
+    implementation("org.flywaydb:flyway-core:10.15.2")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     implementation("org.antlr:antlr4-runtime:4.13.1")
     implementation("com.google.guava:guava:33.2.1-jre")
@@ -75,7 +75,7 @@ dependencies {
     implementation("org.seleniumhq.selenium:selenium-java:4.22.0")
     implementation("com.h2database:h2:2.2.224")
 
-    runtimeOnly("com.mysql:mysql-connector-j:8.4.0")
+    runtimeOnly("com.mysql:mysql-connector-j:9.0.0")
 
     if (project.gradle.startParameter.taskNames.contains("bootWar")) {
         providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
@@ -84,7 +84,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-M2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-M2")
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
