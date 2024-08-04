@@ -26,6 +26,9 @@ RUN gradle wrapper \
 # Copy the source code into the Docker image
 COPY --chown=gradle:gradle src ./src
 
+# Copy the submodules into the Docker image
+COPY --chown=gradle:gradle gumtree ./gumtree
+
 # Copy the built web application into the Docker image
 COPY --from=build-web /app/dist/assets ./src/main/resources/static/assets
 
