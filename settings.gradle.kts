@@ -12,3 +12,5 @@ pluginManagement {
 }
 
 rootProject.name = "Sherlock"
+
+includeBuild("gumtree")

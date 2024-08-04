@@ -41,6 +41,7 @@ java {
 }
 
 dependencies {
+    implementation("tw.xcc.gumtree:core:0.1.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
