@@ -19,15 +19,15 @@ WORKDIR /app
 # Copy the Gradle configuration files
 COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties ./
 
+# Copy the submodules into the Docker image
+COPY --chown=gradle:gradle gumtree ./gumtree
+
 # Load all necessary Gradle dependencies (for caching purposes)
 RUN gradle wrapper \
     && ./gradlew --no-daemon dependencies
 
 # Copy the source code into the Docker image
 COPY --chown=gradle:gradle src ./src
-
-# Copy the submodules into the Docker image
-COPY --chown=gradle:gradle gumtree ./gumtree
 
 # Copy the built web application into the Docker image
 COPY --from=build-web /app/dist/assets ./src/main/resources/static/assets
