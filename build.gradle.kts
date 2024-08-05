@@ -74,7 +74,7 @@ dependencies {
     implementation("javax.xml.bind:jaxb-api")
     implementation("org.json:json:20240303")
     implementation("org.seleniumhq.selenium:selenium-java:4.22.0")
-    implementation("com.h2database:h2:2.2.224")
+    implementation("com.h2database:h2:2.3.230")
 
     runtimeOnly("com.mysql:mysql-connector-j:9.0.0")
 
