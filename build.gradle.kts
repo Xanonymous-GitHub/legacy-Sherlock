@@ -86,7 +86,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-M2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-M2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-RC1")
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
