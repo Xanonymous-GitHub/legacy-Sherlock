@@ -41,9 +41,12 @@ java {
 }
 
 dependencies {
-    implementation("tw.xcc.gumtree:core:0.1.0")
+    implementation("tw.xcc.gumtree:antlr-bridge:latest")
+    implementation("tw.xcc.gumtree:core:latest")
+
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC")
     implementation("org.springframework.boot:spring-boot-starter:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-mail:$springBootVersion")
