@@ -90,7 +90,7 @@ dependencies {
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
-    antlr("org.antlr:antlr4:4.13.1")
+    antlr("org.antlr:antlr4:4.13.2")
 }
 
 configurations {
