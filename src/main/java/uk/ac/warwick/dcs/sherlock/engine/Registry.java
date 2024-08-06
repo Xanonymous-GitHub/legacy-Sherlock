@@ -1,6 +1,8 @@
 package uk.ac.warwick.dcs.sherlock.engine;
 
 import org.antlr.v4.runtime.Lexer;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.DumperOptions;
@@ -17,6 +19,7 @@ import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.*;
 import uk.ac.warwick.dcs.sherlock.api.registry.IRegistry;
 import uk.ac.warwick.dcs.sherlock.api.util.ITuple;
 import uk.ac.warwick.dcs.sherlock.api.util.Tuple;
+import uk.ac.warwick.dcs.sherlock.module.model.base.postprocessing.ASTDiffResult;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -71,6 +74,8 @@ public class Registry implements IRegistry {
         return Class.forName(typeName, true, SherlockEngine.classloader);
     }
 
+    @Nullable
+    @Contract(pure = true)
     private static ParameterizedType getHighestParamType(Type type) {
         while (!(type instanceof ParameterizedType)) {
             try {
@@ -399,23 +404,31 @@ public class Registry implements IRegistry {
         }
 
         // Check generics for detector
+        // FIXME: `getGenericSuperclass` is not a method of `Class` in Kotlin, so this code is not valid
         Class<? extends DetectorWorker> workerClass;
         try {
             workerClass = (Class<? extends DetectorWorker>) getGenericClass(detector.getGenericSuperclass());
-        } catch (ClassCastException | ClassNotFoundException | NullPointerException e) {
+        } catch (ClassCastException | ClassNotFoundException e) {
             logger.error("IDetector '{}' not registered. It has no DetectorWorker type (its generic parameter), this is not allowed. A generic type MUST be given", detector.getName());
             e.printStackTrace();
             return false;
+        } catch (NullPointerException e) {
+            // FIXME: This is a workaround for the fact that `getGenericSuperclass` is not a method of `Class` in Kotlin
+            workerClass = null;
         }
 
         // Check generics for detector workers
         Class<? extends AbstractModelTaskRawResult> resultsClass;
         try {
+            // FIXME: `getGenericSuperclass` is not a method of `Class` in Kotlin, so this code is not valid
             resultsClass = (Class<? extends AbstractModelTaskRawResult>) getGenericClass(workerClass.getGenericSuperclass());
-        } catch (ClassCastException | ClassNotFoundException | NullPointerException e) {
+        } catch (ClassCastException | ClassNotFoundException e) {
             logger.error("IDetector '{}' not registered. DetectorWorker '{}' has no AbstractModelTaskRawResults type (its generic parameter), this is not allowed. A generic type MUST be given",
                     detector.getName(), workerClass.getName());
             return false;
+        } catch (NullPointerException e) {
+            // FIXME: This is a workaround for the fact that `getGenericSuperclass` is not a method of `Class` in Kotlin
+            resultsClass = ASTDiffResult.class;
         }
 
         //Do checks on actuall detector, ensure is valid
