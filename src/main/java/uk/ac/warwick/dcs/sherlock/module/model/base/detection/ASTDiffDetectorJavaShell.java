@@ -8,18 +8,4 @@ package uk.ac.warwick.dcs.sherlock.module.model.base.detection;
 @SuppressWarnings("DeprecatedIsStillUsed")
 public class ASTDiffDetectorJavaShell extends ASTDiffDetector {
     // FIXME: This is just a workaround to ensure the kotlin code can be applied to the Registry.
-
-    final String foo = "";
-
-    public void bar() {
-        int ggg = 33;
-        if (ggg > 32) {
-            System.out.println(ggg);
-        }
-    }
-
-    public String foo(int i) {
-        if (i == 0) return "Foo!";
-        return "";
-    }
 }
