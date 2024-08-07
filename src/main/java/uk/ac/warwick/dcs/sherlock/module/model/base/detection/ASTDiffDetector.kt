@@ -8,8 +8,12 @@ import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector
 import uk.ac.warwick.dcs.sherlock.api.model.detection.ModelDataItem
 import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.PreProcessingStrategy
 import uk.ac.warwick.dcs.sherlock.module.model.base.preprocessing.TrimWhitespaceOnly
+import java.io.Serializable
 
 open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
+    var params = Params()
+    protected lateinit var theShell: ASTDiffDetectorJavaShell
+
     private fun <T> List<T>.pairCombinations(): List<Pair<T, T>> {
         if (isEmpty()) return emptyList()
         if (size == 1) return listOf(first() to first())
@@ -20,6 +24,14 @@ open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
 
     final override fun buildWorkers(data: List<ModelDataItem>): List<ASTDiffDetectorWorker> =
         runBlocking(Dispatchers.Default) {
+            params = params.copy(
+                scoreOfSingleInsertAction = theShell.scoreOfSingleInsertAction,
+                scoreOfSingleUpdateAction = theShell.scoreOfSingleUpdateAction,
+                scoreOfSingleDeleteAction = theShell.scoreOfSingleDeleteAction,
+                scoreOfTreeMoveAction = theShell.scoreOfTreeMoveAction,
+                scoreOfTreeInsertAction = theShell.scoreOfTreeInsertAction,
+                scoreOfTreeDeleteAction = theShell.scoreOfTreeDeleteAction,
+            )
             data.map {
                 async { ASTDiffRegistry.transformToGumTreeFrom(it.file) }
             }.awaitAll()
@@ -33,6 +45,13 @@ open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
         val strategy = PreProcessingStrategy.of("AST Diff strategy", TrimWhitespaceOnly::class.java)
         return listOf(strategy)
     }
-}
 
-\ No newline at end of file
+    data class Params @JvmOverloads constructor(
+        val scoreOfSingleInsertAction: Float = 1f,
+        val scoreOfSingleUpdateAction: Float = 1f,
+        val scoreOfSingleDeleteAction: Float = 1f,
+        val scoreOfTreeMoveAction: Float = 1f,
+        val scoreOfTreeInsertAction: Float = 5f,
+        val scoreOfTreeDeleteAction: Float = 5f,
+    ) : Serializable
+}

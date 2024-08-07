@@ -11,7 +11,10 @@ class ASTDiffPostProcessor: IPostProcessor<ASTDiffResult> {
     ): ModelTaskProcessedResults {
         println(">>> ASTDiffPostProcessor.processResults")
         rawResults.forEach {
-            println(it.editScript)
+            println(it.editScript?.filter { action ->
+                action.node.info.posOfLine != -1
+            })
+            println(it.detectorParams)
         }
         return ModelTaskProcessedResults()
     }
