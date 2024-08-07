@@ -32,8 +32,8 @@ open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
                 scoreOfTreeInsertAction = theShell.scoreOfTreeInsertAction,
                 scoreOfTreeDeleteAction = theShell.scoreOfTreeDeleteAction,
             )
-            data.map {
-                async { ASTDiffRegistry.transformToGumTreeFrom(it.file) }
+            data.sortedBy { it.file.fileDisplayName }.map {
+                async { it.file to ASTDiffRegistry.transformToGumTreeFrom(it.file) }
             }.awaitAll()
         }.pairCombinations().map { ASTDiffDetectorWorker(it, this) }
 
