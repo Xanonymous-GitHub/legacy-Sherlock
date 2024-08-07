@@ -29,7 +29,7 @@ public final class ASTDiffDetectorJavaShell extends ASTDiffDetector {
     public float scoreOfSingleUpdateAction;
     @AdjustableParameter(
         name = "score of Single Delete Action",
-        defaultValue = 1,
+        defaultValue = 3,
         maximumBound = 5,
         minimumBound = 0,
         step = 1
