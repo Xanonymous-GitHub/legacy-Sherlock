@@ -68,7 +68,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.15.0")
     implementation("org.apache.commons:commons-compress:1.26.2")
     implementation("commons-io:commons-io:2.16.1")
-    implementation("commons-codec:commons-codec:1.17.0")
+    implementation("commons-codec:commons-codec:1.17.1")
     implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.0-B02")
     implementation("javax.transaction:jta:1.1")
     implementation("com.objectdb:objectdb:2.9.0")
@@ -79,8 +79,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("javax.xml.bind:jaxb-api")
     implementation("org.json:json:20240303")
-    implementation("org.seleniumhq.selenium:selenium-java:4.22.0")
-    implementation("com.h2database:h2:2.2.224")
+    implementation("org.seleniumhq.selenium:selenium-java:4.23.0")
+    implementation("com.h2database:h2:2.3.230")
 
     runtimeOnly("com.mysql:mysql-connector-j:9.0.0")
 
@@ -90,9 +90,9 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-M2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-M2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-RC1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.0-RC1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-RC1")
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
