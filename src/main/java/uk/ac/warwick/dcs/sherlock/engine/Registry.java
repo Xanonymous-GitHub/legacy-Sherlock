@@ -452,7 +452,7 @@ public class Registry implements IRegistry {
                     }
 
                     if (x.getKey().getType().equals(int.class)) {
-                        float[] vals = {x.getValue()[0].defaultValue(), x.getValue()[0].maxumumBound(), x.getValue()[0].minimumBound(), x.getValue()[0].step()};
+                        float[] vals = {x.getValue()[0].defaultValue(), x.getValue()[0].maximumBound(), x.getValue()[0].minimumBound(), x.getValue()[0].step()};
                         for (float f : vals) {
                             if (f % 1 != 0) {
                                 logger.warn("Detector '{}' not registered, contains @DetectorParameter {} of type int, with a float parameter", tester.getDisplayName(), x.getKey().getName());
@@ -603,7 +603,7 @@ public class Registry implements IRegistry {
                     }
 
                     if (x.getKey().getType().equals(int.class)) {
-                        float[] vals = {x.getValue()[0].defaultValue(), x.getValue()[0].maxumumBound(), x.getValue()[0].minimumBound(), x.getValue()[0].step()};
+                        float[] vals = {x.getValue()[0].defaultValue(), x.getValue()[0].maximumBound(), x.getValue()[0].minimumBound(), x.getValue()[0].step()};
                         for (float f : vals) {
                             if (f % 1 != 0) {
                                 logger.warn("PostProcessor '{}' not registered, contains @DetectorParameter {} of type int, with a float parameter", postProcessor.getName(), x.getKey().getName());

@@ -52,7 +52,7 @@ public class ExecutorUtils {
                     return;
                 }
 
-                if (val > x.getValue()[0].maxumumBound() || val < x.getValue()[0].minimumBound()) {
+                if (val > x.getValue()[0].maximumBound() || val < x.getValue()[0].minimumBound()) {
                     synchronized (logger) {
                         logger.error("Trying to assign an out of bounds value to adjustable parameter {}", ref);
                     }

@@ -33,7 +33,7 @@ annotation class AdjustableParameter( // float and int supported currently
      *
      * @return the max bound
      */
-    val maxumumBound: Float,
+    val maximumBound: Float,
     /**
      * Minimum bound for field
      *

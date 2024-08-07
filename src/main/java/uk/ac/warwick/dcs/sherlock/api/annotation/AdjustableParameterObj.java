@@ -56,7 +56,7 @@ public class AdjustableParameterObj {
      * @return the max bound
      */
     public float getMaximumBound() {
-        return this.param.maxumumBound();
+        return this.param.maximumBound();
     }
 
     /**
