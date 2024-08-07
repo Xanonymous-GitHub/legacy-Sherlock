@@ -11,10 +11,10 @@ import uk.ac.warwick.dcs.sherlock.module.model.base.preprocessing.TrimWhitespace
 
 open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
     private fun <T> List<T>.pairCombinations(): List<Pair<T, T>> {
-        if (this.isEmpty()) return emptyList()
-        if (this.size == 1) return listOf(this.first() to this.first())
-        return this.mapIndexed { index, left ->
-            this.subList(index + 1, this.size).map { right -> left to right }
+        if (isEmpty()) return emptyList()
+        if (size == 1) return listOf(first() to first())
+        return mapIndexed { index, left ->
+            subList(index + 1, size).map { right -> left to right }
         }.flatten()
     }
 
@@ -34,3 +34,5 @@ open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
         return listOf(strategy)
     }
 }
+
+\ No newline at end of file
