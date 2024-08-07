@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import tw.xcc.gumtree.model.GumTree
 import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector
 import uk.ac.warwick.dcs.sherlock.api.model.detection.ModelDataItem
 import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.PreProcessingStrategy
@@ -35,7 +36,13 @@ open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
             data.sortedBy { it.file.fileDisplayName }.map {
                 async { it.file to ASTDiffRegistry.transformToGumTreeFrom(it.file) }
             }.awaitAll()
-        }.pairCombinations().map { ASTDiffDetectorWorker(it, this) }
+        }.pairCombinations().map {
+            ASTDiffDetectorWorker(
+                GumTree(it.first.second) to GumTree(it.second.second),
+                it.first.first to it.second.first,
+                this
+            )
+        }
 
     final override fun getDescription(): String = "Detects AST differences between submissions"
 
