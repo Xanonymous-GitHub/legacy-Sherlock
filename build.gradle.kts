@@ -71,7 +71,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.17.1")
     implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.0-B02")
     implementation("javax.transaction:jta:1.1")
-    implementation("com.objectdb:objectdb:2.9.0")
+    implementation("com.objectdb:objectdb:2.9.0_03")
     implementation("org.yaml:snakeyaml:2.2")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE")
