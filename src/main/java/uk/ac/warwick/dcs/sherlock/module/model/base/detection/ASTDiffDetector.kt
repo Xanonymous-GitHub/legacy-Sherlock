@@ -1,19 +1,24 @@
 package uk.ac.warwick.dcs.sherlock.module.model.base.detection
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.annotations.BlockingExecutor
 import tw.xcc.gumtree.model.GumTree
 import uk.ac.warwick.dcs.sherlock.api.model.detection.IDetector
 import uk.ac.warwick.dcs.sherlock.api.model.detection.ModelDataItem
 import uk.ac.warwick.dcs.sherlock.api.model.preprocessing.PreProcessingStrategy
 import uk.ac.warwick.dcs.sherlock.module.model.base.preprocessing.TrimWhitespaceOnly
 import java.io.Serializable
+import java.util.concurrent.Executors
 
 open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
     var params = Params()
     protected lateinit var theShell: ASTDiffDetectorJavaShell
+    private val loom: @BlockingExecutor CoroutineDispatcher
+        get() = Executors.newVirtualThreadPerTaskExecutor().asCoroutineDispatcher()
 
     private fun <T> List<T>.pairCombinations(): List<Pair<T, T>> {
         if (isEmpty()) return emptyList()
@@ -24,7 +29,7 @@ open class ASTDiffDetector : IDetector<ASTDiffDetectorWorker> {
     }
 
     final override fun buildWorkers(data: List<ModelDataItem>): List<ASTDiffDetectorWorker> =
-        runBlocking(Dispatchers.Default) {
+        runBlocking(loom) {
             params = params.copy(
                 scoreOfSingleInsertAction = theShell.scoreOfSingleInsertAction,
                 scoreOfSingleUpdateAction = theShell.scoreOfSingleUpdateAction,
