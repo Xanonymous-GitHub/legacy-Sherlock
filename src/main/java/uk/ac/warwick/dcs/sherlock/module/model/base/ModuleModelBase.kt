@@ -42,7 +42,6 @@ class ModuleModelBase {
         SherlockRegistry.registerDetector(NGramDetector::class.java)
         SherlockRegistry.registerPostProcessor(NGramPostProcessor::class.java, NGramRawResult::class.java)
 
-        @Suppress("DEPRECATION") // FIXME: support using kotlin in entire project !
         SherlockRegistry.registerDetector(ASTDiffDetectorJavaShell::class.java)
         SherlockRegistry.registerPostProcessor(ASTDiffPostProcessor::class.java, ASTDiffResult::class.java)
     }
