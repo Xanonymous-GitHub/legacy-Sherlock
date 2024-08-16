@@ -46,7 +46,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.1")
 
@@ -60,7 +60,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
 
-    implementation("org.flywaydb:flyway-core:10.15.2")
+    implementation("org.flywaydb:flyway-core:10.17.1")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     implementation("com.google.guava:guava:33.2.1-jre")
     implementation("org.reflections:reflections:0.10.2")
@@ -89,9 +89,9 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0-RC1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.0-RC1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0-RC1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
 
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 
