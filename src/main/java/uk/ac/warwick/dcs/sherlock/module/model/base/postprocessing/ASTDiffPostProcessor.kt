@@ -27,7 +27,7 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
     ): Double = coroutineScope {
         return@coroutineScope actions.map {
             // TODO: The algorithm for calculating the score of each action.
-            async { it.node.info.text.length }
+            async { it.node.childCount() }
         }.awaitAll().sum() * cardinality
     }
 
@@ -129,6 +129,6 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
     private fun String.encoded(): String = Json.encodeToString(String.serializer(), this)
 
     companion object {
-        private const val FULL_SCORE_OF_EACH_LINE = 60
+        private const val FULL_SCORE_OF_EACH_LINE = 30
     }
 }

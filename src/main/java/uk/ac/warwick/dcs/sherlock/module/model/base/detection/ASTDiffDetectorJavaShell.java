@@ -29,7 +29,7 @@ public final class ASTDiffDetectorJavaShell extends ASTDiffDetector {
     public float scoreOfSingleUpdateAction;
     @AdjustableParameter(
         name = "score of Single Delete Action",
-        defaultValue = 3,
+        defaultValue = 1,
         maximumBound = 5,
         minimumBound = 0,
         step = 1
@@ -37,8 +37,8 @@ public final class ASTDiffDetectorJavaShell extends ASTDiffDetector {
     public float scoreOfSingleDeleteAction;
     @AdjustableParameter(
         name = "score of Structural Insert Action",
-        defaultValue = 5,
-        maximumBound = 10,
+        defaultValue = 10,
+        maximumBound = 20,
         minimumBound = 0,
         step = 1
     )
@@ -53,8 +53,8 @@ public final class ASTDiffDetectorJavaShell extends ASTDiffDetector {
     public float scoreOfTreeMoveAction;
     @AdjustableParameter(
         name = "score of Structural Delete Action",
-        defaultValue = 5,
-        maximumBound = 10,
+        defaultValue = 10,
+        maximumBound = 20,
         minimumBound = 0,
         step = 1
     )
