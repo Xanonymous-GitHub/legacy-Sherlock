@@ -1,3 +1,5 @@
+import org.jetbrains.gradle.ext.settings
+import org.jetbrains.gradle.ext.taskTriggers
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -9,6 +11,7 @@ plugins {
     id("org.springframework.boot")
 
     id("io.spring.dependency-management") version "1.1.6"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.8"
 
     antlr
     war
@@ -109,6 +112,12 @@ internal val antlrGenFilesLocation = file(
     "$projectRootLocation/src/main/java/" +
         forcedAntlrPackageName.replace('.', '/')
 )
+
+idea.project.settings {
+    taskTriggers {
+        afterSync(tasks.named("generateGrammarSource"))
+    }
+}
 
 tasks {
     generateGrammarSource {

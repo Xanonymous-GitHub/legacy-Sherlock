@@ -353,4 +353,7 @@ Temporary Items
 
 ### ANTLR templates
 # Ignore ANTLR4 generated files
-!src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang/
+# Please convert files to Kotlin files if you want to let them be tracked :)
+src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang/*.java
+src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang/*.interp
+src/main/java/uk/ac/warwick/dcs/sherlock/module/model/base/lang/*.tokens
