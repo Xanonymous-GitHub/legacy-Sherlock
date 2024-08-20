@@ -65,7 +65,7 @@ dependencies {
 
     implementation("org.flywaydb:flyway-core:10.17.1")
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
-    implementation("com.google.guava:guava:33.2.1-jre")
+    implementation("com.google.guava:guava:33.3.0-jre")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.apache.commons:commons-lang3:3.16.0")
     implementation("org.apache.commons:commons-compress:1.27.0")
@@ -73,7 +73,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.17.1")
     implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.0-B02")
     implementation("javax.transaction:jta:1.1")
-    implementation("com.objectdb:objectdb:2.9.0_03")
+    implementation("com.objectdb:objectdb:2.9.0_04")
     implementation("org.yaml:snakeyaml:2.2")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE")
@@ -82,7 +82,7 @@ dependencies {
     implementation("javax.xml.bind:jaxb-api")
     implementation("org.json:json:20240303")
     implementation("org.seleniumhq.selenium:selenium-java:4.23.1")
-    implementation("com.h2database:h2:2.3.230")
+    implementation("com.h2database:h2:2.3.232")
 
     runtimeOnly("com.mysql:mysql-connector-j:9.0.0")
 
