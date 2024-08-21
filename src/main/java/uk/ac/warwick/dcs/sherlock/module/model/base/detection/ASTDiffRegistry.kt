@@ -17,6 +17,8 @@ import uk.ac.warwick.dcs.sherlock.module.model.base.lang.PythonLexer
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.PythonParser
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.RustLexer
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.RustParser
+import uk.ac.warwick.dcs.sherlock.module.model.base.lang.TypeScriptLexer
+import uk.ac.warwick.dcs.sherlock.module.model.base.lang.TypeScriptParser
 import java.io.InputStream
 
 internal enum class ASTDiffRegistry {
@@ -94,6 +96,18 @@ internal enum class ASTDiffRegistry {
         }
     },
 
+    TYPESCRIPT {
+        override suspend fun generateGumTreeFrom(inputStream: InputStream): GumTree {
+            val convertFrom = GumTreeConverter.convertFrom(
+                inputStream,
+                ::TypeScriptLexer,
+                ::TypeScriptParser,
+                TypeScriptParser::program
+            )
+            return convertFrom
+        }
+    },
+
     UNKNOWN {
         override suspend fun generateGumTreeFrom(inputStream: InputStream): GumTree {
             println("=== WARNING: CONVERTING UNKNOWN FILE TYPE ! ===")
@@ -122,6 +136,8 @@ internal enum class ASTDiffRegistry {
             "js" to JAVASCRIPT,
             "cjs" to JAVASCRIPT,
             "mjs" to JAVASCRIPT,
+            "ts" to TYPESCRIPT,
+            "mts" to TYPESCRIPT,
         )
 
         suspend fun transformToGumTreeFrom(file: ISourceFile): GumTree {
