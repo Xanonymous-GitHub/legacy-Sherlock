@@ -5,6 +5,8 @@ import tw.xcc.gumtree.model.GumTree
 import uk.ac.warwick.dcs.sherlock.api.component.ISourceFile
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.CPP14Lexer
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.CPP14Parser
+import uk.ac.warwick.dcs.sherlock.module.model.base.lang.GoLexer
+import uk.ac.warwick.dcs.sherlock.module.model.base.lang.GoParser
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.JavaLexer
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.JavaParser
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.KotlinLexer
@@ -54,6 +56,16 @@ internal enum class ASTDiffRegistry {
             )
     },
 
+    GO {
+        override suspend fun generateGumTreeFrom(inputStream: InputStream): GumTree =
+            GumTreeConverter.convertFrom(
+                inputStream,
+                ::GoLexer,
+                ::GoParser,
+                GoParser::sourceFile
+            )
+    },
+
     UNKNOWN {
         override suspend fun generateGumTreeFrom(inputStream: InputStream): GumTree {
             println("=== WARNING: CONVERTING UNKNOWN FILE TYPE ! ===")
@@ -77,6 +89,7 @@ internal enum class ASTDiffRegistry {
             "cxx" to CPP,
             "hxx" to CPP,
             "hh" to CPP,
+            "go" to GO,
         )
 
         suspend fun transformToGumTreeFrom(file: ISourceFile): GumTree {
