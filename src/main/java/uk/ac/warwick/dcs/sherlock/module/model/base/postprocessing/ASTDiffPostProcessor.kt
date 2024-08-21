@@ -75,6 +75,18 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
         }
     }
 
+    private fun printAction(action: Action) {
+        print("Action: ${action.name.yellow()}, Node: [${action.node.info.type.name.green()}] ")
+        val line = action.node.info.line
+        val posOfLine = action.node.info.posOfLine
+        if (line != -1 && posOfLine != -1) {
+            print(action.oldInfo?.text?.encoded()?.cyan())
+            println(", Line: ${line.toString().red()}, Position: ${posOfLine.toString().red()}")
+        } else {
+            println()
+        }
+    }
+
     override fun processResults(
         files: List<ISourceFile>,
         rawResults: List<ASTDiffResult>,
@@ -95,17 +107,7 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
             )
             println(score)
 
-            it.editScript?.forEach { action ->
-                print("Action: ${action.name}, Node: [${action.node.info.type.name}] ")
-                val line = action.node.info.line
-                val posOfLine = action.node.info.posOfLine
-                if (line != -1 && posOfLine != -1) {
-                    print(action.node.info.text.encoded())
-                    println(", Line: $line, Position: $posOfLine")
-                } else {
-                    println()
-                }
-            }
+            it.editScript?.forEach(::printAction)
 
             val newResultGroup = result.addGroup()
             newResultGroup.addCodeBlock(
@@ -127,6 +129,14 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
     }
 
     private fun String.encoded(): String = Json.encodeToString(String.serializer(), this)
+
+    private fun String.cyan(): String = "\u001B[36m$this\u001B[0m"
+
+    private fun String.yellow(): String = "\u001B[33m$this\u001B[0m"
+
+    private fun String.green(): String = "\u001B[32m$this\u001B[0m"
+
+    private fun String.red(): String = "\u001B[31m$this\u001B[0m"
 
     companion object {
         private const val FULL_SCORE_OF_EACH_LINE = 30
