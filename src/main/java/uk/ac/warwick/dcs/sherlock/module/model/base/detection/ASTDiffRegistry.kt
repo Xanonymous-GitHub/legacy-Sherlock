@@ -3,6 +3,8 @@ package uk.ac.warwick.dcs.sherlock.module.model.base.detection
 import tw.xcc.gumtree.antlrBridge.GumTreeConverter
 import tw.xcc.gumtree.model.GumTree
 import uk.ac.warwick.dcs.sherlock.api.component.ISourceFile
+import uk.ac.warwick.dcs.sherlock.module.model.base.lang.CPP14Lexer
+import uk.ac.warwick.dcs.sherlock.module.model.base.lang.CPP14Parser
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.JavaLexer
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.JavaParser
 import uk.ac.warwick.dcs.sherlock.module.model.base.lang.KotlinLexer
@@ -42,6 +44,16 @@ internal enum class ASTDiffRegistry {
             )
     },
 
+    CPP {
+        override suspend fun generateGumTreeFrom(inputStream: InputStream): GumTree =
+            GumTreeConverter.convertFrom(
+                inputStream,
+                ::CPP14Lexer,
+                ::CPP14Parser,
+                CPP14Parser::translationUnit
+            )
+    },
+
     UNKNOWN {
         override suspend fun generateGumTreeFrom(inputStream: InputStream): GumTree {
             println("=== WARNING: CONVERTING UNKNOWN FILE TYPE ! ===")
@@ -57,6 +69,14 @@ internal enum class ASTDiffRegistry {
             "rs" to RUST,
             "kt" to KOTLIN,
             "java" to JAVA,
+            "cpp" to CPP,
+            "c" to CPP,
+            "h" to CPP,
+            "hpp" to CPP,
+            "cc" to CPP,
+            "cxx" to CPP,
+            "hxx" to CPP,
+            "hh" to CPP,
         )
 
         suspend fun transformToGumTreeFrom(file: ISourceFile): GumTree {
