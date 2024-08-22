@@ -80,7 +80,7 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
         val line = action.node.info.line
         val posOfLine = action.node.info.posOfLine
         if (line != -1 && posOfLine != -1) {
-            print(action.oldInfo?.text?.encoded()?.cyan())
+            print(action.node.info.text.encoded().cyan())
             println(", Line: ${line.toString().red()}, Position: ${posOfLine.toString().red()}")
         } else {
             println()
