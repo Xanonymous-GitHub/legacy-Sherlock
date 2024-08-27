@@ -8,7 +8,8 @@ import uk.ac.warwick.dcs.sherlock.module.model.base.detection.ASTDiffDetector
 data class ASTDiffResult(
     val editScript: List<Action>? = null,
     val detectorParams: ASTDiffDetector.Params,
-    val sourcePair: Pair<ISourceFile, ISourceFile>
+    val sourcePair: Pair<ISourceFile, ISourceFile>,
+    val referencedTreeSize: Int,
 ) : AbstractModelTaskRawResult() {
     override fun isEmpty(): Boolean = editScript == null
 

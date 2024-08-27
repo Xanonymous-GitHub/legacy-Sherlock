@@ -27,7 +27,7 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
     ): Double = coroutineScope {
         return@coroutineScope actions.map {
             // TODO: The algorithm for calculating the score of each action.
-            async { it.node.childCount() }
+            async { it.node.subTreeSize }
         }.awaitAll().sum() * cardinality
     }
 
@@ -93,9 +93,7 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
     ): ModelTaskProcessedResults {
         val result = ModelTaskProcessedResults()
         rawResults.forEach {
-            val file1LineNums = it.sourcePair.first.totalLineCount
-            val file2LineNums = it.sourcePair.second.totalLineCount
-            val maxScore = listOf(file1LineNums, file2LineNums).average().toInt() * FULL_SCORE_OF_EACH_LINE
+            val maxScore = it.referencedTreeSize
 
             val score = calculateScore(it, maxScore)
                 .toFloat()
@@ -137,8 +135,4 @@ class ASTDiffPostProcessor : IPostProcessor<ASTDiffResult> {
     private fun String.green(): String = "\u001B[32m$this\u001B[0m"
 
     private fun String.red(): String = "\u001B[31m$this\u001B[0m"
-
-    companion object {
-        private const val FULL_SCORE_OF_EACH_LINE = 30
-    }
 }

@@ -25,7 +25,11 @@ class ASTDiffDetectorWorker(
         ASTDiffResult(
             editScript,
             parent.params,
-            sourcePair
+            sourcePair,
+            maxOf(
+                treePair.first.preOrdered().size,
+                treePair.second.preOrdered().size
+            )
         )
     }
 
