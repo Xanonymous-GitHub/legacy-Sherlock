@@ -7,6 +7,9 @@ services:
             - sherlock
         ports:
             - "8080:8080"
+        environment:
+            - ADMIN_PASSWORD=sherlock
+
 
 volumes:
     sherlock:
