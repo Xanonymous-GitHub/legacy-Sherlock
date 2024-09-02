@@ -67,7 +67,7 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     implementation("com.google.guava:guava:33.3.0-jre")
     implementation("org.reflections:reflections:0.10.2")
-    implementation("org.apache.commons:commons-lang3:3.16.0")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("org.apache.commons:commons-compress:1.27.1")
     implementation("commons-io:commons-io:2.16.1")
     implementation("commons-codec:commons-codec:1.17.1")
