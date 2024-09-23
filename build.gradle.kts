@@ -69,7 +69,7 @@ dependencies {
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("org.apache.commons:commons-compress:1.27.1")
-    implementation("commons-io:commons-io:2.16.1")
+    implementation("commons-io:commons-io:2.17.0")
     implementation("commons-codec:commons-codec:1.17.1")
     implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.0-B02")
     implementation("javax.transaction:jta:1.1")
