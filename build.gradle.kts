@@ -81,7 +81,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("javax.xml.bind:jaxb-api")
     implementation("org.json:json:20240303")
-    implementation("org.seleniumhq.selenium:selenium-java:4.24.0")
+    implementation("org.seleniumhq.selenium:selenium-java:4.25.0")
     implementation("com.h2database:h2:2.3.232")
 
     runtimeOnly("com.mysql:mysql-connector-j:9.0.0")
