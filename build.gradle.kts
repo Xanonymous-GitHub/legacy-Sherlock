@@ -71,7 +71,7 @@ dependencies {
     implementation("org.apache.commons:commons-compress:1.27.1")
     implementation("commons-io:commons-io:2.16.1")
     implementation("commons-codec:commons-codec:1.17.1")
-    implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.0-B02")
+    implementation("org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.0-B03")
     implementation("javax.transaction:jta:1.1")
     implementation("com.objectdb:objectdb:2.9.0_05")
     implementation("org.yaml:snakeyaml:2.3")
